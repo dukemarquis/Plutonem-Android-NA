@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+~ Copyright (C) 2019 The Plutonem Application Project
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~      http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<!--    app:startDestination="@id/confirm_order_fragment">-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/confirm_order_fragment"-->
+<!--        android:name="com.plutonem.ConfirmOrderFragment"-->
+<!--        tools:layout="@layout/fragment_confirm_order">-->
+
+<!--        <action-->
+<!--            android:id="@+id/action_confirm_order_fragment_to_add_delivery_information_fragment"-->
+<!--            app:destination="@id/add_delivery_information_fragment"-->
+<!--            app:enterAnim="@anim/slide_in_right"-->
+<!--            app:exitAnim="@anim/slide_out_left"-->
+<!--            app:popEnterAnim="@anim/slide_in_left"-->
+<!--            app:popExitAnim="@anim/slide_out_right" />-->
+
+<!--    </fragment>-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/add_delivery_information_fragment"-->
+<!--        android:name="com.plutonem.add_delivery_information.AddDeliveryInformationFragment"-->
+<!--        android:label="@string/add_deliver_information_title"-->
+<!--        tools:layout="@layout/fragment_add_delivery_information" />-->
+
+</navigation>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/layout_order_detail_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:descendantFocusability="blocksDescendants">
+
+        <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+            android:id="@+id/swipe_to_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--            <com.plutonem.widgets.PNScrollView-->
+            <!--                android:id="@+id/scroll_view_nemur"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:clipToPadding="false"-->
+            <!--                android:fillViewport="true"-->
+            <!--                android:scrollbarStyle="insideOverlay"-->
+            <!--                android:scrollbars="vertical">-->
+
+            <!--                <RelativeLayout-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content">-->
+
+            <!--                    <com.plutonem.ui.nemur.views.NemurOrderDetailHeaderView-->
+            <!--                        android:id="@+id/header_view"-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        tools:ignore="UnknownIdInLayout" />-->
+
+            <!--                </RelativeLayout>-->
+
+            <!--            </com.plutonem.widgets.PNScrollView>-->
+
+            <!--            <LinearLayout-->
+            <!--                android:id="@+id/layout_container"-->
+            <!--                android:background="?android:selectableItemBackground"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:orientation="vertical" >-->
+
+            <!--                <com.plutonem.ui.nemur.views.NemurOrderDetailHeaderView-->
+            <!--                    android:id="@+id/header_view"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    tools:ignore="UnknownIdInLayout" />-->
+
+            <!--            </LinearLayout>-->
+
+            <com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+                android:id="@+id/playerContainer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                >
+
+                <com.google.android.exoplayer2.ui.PlayerView
+                    android:id="@+id/playerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:keep_content_on_player_reset="true"
+                    app:resize_mode="fixed_height"
+                    app:show_buffering="when_playing"
+                    app:shutter_background_color="#0a0a0a"
+                    app:surface_type="texture_view"
+                    app:use_controller="true"
+                    />
+            </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
+
+        </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+        <include
+            android:id="@+id/layout_order_detail_footer"
+            layout="@layout/nemur_include_order_detail_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true" />
+
+        <ProgressBar
+            android:id="@+id/progress_loading"
+            style="@style/NemurProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </RelativeLayout>
+
+    <!-- error message when requesting order fails -->
+    <com.plutonem.widgets.PNTextView
+        android:id="@+id/text_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/nemur_detail_margin"
+        android:layout_marginEnd="@dimen/nemur_detail_margin"
+        android:drawableTop="@drawable/ic_notice_48dp"
+        android:drawablePadding="@dimen/wordpress_margin_small"
+        android:gravity="center"
+        android:textColor="@color/neutral_30"
+        android:textSize="@dimen/text_sz_extra_large"
+        android:visibility="gone"
+        tools:text="Error message"
+        tools:visibility="visible" />
+
+</RelativeLayout>

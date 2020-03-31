@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_buyer_info"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_default"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/margin_extra_large">
+
+        <com.plutonem.widgets.PNTextView
+            android:id="@+id/text_buyer_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/wordpress_margin_large"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="3"
+            android:textColor="?attr/wpColorText"
+            android:textSize="@dimen/wordpress_text_sz_medium"
+            android:fontFamily="serif"
+            tools:text="text_description"
+            android:layout_marginStart="@dimen/nemur_card_content_padding"
+            android:layout_marginEnd="@dimen/nemur_card_content_padding"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@color/neutral_10" />
+
+            <com.plutonem.widgets.PNTextView
+                android:id="@+id/text_buyer_acuser_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/neutral_50"
+                android:textSize="@dimen/wordpress_text_sz_small"
+                tools:text="12 nemurs" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@color/neutral_10" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

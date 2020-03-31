@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    included by NemurOrderDetailFragment
+-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:pn="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_order_detail_footer"
+    android:background="@android:color/white"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent" >
+
+    <View
+        android:id="@+id/divider_footer"
+        android:background="@color/divider"
+        android:layout_height="1dp"
+        android:layout_width="match_parent" >
+    </View>
+
+    <RelativeLayout
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_width="match_parent" >
+
+        <com.plutonem.ui.nemur.views.NemurPriceButton
+            android:id="@+id/price_button"
+            android:layout_alignParentStart="true"
+            android:layout_alignStart="@+id/layout_icons"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" >
+        </com.plutonem.ui.nemur.views.NemurPriceButton>
+
+        <LinearLayout
+            android:id="@+id/layout_icons"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent" >
+
+            <com.plutonem.ui.nemur.views.NemurIconView
+                android:id="@+id/view_buy"
+                android:contentDescription="@string/nemur_buy_orders"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_width="wrap_content"
+                pn:nemurIcon="buy" >
+            </com.plutonem.ui.nemur.views.NemurIconView>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

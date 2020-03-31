@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settings_fragment_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_default">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!--Buyers Information-->
+
+        <androidx.cardview.widget.CardView
+            style="@style/OrderSettingsCardView"
+            card_view:cardBackgroundColor="@android:color/white"
+            card_view:cardCornerRadius="@dimen/default_cardview_radius">
+
+            <LinearLayout
+                style="@style/OrderSettingsCardViewInnerLayout">
+
+                <TextView
+                    android:id="@+id/order_settings_delivery_information_header"
+                    style="@style/OrderSettingsSectionHeader"
+                    android:text="@string/order_settings_delivery_information"/>
+
+                <LinearLayout
+                    android:id="@+id/order_name_container"
+                    style="@style/OrderSettingsContainer">
+
+                    <TextView
+                        style="@style/OrderSettingsTitle"
+                        android:text="@string/order_settings_name"/>
+
+                    <TextView
+                        android:id="@+id/order_name"
+                        style="@style/OrderSettingsSubtitle"
+                        android:hint="@string/order_settings_not_set"/>
+
+                </LinearLayout>
+
+                <View style="@style/OrderSettingsDivider"/>
+
+                <LinearLayout
+                    android:id="@+id/order_phone_number_container"
+                    style="@style/OrderSettingsContainer">
+
+                    <TextView
+                        style="@style/OrderSettingsTitle"
+                        android:text="@string/order_settings_phone_number"/>
+
+                    <TextView
+                        android:id="@+id/order_phone_number"
+                        style="@style/OrderSettingsSubtitle"
+                        android:hint="@string/order_settings_not_set"/>
+
+                </LinearLayout>
+
+                <View style="@style/OrderSettingsDivider"/>
+
+                <LinearLayout
+                    android:id="@+id/order_address_container"
+                    style="@style/OrderSettingsContainer">
+
+                    <TextView
+                        style="@style/OrderSettingsTitle"
+                        android:text="@string/order_settings_address"/>
+
+                    <TextView
+                        android:id="@+id/order_address"
+                        style="@style/OrderSettingsSubtitle"
+                        android:hint="@string/order_settings_not_set"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!--Detail-->
+
+        <androidx.cardview.widget.CardView
+            style="@style/OrderSettingsCardView"
+            card_view:cardBackgroundColor="@android:color/white"
+            card_view:cardCornerRadius="@dimen/default_cardview_radius">
+
+            <LinearLayout
+                style="@style/OrderSettingsCardViewInnerLayout">
+
+                <TextView
+                    android:id="@+id/order_settings_detail"
+                    style="@style/OrderSettingsSectionHeader"
+                    android:text="@string/order_settings_detail"/>
+                <LinearLayout
+                    android:id="@+id/order_shop_name_container"
+                    style="@style/OrderSettingsContainer">
+
+                    <TextView
+                        style="@style/OrderSettingsTitle"
+                        android:text="@string/shop_name"/>
+
+                    <TextView
+                        android:id="@+id/order_shop_name"
+                        style="@style/OrderSettingsSubtitle"
+                        android:hint="@string/order_settings_not_set"/>
+                </LinearLayout>
+
+                <View style="@style/OrderSettingsDivider"/>
+
+                <LinearLayout
+                    android:id="@+id/order_good_name_container"
+                    style="@style/OrderSettingsContainer">
+
+                    <TextView
+                        style="@style/OrderSettingsTitle"
+                        android:text="@string/good_name"/>
+
+                    <TextView
+                        android:id="@+id/order_good_name"
+                        style="@style/OrderSettingsSubtitle"
+                        android:hint="@string/order_settings_not_set"/>
+                </LinearLayout>
+
+                <View style="@style/OrderSettingsDivider"/>
+
+                <LinearLayout
+                    android:id="@+id/order_item_sales_price_container"
+                    style="@style/OrderSettingsContainer">
+
+                    <TextView
+                        style="@style/OrderSettingsTitle"
+                        android:text="@string/item_sales_price"/>
+
+                    <TextView
+                        android:id="@+id/order_item_sales_price"
+                        style="@style/OrderSettingsSubtitle"
+                        android:hint="@string/order_settings_not_set"/>
+                </LinearLayout>
+
+                <View style="@style/OrderSettingsDivider"/>
+
+                <LinearLayout
+                    android:id="@+id/order_number_container"
+                    style="@style/OrderSettingsContainer">
+
+                    <TextView
+                        style="@style/OrderSettingsTitle"
+                        android:text="@string/order_settings_number"/>
+
+                    <TextView
+                        android:id="@+id/order_number"
+                        style="@style/OrderSettingsSubtitle" />
+                </LinearLayout>
+
+                <View style="@style/OrderSettingsDivider"/>
+
+                <LinearLayout
+                    android:id="@+id/order_item_distribution_mode_container"
+                    style="@style/OrderSettingsContainer">
+
+                    <TextView
+                        style="@style/OrderSettingsTitle"
+                        android:text="@string/item_distribution_mode"/>
+
+                    <TextView
+                        android:id="@+id/order_item_distribution_mode"
+                        style="@style/OrderSettingsSubtitle"
+                        android:hint="@string/order_settings_not_set"/>
+                </LinearLayout>
+
+                <View style="@style/OrderSettingsDivider"/>
+
+                <LinearLayout
+                    android:id="@+id/total_price_container"
+                    style="@style/OrderSettingsContainer">
+
+                    <TextView
+                        style="@style/OrderSettingsTitle"
+                        android:text="@string/total_price"/>
+
+                    <TextView
+                        android:id="@+id/total_price"
+                        style="@style/OrderSettingsSubtitle"
+                        android:hint="@string/hundred"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+</ScrollView>

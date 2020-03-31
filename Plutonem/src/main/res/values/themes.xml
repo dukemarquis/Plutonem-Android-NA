@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+~ Copyright (C) 2019 The Plutonem Application Project
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~      http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+<!--    &lt;!&ndash;Top level DayNight theme to be used in AndroidManifest.xml&ndash;&gt;-->
+<!--    <style name="PlutonemTheme.DayNight" parent="Base.PlutonemTheme" />-->
+
+<!--    &lt;!&ndash;Base Plutonem theme which will be shared between both light and dark theme variants&ndash;&gt;-->
+<!--    <style name="Base.PlutonemTheme" parent="Base.MaterialThemeBuilder">-->
+
+<!--        <item name="wpColorText">@color/neutral_70</item>-->
+<!--        <item name="wpColorTextSubtle">@color/neutral</item>-->
+<!--        <item name="wpColorError">@color/error</item>-->
+
+<!--        <item name="wpColorWarningDark">@color/warning_50</item>-->
+
+<!--        &lt;!&ndash; Customize your themes here. &ndash;&gt;-->
+
+<!--        <item name="colorPrimary">@color/color_primary</item>-->
+<!--        <item name="colorPrimaryVariant">@color/color_primary_variant</item>-->
+<!--        <item name="colorAccent">@color/accent</item>-->
+<!--        <item name="colorSecondary">@color/color_secondary</item>-->
+<!--        <item name="colorSecondaryVariant">@color/color_secondary_variant</item>-->
+
+<!--        <item name="android:colorBackground">@color/color_background</item>-->
+<!--        <item name="colorSurface">@color/color_surface</item>-->
+<!--        <item name="colorError">@color/color_error</item>-->
+
+<!--        <item name="colorOnPrimary">@color/color_on_primary</item>-->
+<!--        <item name="colorOnSecondary">@color/color_on_secondary</item>-->
+<!--        <item name="colorOnBackground">@color/color_on_background</item>-->
+<!--        <item name="colorOnSurface">@color/color_on_surface</item>-->
+<!--        <item name="colorOnError">@color/color_on_error</item>-->
+
+<!--        &lt;!&ndash;Material type attributes&ndash;&gt;-->
+<!--        <item name="textAppearanceHeadline1">@style/TextAppearance.PlutonemTheme.Headline1</item>-->
+<!--        <item name="textAppearanceHeadline2">@style/TextAppearance.PlutonemTheme.Headline2</item>-->
+<!--        <item name="textAppearanceHeadline3">@style/TextAppearance.PlutonemTheme.Headline3</item>-->
+<!--        <item name="textAppearanceHeadline4">@style/TextAppearance.PlutonemTheme.Headline4</item>-->
+<!--        <item name="textAppearanceHeadline5">@style/TextAppearance.PlutonemTheme.Headline5</item>-->
+<!--        <item name="textAppearanceHeadline6">@style/TextAppearance.PlutonemTheme.Headline6</item>-->
+<!--        <item name="textAppearanceSubtitle1">@style/TextAppearance.PlutonemTheme.Subtitle1</item>-->
+<!--        <item name="textAppearanceSubtitle2">@style/TextAppearance.PlutonemTheme.Subtitle2</item>-->
+<!--        <item name="textAppearanceBody1">@style/TextAppearance.PlutonemTheme.Body1</item>-->
+<!--        <item name="textAppearanceBody2">@style/TextAppearance.PlutonemTheme.Body2</item>-->
+<!--        <item name="textAppearanceButton">@style/TextAppearance.PlutonemTheme.Button</item>-->
+<!--        <item name="textAppearanceCaption">@style/TextAppearance.PlutonemTheme.Caption</item>-->
+<!--        <item name="textAppearanceOverline">@style/TextAppearance.PlutonemTheme.Overline</item>-->
+
+<!--        &lt;!&ndash;Material shape attributes&ndash;&gt;-->
+<!--        <item name="shapeAppearanceSmallComponent">-->
+<!--            @style/ShapeAppearance.PlutonemTheme.SmallComponent-->
+<!--        </item>-->
+<!--        <item name="shapeAppearanceMediumComponent">-->
+<!--            @style/ShapeAppearance.PlutonemTheme.MediumComponent-->
+<!--        </item>-->
+<!--        <item name="shapeAppearanceLargeComponent">-->
+<!--            @style/ShapeAppearance.PlutonemTheme.LargeComponent-->
+<!--        </item>-->
+
+<!--        &lt;!&ndash;Component styles&ndash;&gt;-->
+<!--        <item name="materialCardViewStyle">@style/Widget.PlutonemTheme.CardView</item>-->
+<!--        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.Dialog.Alert-->
+<!--        </item>-->
+<!--        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.MyTheme.BottomSheetDialog</item>-->
+<!--        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.PrimarySurface</item>-->
+<!--    </style>-->
+
+<!--    <style name="Base.MaterialThemeBuilder" parent="Theme.MaterialComponents.DayNight.NoActionBar">-->
+<!--        <item name="alphaEmphasisHigh">@dimen/alpha_emphasis_high</item>-->
+<!--        <item name="alphaEmphasisMedium">@dimen/alpha_emphasis_medium</item>-->
+<!--        <item name="alphaEmphasisDisabled">@dimen/alpha_emphasis_disabled</item>-->
+
+<!--        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/status_bar</item>-->
+<!--        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>-->
+<!--        <item name="android:navigationBarColor" tools:targetApi="lollipop">?android:colorBackground</item>-->
+<!--        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">true</item>-->
+<!--        <item name="android:navigationBarDividerColor" tools:ignore="NewApi">-->
+<!--            ?colorControlHighlight-->
+<!--        </item>-->
+
+<!--        &lt;!&ndash;Remap legacy AppCompat attributes to MaterialComponent attributes&ndash;&gt;-->
+<!--        <item name="colorPrimaryDark">?colorPrimaryVariant</item>-->
+<!--        <item name="colorAccent">?colorSecondary</item>-->
+<!--    </style>-->
+
+    <style name="Base.Plutonem" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Material theme -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="colorControlActivated">@color/primary_30</item>
+
+        <item name="wpColorText">@color/neutral_70</item>
+        <item name="wpColorTextSubtle">@color/neutral</item>
+        <item name="wpColorError">@color/error</item>
+
+        <item name="wpColorWarningDark">@color/warning_50</item>
+
+        <item name="android:windowBackground">@color/background_default</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.Plutonem</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.WordPress</item>
+        <item name="android:actionModeBackground">@color/primary_dark</item>
+        <item name="android:actionBarTabTextStyle">@style/TabTextStyle.Plutonem</item>
+        <item name="android:actionBarTabBarStyle">@style/TabBarStyle.Plutonem</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/status_bar</item>
+
+        <item name="colorButtonNormal">@color/light_gray</item>
+
+        <item name="android:dialogTheme">@style/DialogTheme.Plutonem</item>
+        <item name="android:alertDialogTheme">@style/Calypso.Dialog.Alert</item>
+        <item name="android:datePickerStyle">@style/DatePicker.Plutonem</item>
+        <item name="android:timePickerStyle" tools:targetApi="lollipop">@style/TimePicker.Plutonem</item>
+
+        <!-- Light.DarkActionBar specific -->
+        <item name="android:actionBarWidgetTheme">@style/Theme.WordPress.Widget</item>
+
+        <item name="windowActionModeOverlay">true</item>
+        <item name="searchViewStyle">@style/Plutonem.SearchViewStyle</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_left_white_24dp</item>
+    </style>
+
+    <style name="Plutonem" parent="Base.Plutonem">
+        <!-- We need to keep this here so we can override it in values-vXY -->
+    </style>
+
+    <!-- Overload of Login Theme -->
+    <style name="LoginTheme" parent="Plutonem">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorControlActivated">@color/accent</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+    </style>
+
+    <style name="LoginTheme.Toolbar" parent="LoginTheme">
+        <item name="colorControlNormal">@color/color_control_normal</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_left_white_24dp</item>
+    </style>
+
+    <style name="LoginTheme.Button" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/login_base_button_normal_color</item>
+    </style>
+
+    <style name="LoginTheme.Button.Primary" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/login_primary_button_normal_color</item>
+        <item name="android:textColor">@color/login_primary_button_text_color</item>
+    </style>
+
+    <style name="LoginTheme.Button.SignUp" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/login_google_button_text_color</item>
+    </style>
+
+    <style name="LoginTheme.TextLabel" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/login_text_label_text_color</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+
+    <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/login_input_label_static_text_color</item>
+    </style>
+
+    <style name="LoginTheme.EditText" parent="LoginTheme">
+        <item name="colorControlNormal">@color/login_edit_text_color_control_normal</item>
+        <item name="android:textColor">@color/login_edit_text_text_color</item>
+        <item name="android:textColorHint">@color/login_edit_text_text_hint_color</item>
+        <item name="colorControlActivated">@color/login_edit_text_color_control_activated</item>
+        <item name="colorControlHighlight">@color/login_edit_text_color_control_highlight</item>
+    </style>
+
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PlutonemUtils</string>
+    <string name="no_network_message">There is no network available</string>
+    <string name="timespan_now">Now</string>
+</resources>

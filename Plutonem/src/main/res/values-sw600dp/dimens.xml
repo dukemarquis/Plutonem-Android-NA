@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="wordpress_reader_featured_image_height">@dimen/wordpress_reader_featured_image_height_tablet</dimen>
+
+</resources>

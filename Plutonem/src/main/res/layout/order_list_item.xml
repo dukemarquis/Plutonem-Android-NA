@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/order_list_content_margin_standard"
+    android:layout_marginEnd="@dimen/order_list_content_margin_standard"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground">
+
+        <com.plutonem.widgets.PNTextView
+            android:id="@+id/shop_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:ellipsize="end"
+            android:fontFamily="serif"
+            android:maxLines="2"
+            android:textColor="@color/neutral_80"
+            android:textSize="@dimen/wordpress_text_sz_large"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginTop="@dimen/margin_extra_large"
+            tools:text="Testing title Testing title Testing title Testing title Testing title Testing title Testing title Testing title"/>
+
+        <com.plutonem.widgets.PNTextView
+            android:id="@+id/product_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:ellipsize="end"
+            android:fontFamily="serif"
+            android:importantForAccessibility="no"
+            android:lineSpacingMultiplier="1.1"
+            android:maxLines="3"
+            android:textColor="?attr/wpColorText"
+            android:textSize="@dimen/wordpress_text_sz_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shop_title"
+            tools:text="test_name test_name test_name test_name test_name test_name test_name test_name test_name test_name test_name test_name test_name test_name test_name test_name test_name test_name "/>
+
+        <com.plutonem.widgets.PNTextView
+            android:id="@+id/order_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/wordpress_margin_medium"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="?attr/wpColorTextSubtle"
+            android:textSize="@dimen/wordpress_text_sz_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_name"
+            tools:text="$ 23 dollar $ 23 dollar $ 23 dollar $ 23 dollar $ 23 dollar $ 23 dollar $ 23 dollar "/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

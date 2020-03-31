@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="wordpress_content_margin">@dimen/wordpress_content_margin_tablet</dimen>
+    <dimen name="nemur_card_margin">@dimen/nemur_card_margin_tablet</dimen>
+    <dimen name="nemur_detail_margin">@dimen/nemur_detail_margin_tablet</dimen>
+    <dimen name="order_list_content_margin_standard">@dimen/content_margin_tablet</dimen>
+
+</resources>

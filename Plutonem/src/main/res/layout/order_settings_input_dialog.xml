@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/order_settings_input_dialog_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="6"
+        android:inputType="text"
+        android:paddingBottom="@dimen/wordpress_margin_large"
+        android:layout_marginEnd="@dimen/order_settings_input_dialog_edit_text_side_margin"
+        android:layout_marginStart="@dimen/order_settings_input_dialog_edit_text_side_margin"
+        android:importantForAutofill="no"
+        tools:targetApi="O"/>
+
+    <com.plutonem.widgets.PNTextView
+        android:id="@+id/order_settings_input_dialog_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/order_settings_input_dialog_hint_side_margin"
+        android:layout_marginStart="@dimen/order_settings_input_dialog_hint_side_margin" />
+
+</LinearLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="CalypsoTheme" parent="@style/Plutonem">
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:popupMenuStyle">@style/Calypso.PopupMenu</item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/Calypso.TextAppearance</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/Calypso.TextAppearance</item>
+    </style>
+
+    <style name="Calypso.ActionMode.Dark" parent="@style/CalypsoTheme">
+        <item name="actionModeBackground">@color/neutral_50</item>
+        <item name="actionModeSplitBackground">@color/neutral_50</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_close_white_24dp</item>
+    </style>
+
+    <style name="Calypso.ActionMode.Text">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif-light</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_sz_extra_large</item>
+    </style>
+
+    <style name="Calypso.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="android:titleTextStyle">@style/Calypso.ActionMode.Text</item>
+        <item name="android:background">@color/neutral_40</item>
+    </style>
+
+    <style name="Calypso.Dialog.Alert" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/primary_40</item>
+        <item name="actionModeStyle">@style/Calypso.ActionMode</item>
+        <item name="android:listDivider">@drawable/bg_rectangle_divider</item>
+        <item name="android:dividerHeight">@dimen/buyer_settings_divider_height</item>
+    </style>
+
+    <style name="Calypso.NoActionBar" parent="CalypsoTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Calypso.PopupMenu" parent="@android:style/Widget.Holo.Light.PopupMenu">
+        <item name="android:textAppearance">@style/Calypso.TextAppearance</item>
+    </style>
+
+    <style name="Calypso.TextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">?attr/wpColorText</item>
+    </style>
+</resources>

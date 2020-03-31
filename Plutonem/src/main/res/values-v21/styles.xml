@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DropDownNav.WordPress" parent="android:Widget.Material.Light.Spinner">
+        <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
+        <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
+    </style>
+
+    <style name="ActionButton.CloseMode.WordPress" parent="android:Widget.Material.ActionButton.CloseMode">
+        <item name="android:background">@drawable/btn_cab_done_wordpress</item>
+    </style>
+
+    <style name="TabTextStyle.Plutonem" parent="android:Widget.Material.ActionBar.TabText">
+        <item name="android:textColor">?attr/wpColorText</item>
+    </style>
+
+    <style name="TabBarStyle.Plutonem" parent="@android:style/Widget.Material.ActionBar.TabBar">
+        <item name="android:showDividers">middle</item>
+        <item name="android:divider">@drawable/tab_divider_plutonem</item>
+    </style>
+
+    <style name="DialogTheme.Plutonem" parent="android:Theme.Material.Dialog">
+        <item name="android:datePickerStyle">@style/DatePicker.Plutonem</item>
+        <item name="android:timePickerStyle">@style/TimePicker.Plutonem</item>
+    </style>
+
+    <style name="DatePicker.Plutonem" parent="android:Widget.Material.DatePicker">
+        <item name="android:datePickerMode">spinner</item>
+    </style>
+
+    <style name="TimePicker.Plutonem" parent="android:Widget.Material.TimePicker">
+        <item name="android:timePickerMode">spinner</item>
+    </style>
+
+    <style name="MyBuyerQuickActionButton" parent="Widget.Design.FloatingActionButton">
+        <item name="borderWidth">0dp</item>
+        <item name="elevation">@dimen/wordpress_card_elevation</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:backgroundTint">@android:color/white</item>
+        <item name="android:tint">@color/neutral_60</item>
+    </style>
+
+</resources>

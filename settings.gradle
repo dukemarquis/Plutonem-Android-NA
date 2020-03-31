@@ -1,0 +1,4 @@
+include ':Plutonem', ':PlutonemLoginFlow', ':PlutonemUtils', ':PlutonemUtils', ':PlutonemEditor', ':PlutonemNetworking'
+include ':lib'
+include ':xmpp-addr'
+include ':lib2'

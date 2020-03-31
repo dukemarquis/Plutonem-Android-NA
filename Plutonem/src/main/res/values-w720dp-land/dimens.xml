@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="nemur_detail_margin">@dimen/nemur_detail_margin_tablet_big_landscape</dimen>
+</resources>

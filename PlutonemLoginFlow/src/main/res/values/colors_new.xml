@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- material colors -->
+    <!--
+        colorPrimary            app branding color for the app bar
+        colorPrimaryDark        status bar and contextual app bars
+        colorControlNormal      (unused here) controls in their normal state (spinner arrow, scrollbars, unchecked checkboxes)
+        colorControlActivated   controls in their activated/checked state (search highlight, checked checkboxes)
+        colorControlHighlight   control highlights (ripples, list selectors)
+    -->
+    <color name="color_primary">@color/pink_plutonem</color>
+    <color name="color_primary_dark">@color/status_bar</color>
+    <color name="color_accent">@color/orange_jazzy</color>
+    <color name="color_control_normal">@color/white</color>
+    <color name="color_control_activated">@color/pink_light</color>
+    <color name="color_control_highlight">@color/brown_lighten_20</color>
+
+    <!-- Default Colors -->
+    <color name="transparent">#00000000</color>
+    <color name="light_gray">@color/brown_lighten_30</color>
+    <color name="gray">@color/brown_lighten_20</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white_self_hosted_back">#F1F1F1</color>
+    <!-- note that black should NOT be used for text - use grey_dark instead -->
+    <color name="black">#000000</color>
+    <color name="background_default">@color/brown_lighten_30</color>
+
+    <!-- ==================================== -->
+    <!-- Plutonem Colors                 -->
+    <!-- plutonem/design-handbook/colors -->
+    <!-- Pinks -->
+    <color name="pink_plutonem">#f48fb1</color>
+    <color name="pink_light">#ffc1e3</color>
+    <color name="pink_medium">#f8bbd0</color>
+    <color name="pink_dark">#bf5f82</color>
+
+    <!-- Primary Greys -->
+    <color name="brown">#bcaaa4</color>
+    <color name="brown_light">#fce4db</color>
+    <color name="brown_dark">#786d68</color>
+    <color name="brown_disabled">@color/brown_darken_10</color>
+
+    <color name="brown_text_min">@color/brown_darken_20</color>
+
+    <!-- Secondary Greys -->
+    <color name="brown_lighten_30">#f2dbd4</color>
+    <color name="brown_lighten_20">#e2cdc9</color>
+    <color name="brown_lighten_10">#d6c2be</color>
+    <color name="brown_darken_10">#afa099</color>
+    <color name="brown_darken_20">#9c8f89</color>
+    <color name="brown_darken_30">#8c7f7a</color>
+
+    <!-- Oranges -->
+    <color name="orange_jazzy">#f0821e</color>
+    <color name="orange_fire">#d54e21</color>
+
+    <!-- Alerts -->
+    <color name="alert_yellow">#f0b849</color>
+    <color name="alert_red">#d94f4f</color>
+    <color name="alert_green">#4ab866</color>
+
+    <!-- Translucent -->
+    <color name="black_translucent_40">#66000000</color>
+    <color name="black_translucent_50">#80000000</color>
+    <color name="pink_light_translucent_80">#cdffc1e3</color>
+    <color name="brown_dark_translucent_50">#80786D68</color>
+    <color name="brown_dark_translucent_70">#B3786D68</color>
+    <color name="brown_translucent_50">#80BCAAA4</color>
+    <color name="brown_lighten_10_translucent_50">#80D6C2BE</color>
+    <color name="brown_lighten_20_translucent_50">#80E2CDC9</color>
+    <color name="brown_lighten_30_translucent_50">#80F2DBD4</color>
+    <color name="white_translucent_40">#66ffffff</color>
+    <color name="white_translucent_60">#99ffffff</color>
+    <color name="white_translucent_65">#a6ffffff</color>
+
+    <!-- App specific colors -->
+    <!-- We could use blue_dark for the status bar color, but to adhere to the material design spec very closely,
+      we're using a shade of pink_plutonem -->
+    <color name="status_bar">#c94f7c</color>
+    <color name="status_bar_action_mode">#ffa75770</color>
+
+    <!-- Login -->
+    <color name="login_theme_accent_color">@color/pink_medium</color>
+    <color name="login_background_color">@color/brown_light</color>
+
+    <color name="login_toolbar_color">@color/pink_plutonem</color>
+    <color name="login_base_button_normal_color">@color/white</color>
+    <color name="login_primary_button_normal_color">@color/pink_medium</color>
+    <color name="login_primary_button_text_color">@color/white</color>
+    <color name="login_secondary_button_text_color">@color/pink_plutonem</color>
+    <color name="login_google_button_text_color">@color/pink_plutonem</color>
+    <color name="login_text_label_text_color">@color/brown_dark</color>
+    <color name="login_input_label_static_text_color">@color/brown_text_min</color>
+    <color name="login_edit_text_color_control_normal">@color/brown_text_min</color>
+    <color name="login_edit_text_color_control_activated">@color/pink_medium</color>
+    <color name="login_edit_text_color_control_highlight">@color/pink_medium</color>
+    <color name="login_edit_text_text_color">@color/brown_dark</color>
+    <color name="login_edit_text_text_hint_color">@color/brown_text_min</color>
+    <color name="login_heading_text_color">@color/brown_text_min</color>
+    <color name="login_subhead_text_color">@color/brown_dark</color>
+    <color name="login_username_text_color">@color/brown_text_min</color>
+    <color name="login_footnote_text_color">@color/brown_dark</color>
+
+    <color name="login_input_icon_color">@color/brown_lighten_10</color>
+    <color name="login_input_password_icon_color">@color/brown</color>
+    <color name="login_notification_accent_color">@color/pink_plutonem</color>
+
+    <!--  Xmpp Specification  -->
+    <color name="green600">#ff43A047</color>
+</resources>

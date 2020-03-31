@@ -1,0 +1,234 @@
+<resources>
+    <string name="app_name" translatable="false">Plutonem</string>
+
+    <!-- account setup -->
+    <string name="no_network_title">No network available</string>
+    <string name="no_network_message">There is no network available</string>
+
+    <!-- form labels -->
+    <string name="shop_name">Shop Name</string>
+    <string name="good_name">Good Name</string>
+    <string name="item_sales_price">Item Sales Price</string>
+    <string name="item_distribution_mode">Item Distribution Mode</string>
+
+    <!-- Screen titles -->
+    <string name="home_page_section_screen_title" translatable="false">Nemur</string>
+    <string name="me_section_screen_title">Me</string>
+
+    <!--TabBar Accessibility Labels-->
+    <string name="tabbar_accessibility_label_home_page">Nemur. Enjoy shopping in plutonem.</string>
+    <string name="tabbar_accessibility_label_me">My buyer. View your buyer and manage it, including orders.</string>
+
+    <!-- default strings -->
+    <string name="plutonem" translatable="false">Plutonem</string>
+
+    <!-- general strings -->
+    <string name="orders">Orders</string>
+    <string name="conservative">Conservative</string>
+    <string name="await_receive">Await receiving</string>
+    <string name="cancel">Cancel</string>
+    <string name="keep_checking">Keep checking</string>
+    <string name="search">Search</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="buyer_not_found">An error occurred when accessing this buyer</string>
+    <string name="order_not_found">An error occurred when loading the order. Refresh your orders and try again.</string>
+    <string name="swipe_for_more">Swipe for more</string>
+    <string name="retry">Retry</string>
+    <string name="dismiss">dismiss</string>
+    <string name="confirm_orders">Confirm Orders</string>
+
+    <!-- orders tab -->
+    <string name="orders_cannot_be_started">We cannot open the orders right now. Please try again later</string>
+    <string name="untitled_in_parentheses">(Untitled)</string>
+    <string name="undetailed_in_parentheses">(Undetailed)</string>
+    <string name="orders_empty_list">No orders yet. Why not buy one?</string>
+    <string name="empty_list_default">This list is empty</string>
+    <string name="orders_receiving_empty">You haven\'t got any orders yet</string>
+    <string name="orders_delivering_empty">You haven\'t got any orders yet</string>
+    <string name="orders_finished_empty">You haven\'t got any orders yet</string>
+
+    <!-- buttons on order cards -->
+    <string name="button_receive">Receive</string>
+    <string name="button_confirm">Buy Now</string>
+
+    <!-- order view -->
+    <string name="order_confirmed">Order confirmed</string>
+    <string name="order_submitted">Order submitted</string>
+    <string name="order_updated">Order updated</string>
+    <string name="orders_fetching">Fetching orders…</string>
+    <string name="dialog_confirm_buy_now_title">Ready to Buy Now?</string>
+    <string name="dialog_confirm_buy_now_message_order">This order will be bought now immediately.</string>
+    <string name="dialog_confirm_buy_now_yes">Buy now</string>
+
+    <!-- action from buy intents -->
+    <string name="cant_buy_no_visible_buyer">You can\'t buy in Plutonem without a visible buyer</string>
+
+    <!-- notifications -->
+    <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
+
+    <!-- editor -->
+    <string name="editor_draft_saved_locally">Draft saved on device</string>
+
+    <!-- Order Settings -->
+    <string name="order_settings_number">Number</string>
+    <string name="order_settings_detail">Detail</string>
+    <string name="order_settings_delivery_information">Delivery Information</string>
+    <string name="order_settings_not_set">Not Set</string>
+    <string name="order_settings_name">Name</string>
+    <string name="order_settings_phone_number">Phone Number</string>
+    <string name="order_settings_address">Address</string>
+    <string name="order_settings_name_dialog_hint">The name is the compellation of the consignee.</string>
+    <string name="order_settings_phone_number_dialog_hint">The phone number is the contact way of the consignee.</string>
+    <string name="order_settings_address_dialog_hint">The address is the delivery address of this order.</string>
+
+    <!-- order price selection -->
+    <string name="total_price">Total</string>
+    <string name="hundred">$ 000</string>
+    <string name="total_on">Total cost: %s</string>
+
+    <!-- Order Status -->
+    <string name="order_status_confirm_order">Buy Now</string>
+
+    <!-- Order Number -->
+    <string name="order_number_one">1</string>
+    <string name="order_number_two">2</string>
+    <string name="order_number_three">3</string>
+    <string name="order_number_four">4</string>
+    <string name="order_number_five">5</string>
+    <string-array name="order_settings_numbers" translatable="false">
+        <item>@string/order_number_one</item>
+        <item>@string/order_number_two</item>
+        <item>@string/order_number_three</item>
+        <item>@string/order_number_four</item>
+        <item>@string/order_number_five</item>
+    </string-array>
+
+    <!-- Error Messages -->
+    <!-- The following messages can\'t be factorized due to i18n -->
+    <string name="error_refresh_orders">Orders couldn\'t be refreshed at this time</string>
+
+    <string name="error_confirm_incomplete_order">Can\'t confirm an incomplete order</string>
+    <string name="error_pay_order">I\'m Sorry, there are some issues during your paying process.</string>
+    <string name="error_buyer_hidden">This buyer is hidden and couldn\'t be loaded. Enable it and try again.</string>
+
+    <!-- accessibility announcement when list loads -->
+    <string name="nemur_acessibility_list_loaded">"The list has loaded with %1$d items."</string>
+
+    <!-- activity titles -->
+    <string name="nemur_title_deeplink">Plutonem Nemur</string>
+    <string name="nemur_title_order_detail">Nemur Order</string>
+
+    <!-- button text -->
+    <string name="nemur_description_price">The price of this order</string>
+    <string name="nemur_btn_price_icon_US">$</string>
+    <string name="nemur_btn_price_icon_CNm">￥</string>
+    <string name="nemur_btn_price">140</string>
+    <string name="nemur_btn_buy">Buy Now</string>
+
+    <!-- EditText hints -->
+    <string name="nemur_hint_order_search">Search Plutonem</string>
+
+    <!-- TextView labels -->
+    <string name="nemur_label_new_orders">New orders</string>
+    <string name="nemur_label_new_orders_subtitle">Tap to show them</string>
+    <string name="namur_label_acuser_count">%,d active users</string>
+    <string name="nemur_label_gap_marker">Load more orders</string>
+    <string name="nemur_label_order_search_explainer">What would you like to find?</string>
+    <string name="nemur_buy_orders">Buy orders</string>
+
+    <!-- toast messages -->
+    <string name="nemur_toast_err_get_buyer_info">Unable to show this buyer</string>
+
+    <!-- failure messages when retrieving a single nemur order -->
+    <string name="nemur_err_get_order_generic">Unable to retrieve this order</string>
+    <string name="nemur_err_get_order_not_authorized">You\'re not authorized to view this order</string>
+    <string name="nemur_err_get_order_not_found">This order no longer exists</string>
+
+    <!-- empty list/grid text -->
+    <string name="nemur_empty_orders_no_connection" translatable="false">@string/no_network_title</string>
+    <string name="nemur_empty_orders_request_failed">Unable to retrieve orders</string>
+    <string name="nemur_empty_orders_in_tag">No orders with this tag</string>
+    <string name="nemur_empty_orders_in_tag_updating">Fetching orders…</string>
+    <string name="nemur_empty_default_buyer_title">No orders yet</string>
+    <string name="nemur_empty_default_buyer_description">There is currently no order to buy. Please wait!</string>
+    <string name="nemur_empty_default_buyer_button_wait">Waiting new orders</string>
+    <string name="nemur_empty_search_title">No results found</string>
+    <string name="nemur_empty_search_description">No results found for %s for your language</string>
+    <string name="nemur_empty_search_request_failed">Unable to perform search</string>
+
+    <string name="dlg_confirm_clear_search_history">Clear search history?</string>
+    <string name="label_clear_search_history">Clear search history</string>
+
+    <!--My Buyer-->
+    <string name="my_buyer_btn_my_order">My Order</string>
+    <string name="my_buyer_btn_buyer_orders">Buyer Orders</string>
+    <string name="my_buyer_icon_content_description">Change buyer icon</string>
+
+    <!-- Special characters -->
+    <string name="previous_button" translatable="false">&lt;</string>
+    <string name="next_button" translatable="false">&gt;</string>
+
+    <!-- Login -->
+    <!-- If any of these appear unused, be sure to check the same string in the login library -
+    it may be used there and keeping it here is required for translation. -->
+    <string name="phone_number">Phone number</string>
+    <string name="password">Password</string>
+    <string name="enter_phone_plutonem">Log in to Plutonem using a phone number to enjoy shopping process.</string>
+    <string name="next">Next</string>
+    <string name="alternatively">Alternatively:</string>
+    <string name="sign_up_instead">Sign up</string>
+    <string name="phone_not_registered_plutonem">Hmm, we can\'t find a Plutonem account connected to this phone number. Please sign up with this number first.</string>
+    <string name="registration_fail">It looks like this registration is fail. Please try again later.</string>
+    <string name="enter_pn_password">Enter your Plutonem password.</string>
+    <string name="enter_pn_password_google">To proceed with this Google account, please provide the matching Plutonem password. This will be asked only once.</string>
+    <string name="enter_phone">Enter the Phone of the Plutonem you\'d like to connect.</string>
+    <string name="login_error_button">Close</string>
+    <string name="signup_phone_error_generic">There was some trouble checking the phone number.</string>
+    <string name="signup_phone_header">To create your new Plutonem account, please enter your phone number.</string>
+
+    <string name="duplicate_buyer_detected">A duplicate buyer has been detected.</string>
+    <string name="error_fetch_my_profile">Couldn\'t retrieve your profile</string>
+    <string name="checking_phone">Checking phone</string>
+    <string name="phone_invalid">Enter a valid phone number</string>
+    <string name="Signing_up">Signing up</string>
+    <string name="logging_in">Logging in</string>
+    <string name="error_generic">An error occurred</string>
+    <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
+
+    <!-- Screen titles -->
+    <string name="phone_number_login_title">Phone number login</string>
+    <string name="pn_signup_title">Signup credentials</string>
+
+    <string name="signup_phone_screen_title">Phone signup</string>
+
+    <!-- Content description for accessibility  -->
+    <string name="nemur_list_item_suggestion_remove_desc">delete</string>
+
+    <!-- Orders -->
+    <string name="order_list_account_me">Me</string>
+    <string name="order_list_delivering">Delivering</string>
+    <string name="order_list_receiving">Receiving</string>
+    <string name="order_list_finished">Finished</string>
+
+    <!-- await delivery view -->
+    <string name="await_delivery">Await delivering</string>
+
+    <!-- notifications -->
+
+    <!-- News Card -->
+    <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
+    <!-- Never reuse same keys for new announcements! The new value might not be translated before the release
+    which would result in showing an out-of-date announcement. Moreover since the url has translatable set to false,
+    the out-of-date announcement might redirect the user to the new feature. -->
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_title_sample_announcement">[New feature available]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_content_sample_announcement">[No time to shop right now? No problem: back to action when you do.]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_action_sample_announcement">[Shop more]</string>
+    <!--suppress UnusedResources -->
+    <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://www.plutonem.com/</string>
+    <!-- END (News Card) -->
+
+</resources>

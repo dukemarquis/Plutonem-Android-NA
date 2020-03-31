@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.plutonem.ui.FilteredRecyclerView
+        android:id="@+id/nemur_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:pnSpinnerItemView="@layout/toolbar_main_spinner_item"
+        app:pnToolbarDisableScrollGestures="true"
+        app:pnUseTabsForFiltering="false"/>
+
+    <include
+        android:id="@+id/empty_custom_view"
+        layout="@layout/nemur_empty_view"/>
+
+    <LinearLayout
+        android:id="@+id/layout_new_orders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/nemur_new_orders_bar_background"
+        android:elevation="@dimen/message_bar_elevation"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/wordpress_margin_large"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
+        android:paddingTop="@dimen/wordpress_margin_large"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:targetApi="lollipop">
+
+        <com.plutonem.widgets.PNTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nemur_label_new_orders"
+            android:textColor="@color/neutral_0"
+            android:textSize="@dimen/wordpress_text_sz_large"/>
+
+        <com.plutonem.widgets.PNTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nemur_label_new_orders_subtitle"
+            android:textColor="@color/neutral_0"
+            android:textSize="@dimen/wordpress_text_sz_small"/>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_footer"
+        style="@style/NemurProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+</RelativeLayout>

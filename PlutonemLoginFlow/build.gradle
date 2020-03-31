@@ -1,0 +1,62 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        minSdkVersion 17
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        buildConfigField "String", "LOGTAG", "\"plutonem\""
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+}
+
+dependencies {
+//    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation ('org.wordpress:utils:1.20.3') {
+        exclude group: "com.android.volley"
+//        exclude group: "com.mcxiaoke.volley"
+    }
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.0.0'
+
+    // Share FluxC version from host project if defined, otherwise fallback to default
+    if (project.hasProperty("fluxCVersion")) {
+        implementation("com.github.plutonem-mobile.Plutonem-FluxC-Android-NA:fluxc:$fluxCVersion") {
+            exclude group: "com.android.support"
+            exclude group: "org.wordpress", module: "utils"
+        }
+    } else {
+        implementation("com.github.plutonem-mobile.Plutonem-FluxC-Android-NA:fluxc:1.0.1") {
+            exclude group: "com.android.support"
+            exclude group: "org.wordpress", module: "utils"
+        }
+    }
+
+    // Dagger
+    implementation 'com.google.dagger:dagger:2.22.1'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.22.1'
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+    implementation 'com.google.dagger:dagger-android-support:2.22.1'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.22.1'
+
+}

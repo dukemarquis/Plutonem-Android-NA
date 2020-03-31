@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+~ Copyright (C) 2019 The Plutonem Application Project
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~      http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<resources>
+
+    <!-- Semantic colors -->
+    <attr name="wpColorText" format="reference|color" />
+    <attr name="wpColorTextSubtle" format="reference|color" />
+    <attr name="wpColorError" format="reference|color" />
+
+    <attr name="wpColorWarningDark" format="reference|color" />
+
+    <attr name="alphaEmphasisHigh" format="float"/>
+    <attr name="alphaEmphasisMedium" format="float"/>
+    <attr name="alphaEmphasisDisabled" format="float"/>
+
+    <!--Common attributes-->
+
+    <!--
+        PNTextView attributes
+    -->
+    <declare-styleable name="PNTextView">
+        <attr name="fixWidowWords" format="boolean" />
+    </declare-styleable>
+
+    <!--
+        NemurIconBuyView attributes
+    -->
+    <declare-styleable name="NemurIconBuyView">
+        <attr name="nemurIcon" format="enum">
+            <enum name="buy" value="0" />
+        </attr>
+    </declare-styleable>
+
+    <!--
+        OrderListButton attributes
+    -->
+    <declare-styleable name="pnOrderListButton">
+        <attr name="pnOrderButtonType" format="enum">
+            <enum name="receive" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <!--
+        FilteredRecyclerView
+    -->
+    <declare-styleable name="FilteredRecyclerView">
+        <!-- Optional: Layout resource id for the Filter Spinner main TextView -->
+        <attr name="pnSpinnerItemView" format="reference"/>
+
+        <!-- Optional: Layout resource id for the Filter Spinner dropdown TextView -->
+        <attr name="pnSpinnerDropDownItemView" format="reference"/>
+
+        <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
+        <attr name="pnToolbarDisableScrollGestures" format="boolean"/>
+        <!-- Optional: Default to false. Activate filtering by Tabs instead of Spinner -->
+        <attr name="pnUseTabsForFiltering" format="boolean"/>
+    </declare-styleable>
+
+    <!--
+        Actionable Empty View
+    -->
+    <declare-styleable name="ActionableEmptyView">
+        <!-- Optional: string text of button -->
+        <attr name="aevButton" format="string"/>
+        <!-- Optional: resource id of image -->
+        <attr name="aevImage" format="reference"/>
+        <!-- Optional: string text of subtitle -->
+        <attr name="aevSubtitle" format="string"/>
+        <!-- Required: string text of title -->
+        <attr name="aevTitle" format="string"/>
+    </declare-styleable>
+
+</resources>

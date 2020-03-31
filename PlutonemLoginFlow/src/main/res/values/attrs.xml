@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+        PLoginInputRow
+    -->
+    <declare-styleable name="pLoginInputRow">
+        <attr name="pIconDrawable" format="reference"/>
+        <attr name="pIconDrawableTint" format="color"/>
+        <attr name="android:inputType" />
+        <attr name="android:hint" />
+        <attr name="android:imeOptions" />
+        <attr name="passwordToggleEnabled" />
+        <attr name="passwordToggleTint" />
+        <attr name="android:textAlignment" />
+    </declare-styleable>
+
+</resources>

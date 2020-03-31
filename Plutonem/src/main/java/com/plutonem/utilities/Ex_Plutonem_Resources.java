@@ -1,0 +1,60 @@
+package com.plutonem.utilities;
+
+import com.plutonem.models.Ex_Plutonem_MediaObject;
+
+public class Ex_Plutonem_Resources {
+
+    public static final Ex_Plutonem_MediaObject[] MEDIA_OBJECTS = {
+
+            new Ex_Plutonem_MediaObject("Commodity name 1",
+                    "￥123",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_sVideo/Nike%20Air%20Force%201%2007%20Mens%20Shoe.%20Nike.com.webm",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_Picture/ThumbNail%201.png",
+                    "Description for media object #1"),
+            new Ex_Plutonem_MediaObject("Commodity name 2",
+                    "￥123",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_sVideo/Nike%20Air%20Force%201%2007%20Mens%20Shoe.%20Nike.com.webm",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_Picture/ThumbNail%202.png",
+                    "Description for media object #2"),
+            new Ex_Plutonem_MediaObject("Commodity name 3",
+                    "￥123",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_sVideo/Nike%20Air%20Force%201%2007%20Mens%20Shoe.%20Nike.com.webm",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_Picture/ThumbNail%203.png",
+                    "Description for media object #3"),
+            new Ex_Plutonem_MediaObject("Commodity name 4",
+                    "￥123",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_sVideo/Nike%20Air%20Force%201%2007%20Mens%20Shoe.%20Nike.com.webm",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_Picture/ThumbNail%204.png",
+                    "Description for media object #4"),
+            new Ex_Plutonem_MediaObject("Commodity name 5",
+                    "￥123",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_sVideo/Nike%20Air%20Force%201%2007%20Mens%20Shoe.%20Nike.com.webm",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_Picture/ThumbNail%205.png",
+                    "Description for media object #5"),
+            new Ex_Plutonem_MediaObject("Commodity name 6",
+                    "￥123",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_sVideo/Nike%20Air%20Force%201%2007%20Mens%20Shoe.%20Nike.com.webm",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_Picture/ThumbNail%206.png",
+                    "Description for media object #6"),
+            new Ex_Plutonem_MediaObject("Commodity name 7",
+                    "￥123",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_sVideo/Nike%20Air%20Force%201%2007%20Mens%20Shoe.%20Nike.com.webm",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_Picture/ThumbNail%207.png",
+                    "Description for media object #7"),
+            new Ex_Plutonem_MediaObject("Commodity name 8",
+                    "￥123",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_sVideo/Nike%20Air%20Force%201%2007%20Mens%20Shoe.%20Nike.com.webm",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_Picture/ThumbNail%208.png",
+                    "Description for media object #8"),
+            new Ex_Plutonem_MediaObject("Commodity name 9",
+                    "￥123",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_sVideo/Nike%20Air%20Force%201%2007%20Mens%20Shoe.%20Nike.com.webm",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_Picture/ThumbNail%209.png",
+                    "Description for media object #9"),
+            new Ex_Plutonem_MediaObject("Commodity name 10",
+                    "￥123",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_sVideo/Nike%20Air%20Force%201%2007%20Mens%20Shoe.%20Nike.com.webm",
+                    "https://plutonem.oss-cn-beijing.aliyuncs.com/Plutonem_Picture/ThumbNail%2010.png",
+                    "Description for media object #10")
+    };
+}
