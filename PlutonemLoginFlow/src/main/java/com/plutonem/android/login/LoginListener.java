@@ -1,5 +1,7 @@
 package com.plutonem.android.login;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.ArrayList;
 
 public interface LoginListener {
@@ -17,5 +19,5 @@ public interface LoginListener {
     void showSignupPhonePassword(String phone);
 
     // Xmpp specification
-    void signUpXmppAccount(String phone, String password);
+    void signUpXmppAccount(String phone, String password, MaterialButton materialButton);
 }

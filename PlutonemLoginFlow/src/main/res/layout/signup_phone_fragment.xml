@@ -8,13 +8,14 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_extra_large"
     android:orientation="vertical"
-    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large"
     android:paddingLeft="@dimen/margin_extra_large"
-    android:paddingRight="@dimen/margin_extra_large"
-    android:paddingStart="@dimen/margin_extra_large" >
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label"
+        style="@style/LoginTheme.TextLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"

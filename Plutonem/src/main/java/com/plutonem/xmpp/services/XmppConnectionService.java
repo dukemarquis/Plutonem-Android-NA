@@ -361,6 +361,10 @@ public class XmppConnectionService extends Service {
                         }
                     }
                     break;
+                case ACTION_TRY_AGAIN:
+                    resetAllAttemptCounts(false, true);
+                    interactive = true;
+                    break;
                 case ACTION_REPLY_TO_CONVERSATION:
                     Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
                     if (remoteInput == null) {

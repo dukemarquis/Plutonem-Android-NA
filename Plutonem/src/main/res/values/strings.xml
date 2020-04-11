@@ -23,7 +23,7 @@
     <string name="plutonem" translatable="false">Plutonem</string>
 
     <!-- general strings -->
-    <string name="orders">Orders</string>
+    <string name="orders">All</string>
     <string name="conservative">Conservative</string>
     <string name="await_receive">Await receiving</string>
     <string name="cancel">Cancel</string>
@@ -91,11 +91,11 @@
     <string name="order_status_confirm_order">Buy Now</string>
 
     <!-- Order Number -->
-    <string name="order_number_one">1</string>
-    <string name="order_number_two">2</string>
-    <string name="order_number_three">3</string>
-    <string name="order_number_four">4</string>
-    <string name="order_number_five">5</string>
+    <string name="order_number_one" translatable="false">1</string>
+    <string name="order_number_two" translatable="false">2</string>
+    <string name="order_number_three" translatable="false">3</string>
+    <string name="order_number_four" translatable="false">4</string>
+    <string name="order_number_five" translatable="false">5</string>
     <string-array name="order_settings_numbers" translatable="false">
         <item>@string/order_number_one</item>
         <item>@string/order_number_two</item>
@@ -116,15 +116,15 @@
     <string name="nemur_acessibility_list_loaded">"The list has loaded with %1$d items."</string>
 
     <!-- activity titles -->
-    <string name="nemur_title_deeplink">Plutonem Nemur</string>
+    <string name="nemur_title_deeplink" translatable="false">Plutonem Nemur</string>
     <string name="nemur_title_order_detail">Nemur Order</string>
 
     <!-- button text -->
     <string name="nemur_description_price">The price of this order</string>
-    <string name="nemur_btn_price_icon_US">$</string>
-    <string name="nemur_btn_price_icon_CNm">￥</string>
-    <string name="nemur_btn_price">140</string>
-    <string name="nemur_btn_buy">Buy Now</string>
+    <string name="nemur_btn_price_icon_US" translatable="false">$</string>
+    <string name="nemur_btn_price_icon_CNm" translatable="false">￥</string>
+    <string name="nemur_btn_price" translatable="false">140</string>
+    <string name="nemur_btn_buy">Buy</string>
 
     <!-- EditText hints -->
     <string name="nemur_hint_order_search">Search Plutonem</string>
@@ -232,5 +232,100 @@
     <!--suppress UnusedResources -->
     <string name="news_card_announcement_action_url_sample_announcement" translatable="false">https://www.plutonem.com/</string>
     <!-- END (News Card) -->
+
+    <!-- Xmpp Chat Specification -->
+    <!-- If any of these appear unused, be sure to check the same string in the login library -
+    it may be used there and keeping it here is required for translation. -->
+    <string name="just_now">just now</string>
+    <string name="minute_ago">1 min ago</string>
+    <string name="minutes_ago">%d mins ago</string>
+    <string name="x_unread_conversations">%d unread conversations</string>
+    <string name="sending">sending…</string>
+    <string name="blocked">Blocked</string>
+    <string name="problem_connecting_to_account">Unable to connect to account</string>
+    <string name="problem_connecting_to_accounts">Unable to connect to multiple accounts</string>
+    <string name="touch_to_fix">Touch here to manage your accounts</string>
+    <string name="send_failed">delivery failed</string>
+    <string name="send_presell_message">Hi, What do you want to ask?</string>
+    <string name="send_message">Send message</string>
+    <string name="send_message_to_x">Send message to %s</string>
+    <string name="waiting">waiting…</string>
+    <string name="account_status_unknown">Unknown</string>
+    <string name="account_status_disabled">Temporarily disabled</string>
+    <string name="account_status_online">Online</string>
+    <string name="account_status_connecting">Connecting\u2026</string>
+    <string name="account_status_offline">Offline</string>
+    <string name="account_status_unauthorized">Unauthorized</string>
+    <string name="account_status_not_found">Server not found</string>
+    <string name="account_status_no_internet">No connectivity</string>
+    <string name="account_status_regis_fail">Registration failed</string>
+    <string name="account_status_regis_conflict">Username already in use</string>
+    <string name="account_status_regis_success">Registration completed</string>
+    <string name="account_status_regis_not_sup">Server does not support registration</string>
+    <string name="account_status_regis_invalid_token">Invalid registration token</string>
+    <string name="account_status_tls_error">TLS negotiation failed</string>
+    <string name="account_status_policy_violation">Policy violation</string>
+    <string name="account_status_incompatible_server">Incompatible server</string>
+    <string name="account_status_stream_error">Stream error</string>
+    <string name="account_status_stream_opening_error">Stream opening error</string>
+    <string name="invalid_jid">This is not a valid XMPP address</string>
+    <string name="contact_has_read_up_to_this_point">%s has read up to this point</string>
+    <string name="account_already_exists">This account already exists</string>
+    <string name="title_pref_quiet_hours">Quiet Hours</string>
+    <string name="try_again">Try again</string>
+    <string name="no_application_found_to_open_link">No application found to open link</string>
+    <string name="fetching_history_from_server">Fetching history from server</string>
+    <string name="no_more_history_on_server">No more history on server</string>
+    <string name="snooze">Snooze</string>
+    <string name="reply">Reply</string>
+    <string name="mark_as_read">Mark as read</string>
+    <string name="contact_is_typing">%s is typing…</string>
+    <string name="contact_has_stopped_typing">%s has stopped typing</string>
+    <string name="account_status_tor_unavailable">Tor network unavailable</string>
+    <string name="account_status_bind_failure">Bind failure</string>
+    <string name="account_status_host_unknown">Server not responsible for domain</string>
+    <string name="connected_accounts">%1$d of %2$d accounts connected</string>
+    <plurals name="x_messages">
+        <item quantity="one">%d message</item>
+        <item quantity="other">%d messages</item>
+    </plurals>
+    <string name="load_more_messages">Load more messages</string>
+    <string name="always">Always</string>
+    <string name="presence_chat">Free for Chat</string>
+    <string name="presence_online">Online</string>
+    <string name="presence_away">Away</string>
+    <string name="presence_xa">Not Available</string>
+    <string name="presence_dnd">Busy</string>
+    <string name="registration_please_wait">Registration failed: Try again later</string>
+    <string name="registration_password_too_weak">Registration failed: Password too weak</string>
+    <string name="payment_required">Payment required</string>
+    <string name="missing_internet_permission">Missing internet permission</string>
+    <string name="me">Me</string>
+    <string name="unable_to_update_account">Unable to update account</string>
+    <string name="not_fetching_history_retention_period">Not fetching messages due to local retention period.</string>
+    <string name="session_failure">Session failure</string>
+    <string name="sasl_downgrade">Downgraded SASL mechanism</string>
+    <string name="account_status_regis_web">Server requires registration on website</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="mtm_accept_cert">Accept Unknown Certificate?</string>
+    <string name="mtm_trust_anchor">The server certificate is not signed by a known Certificate Authority.</string>
+    <string name="mtm_accept_servername">Accept Mismatching Server Name?</string>
+    <string name="mtm_hostname_mismatch">Server could not authenticate as \&quot;%s\&quot;. The certificate is only valid for:</string>
+    <string name="mtm_connect_anyway">Do you want to connect anyway?</string>
+    <string name="mtm_cert_details">Certificate details:</string>
+    <string name="once">Once</string>
+    <string name="not_encrypted_for_this_device">Message was not encrypted for this device.</string>
+    <string name="foreground_service_channel_name">Foreground service</string>
+    <string name="foreground_service_channel_description">This notification category is used to display a permanent notification indicating that Conversations is running.</string>
+    <string name="notification_group_status_information">Status Information</string>
+    <string name="error_channel_name">Connectivity Problems</string>
+    <string name="error_channel_description">This notification category is used to display a notification in case there is a problem connecting to an account.</string>
+    <string name="notification_group_messages">Messages</string>
+    <string name="messages_channel_name">Messages</string>
+    <string name="silent_messages_channel_name">Silent messages</string>
+    <string name="silent_messages_channel_description">This notification group is used to display notifications that should not trigger any sound. For example when being active on another device (Grace Period).</string>
+    <string name="cancelled">cancelled</string>
+    <string name="fetch_xmpp_chat_service_fail">Chat service initialization failed. Please try again later</string>
 
 </resources>

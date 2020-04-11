@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.button.MaterialButton;
 import com.plutonem.Config;
 import com.plutonem.Plutonem;
 import com.plutonem.R;
@@ -50,6 +51,7 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
     private boolean mInitMode = false;
     private Boolean mForceRegister = null;
     private Account mAccount;
+    private MaterialButton mNextButton;
     private final UiCallback<Avatar> mAvatarFetchCallback = new UiCallback<Avatar>() {
         @Override
         public void success(Avatar avatar) {
@@ -259,7 +261,7 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
     }
 
     @Override
-    public void signUpXmppAccount(String phone, String xmppPassword) {
+    public void signUpXmppAccount(String phone, String xmppPassword, MaterialButton nextButton) {
         final String account = phone + '@' + XMPP_NA_SERVER_DOMAIN;
         final String password = xmppPassword;
         final boolean wasDisabled = mAccount != null && mAccount.getStatus() == Account.State.DISABLED;
@@ -333,6 +335,9 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
             mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
             xmppConnectionService.createAccount(mAccount);
         }
+
+        mNextButton = nextButton;
+        updateNextButton(mNextButton);
     }
 
     @Override
@@ -378,6 +383,22 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
                 mFetchingAvatar = true;
                 xmppConnectionService.checkForAvatar(mAccount, mAvatarFetchCallback);
             }
+        }
+        updateNextButton(mNextButton);
+    }
+
+    protected void updateNextButton(MaterialButton nextButton) {
+        if (nextButton == null) {
+            return;
+        }
+
+        if (mAccount != null
+            && (mAccount.getStatus() == Account.State.CONNECTING || mAccount.getStatus() == Account.State.REGISTRATION_SUCCESSFUL || mFetchingAvatar)) {
+            nextButton.setEnabled(false);
+            nextButton.setText(R.string.account_status_connecting);
+        } else {
+            nextButton.setEnabled(true);
+            nextButton.setText(R.string.next);
         }
     }
 

@@ -32,6 +32,7 @@ import androidx.core.graphics.drawable.IconCompat;
 
 import com.plutonem.Config;
 import com.plutonem.android.login.R;
+import com.plutonem.ui.main.PMainActivity;
 import com.plutonem.xmpp.entities.Account;
 import com.plutonem.xmpp.entities.Contact;
 import com.plutonem.xmpp.entities.Conversation;
@@ -763,7 +764,7 @@ public class NotificationService {
             }
         }
         mBuilder.setContentText(mXmppConnectionService.getString(R.string.connected_accounts, connected, enabled));
-        final PendingIntent openIntent = createOpenConversationsIntent();
+        final PendingIntent openIntent = createOpenMainGroundIntent();
         if (openIntent != null) {
             mBuilder.setContentIntent(openIntent);
         }
@@ -778,9 +779,9 @@ public class NotificationService {
         return mBuilder.build();
     }
 
-    private PendingIntent createOpenConversationsIntent() {
+    private PendingIntent createOpenMainGroundIntent() {
         try {
-            return PendingIntent.getActivity(mXmppConnectionService, 0, new Intent(mXmppConnectionService, ConversationsActivity.class), 0);
+            return PendingIntent.getActivity(mXmppConnectionService, 0, new Intent(mXmppConnectionService, PMainActivity.class), 0);
         } catch (RuntimeException e) {
             return null;
         }
@@ -826,15 +827,7 @@ public class NotificationService {
             mBuilder.setLocalOnly(true);
         }
         mBuilder.setPriority(Notification.PRIORITY_LOW);
-//        final Intent intent;
-//        if (AccountUtils.MANAGE_ACCOUNT_ACTIVITY != null) {
-//            intent = new Intent(mXmppConnectionService, AccountUtils.MANAGE_ACCOUNT_ACTIVITY);
-//        } else {
-//            intent = new Intent(mXmppConnectionService, EditAccountActivity.class);
-//            intent.putExtra("jid", errors.get(0).getJid().asBareJid().toEscapedString());
-//            intent.putExtra(EditAccountActivity.EXTRA_OPENED_FROM_NOTIFICATION, true);
-//        }
-//        mBuilder.setContentIntent(PendingIntent.getActivity(mXmppConnectionService, 145, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+        // skip Error Notification Content intent part.
         if (Compatibility.runsTwentySix()) {
             mBuilder.setChannelId("error");
         }

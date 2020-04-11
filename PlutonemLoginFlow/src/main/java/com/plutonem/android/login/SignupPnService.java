@@ -43,25 +43,19 @@ public class SignupPnService extends AutoForeground<SignupState> {
     private static final String ARG_SOCIAL_LOGIN = "ARG_SOCIAL_LOGIN";
     private static final String ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE";
 
-//    private static final String XMPP_SERVER_DOMAIN = "3.15.14.1";
-//
-//    private boolean mInitMode = true;
-//    private Boolean mForceRegister = true;
-//    private boolean mUsernameMode = Config.DOMAIN_LOCK != null;
-//    private Account mAccount;
-
     public enum SignupStep {
         IDLE,
         REGISTERING(20),
-        FETCHING_XMPP(40),
-        FETCHING_ACCOUNT(60),
-        FETCHING_SETTINGS(80),
-        FETCHING_BUYERS(100),
+        FETCHING_ACCOUNT(40),
+        FETCHING_SETTINGS(60),
+        FETCHING_BUYERS(80),
+        FETCHING_CHAT(100),
         SUCCESS,
         FAILURE_REGISTERING,
         FAILUER_FETCHING_XMPP,
         FAILURE_FETCHING_ACCOUNT,
         FAILURE_CANNOT_ADD_DUPLICATE_BUYER,
+        FAILURE_FETCHING_CHAT_SERVICE,
         FAILURE;
 
         public final int progressPercent;
@@ -234,16 +228,7 @@ public class SignupPnService extends AutoForeground<SignupState> {
 
     // OnChanged events
 
-//    @SuppressWarnings("unused")
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onAuthenticationChanged(OnAuthenticationChanged event) {
-//        if (event.isError()) {
-//            AppLog.e(T.API, "onAuthenticationChanged has error: " + event.error.type + " - " + event.error.message);
-//            handleAuthError(event.error.type, event.error.message);
-//            return;
-//        }
-//    }
-
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRegistrationChanged(OnRegistrationChanged event) {
         if (event.isError()) {

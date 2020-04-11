@@ -73,7 +73,7 @@ public class NemurOrderPagerActivity extends XmppActivity
     private Kohii kohii;
 
     // Xmpp Chat Specification
-    private static final String XMPP_CONNECTION_SELLER_UNIQUE_ID = "han@3.15.14.1";
+    private static final String XMPP_CONNECTION_SELLER_UNIQUE_ID = "seller@3.15.14.1";
 
     private List<String> mActivatedAccounts = new ArrayList<>();
 

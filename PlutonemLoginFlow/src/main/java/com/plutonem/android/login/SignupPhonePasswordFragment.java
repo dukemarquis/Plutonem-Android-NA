@@ -15,6 +15,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.button.MaterialButton;
 import com.plutonem.android.login.SignupPnService.SignupState;
 import com.plutonem.android.login.widgets.PNLoginInputRow;
 import com.plutonem.android.login.widgets.PNLoginInputRow.OnEditorCommitListener;
@@ -41,6 +42,7 @@ public class SignupPhonePasswordFragment extends LoginBaseFormFragment<LoginList
     public static final String TAG = "signup_phone_password_fragment_tag";
 
     private PNLoginInputRow mPasswordInput;
+    private MaterialButton mNextButton;
 
     private String mRequestedPassword;
 
@@ -141,6 +143,8 @@ public class SignupPhonePasswordFragment extends LoginBaseFormFragment<LoginList
 
         mPasswordInput = rootView.findViewById(R.id.password_row);
         mPasswordInput.setOnEditorCommitListener(this);
+
+        mNextButton = rootView.findViewById(R.id.primary_button);
     }
 
     @Override
@@ -223,9 +227,9 @@ public class SignupPhonePasswordFragment extends LoginBaseFormFragment<LoginList
     protected void onLoginFinished() {
         // Next we need to register a new xmpp account for communication in Plutonem, be careful with Stream Error.
         if (mIsSocialLogin) {
-            mLoginListener.signUpXmppAccount(mPhoneNumber, mRequestedPassword);
+            mLoginListener.signUpXmppAccount(mPhoneNumber, mRequestedPassword, mNextButton);
         } else {
-            mLoginListener.signUpXmppAccount(mPhoneNumber, mRequestedPassword);
+            mLoginListener.signUpXmppAccount(mPhoneNumber, mRequestedPassword, mNextButton);
         }
     }
 
@@ -239,10 +243,10 @@ public class SignupPhonePasswordFragment extends LoginBaseFormFragment<LoginList
                 // nothing special to do, we'll start the service on next()
                 break;
             case REGISTERING:
-            case FETCHING_XMPP:
             case FETCHING_ACCOUNT:
             case FETCHING_SETTINGS:
             case FETCHING_BUYERS:
+            case FETCHING_CHAT:
                 if (!isInProgress()) {
                     startProgress();
                 }
@@ -262,6 +266,10 @@ public class SignupPhonePasswordFragment extends LoginBaseFormFragment<LoginList
             case FAILURE_CANNOT_ADD_DUPLICATE_BUYER:
                 onLoginFinished(false);
                 showError(getString(R.string.cannot_add_duplicate_buyer));
+                break;
+            case FAILURE_FETCHING_CHAT_SERVICE:
+                onLoginFinished(false);
+                showError(getString(R.string.fetch_xmpp_chat_service_fail));
                 break;
             case FAILURE:
                 onLoginFinished(false);

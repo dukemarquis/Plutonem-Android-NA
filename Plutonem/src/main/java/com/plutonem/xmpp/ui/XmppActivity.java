@@ -171,8 +171,9 @@ public abstract class XmppActivity extends AppCompatActivity {
             intent.putExtra(ConversationsActivity.EXTRA_DO_NOT_APPEND, true);
         }
         intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.setFlags(intent.getFlags());
         startActivity(intent);
-        finish();
+//        finish();
     }
 
     @Override

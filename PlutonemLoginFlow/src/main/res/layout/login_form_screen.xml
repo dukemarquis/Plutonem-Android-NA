@@ -5,15 +5,15 @@
     android:layout_height="match_parent">
 
     <include
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbar_container"
         layout="@layout/toolbar_login" />
 
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/bottom_buttons">
+        android:layout_above="@+id/bottom_buttons"
+        android:layout_below="@+id/toolbar_container">
 
         <ViewStub
             android:id="@+id/login_form_content_stub"

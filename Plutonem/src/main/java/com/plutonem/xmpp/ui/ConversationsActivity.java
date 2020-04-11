@@ -2,11 +2,13 @@ package com.plutonem.xmpp.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.IdRes;
@@ -23,6 +25,7 @@ import com.plutonem.xmpp.ui.interfaces.OnBackendConnected;
 import com.plutonem.xmpp.ui.interfaces.OnConversationArchived;
 import com.plutonem.xmpp.ui.interfaces.OnConversationRead;
 import com.plutonem.xmpp.ui.interfaces.OnConversationsListItemUpdated;
+import com.plutonem.xmpp.ui.util.MenuDoubleTabUtil;
 import com.plutonem.xmpp.ui.util.PendingItem;
 import com.plutonem.xmpp.utils.EmojiWrapper;
 
@@ -151,6 +154,19 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         ConversationFragment conversationFragment = (ConversationFragment) mainFragment;
         conversationFragment.reInit(conversation, extras == null ? new Bundle() : extras);
         invalidateActionBarTitle();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        }
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

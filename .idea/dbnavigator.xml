@@ -24,29 +24,11 @@
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes>
-      <connection connection-id="771753d8-f504-4547-889a-0306688a830a">
-        <schema name="main" object-types="table, view" />
-      </connection>
-      <connection connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff">
-        <schema name="main" object-types="table, view" />
-      </connection>
-      <connection connection-id="6ddd641d-daaf-4068-9a23-59316d605a21">
-        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
-      </connection>
-      <connection connection-id="e9b765aa-55ba-461d-a813-9e1eca56a9c8">
-        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
-      </connection>
-      <connection connection-id="40da0708-3a60-4200-89af-9004a7ed3a46">
-        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
-      </connection>
-      <connection connection-id="be7b08c4-45df-4e65-b811-842a4de6ac77">
-        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
-      </connection>
-      <connection connection-id="bf121184-9114-406a-b83e-084d72164394">
-        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
-      </connection>
       <connection connection-id="db4ceb3d-fcaa-4fee-8225-f93e495860db">
-        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
+        <schema name="main" object-types="view, table" />
+      </connection>
+      <connection connection-id="f3583839-f91a-47a2-b8ef-bd2c21b9e41c">
+        <schema name="main" object-types="view, table" />
       </connection>
     </loaded-nodes>
   </component>
@@ -81,14 +63,12 @@
     <connection id="db4ceb3d-fcaa-4fee-8225-f93e495860db">
       <console name="Connection 9" type="STANDARD" schema="main" session="Main" />
     </connection>
+    <connection id="f3583839-f91a-47a2-b8ef-bd2c21b9e41c">
+      <console name="Connection 10" type="STANDARD" schema="main" session="Main" />
+    </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="40da0708-3a60-4200-89af-9004a7ed3a46" object-ref="schemas/main/tables/messages_index_content" />
-      <object connection-id="bf121184-9114-406a-b83e-084d72164394" object-ref="schemas/main/tables/accounts" />
-      <object connection-id="db4ceb3d-fcaa-4fee-8225-f93e495860db" object-ref="schemas/main/tables/accounts" />
-      <object connection-id="40da0708-3a60-4200-89af-9004a7ed3a46" object-ref="schemas/main/tables/messages_index" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="771753d8-f504-4547-889a-0306688a830a" />
@@ -101,6 +81,7 @@
     <connection id="be7b08c4-45df-4e65-b811-842a4de6ac77" />
     <connection id="bf121184-9114-406a-b83e-084d72164394" />
     <connection id="db4ceb3d-fcaa-4fee-8225-f93e495860db" />
+    <connection id="f3583839-f91a-47a2-b8ef-bd2c21b9e41c" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="40da0708-3a60-4200-89af-9004a7ed3a46" dataset="main.messages_index_content" active-filter-id="EMPTY_FILTER" />
@@ -135,6 +116,7 @@
     <filter-actions connection-id="bf121184-9114-406a-b83e-084d72164394" dataset="main.accounts" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="bf121184-9114-406a-b83e-084d72164394" dataset="main.messages" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="bf121184-9114-406a-b83e-084d72164394" dataset="main.messages_index" active-filter-id="" />
+    <filter-actions connection-id="f3583839-f91a-47a2-b8ef-bd2c21b9e41c" dataset="main.accounts" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="be7b08c4-45df-4e65-b811-842a4de6ac77" dataset="main.discovery_results" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="be7b08c4-45df-4e65-b811-842a4de6ac77" dataset="main.resolver_results" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="6ddd641d-daaf-4068-9a23-59316d605a21" dataset="main.messages" active-filter-id="EMPTY_FILTER" />
@@ -953,6 +935,92 @@
           <database value="database" />
           <files>
             <file path="C:\Users\Administrator\Desktop\history16" schema="main" />
+          </files>
+          <type value="NONE" />
+          <user value="" />
+          <deprecated-pwd value="" />
+        </database>
+        <properties>
+          <auto-commit value="false" />
+        </properties>
+        <ssh-settings>
+          <active value="false" />
+          <proxy-host value="" />
+          <proxy-port value="22" />
+          <proxy-user value="" />
+          <deprecated-proxy-pwd value="" />
+          <auth-type value="PASSWORD" />
+          <key-file value="" />
+          <key-passphrase value="" />
+        </ssh-settings>
+        <ssl-settings>
+          <active value="false" />
+          <certificate-authority-file value="" />
+          <client-certificate-file value="" />
+          <client-key-file value="" />
+        </ssl-settings>
+        <details>
+          <charset value="UTF-8" />
+          <session-management value="true" />
+          <ddl-file-binding value="true" />
+          <database-logging value="false" />
+          <connect-automatically value="true" />
+          <restore-workspace value="true" />
+          <restore-workspace-deep value="true" />
+          <environment-type value="default" />
+          <idle-time-to-disconnect value="30" />
+          <idle-time-to-disconnect-pool value="5" />
+          <credential-expiry-time value="10" />
+          <max-connection-pool-size value="7" />
+          <alternative-statement-delimiter value="" />
+        </details>
+        <object-filters hide-empty-schemas="false" hide-pseudo-columns="false">
+          <object-type-filter use-master-settings="true">
+            <object-type name="SCHEMA" enabled="true" />
+            <object-type name="USER" enabled="true" />
+            <object-type name="ROLE" enabled="true" />
+            <object-type name="PRIVILEGE" enabled="true" />
+            <object-type name="CHARSET" enabled="true" />
+            <object-type name="TABLE" enabled="true" />
+            <object-type name="VIEW" enabled="true" />
+            <object-type name="MATERIALIZED_VIEW" enabled="true" />
+            <object-type name="NESTED_TABLE" enabled="true" />
+            <object-type name="COLUMN" enabled="true" />
+            <object-type name="INDEX" enabled="true" />
+            <object-type name="CONSTRAINT" enabled="true" />
+            <object-type name="DATASET_TRIGGER" enabled="true" />
+            <object-type name="DATABASE_TRIGGER" enabled="true" />
+            <object-type name="SYNONYM" enabled="true" />
+            <object-type name="SEQUENCE" enabled="true" />
+            <object-type name="PROCEDURE" enabled="true" />
+            <object-type name="FUNCTION" enabled="true" />
+            <object-type name="PACKAGE" enabled="true" />
+            <object-type name="TYPE" enabled="true" />
+            <object-type name="TYPE_ATTRIBUTE" enabled="true" />
+            <object-type name="ARGUMENT" enabled="true" />
+            <object-type name="DIMENSION" enabled="true" />
+            <object-type name="CLUSTER" enabled="true" />
+            <object-type name="DBLINK" enabled="true" />
+          </object-type-filter>
+          <object-name-filters />
+        </object-filters>
+      </connection>
+      <connection id="f3583839-f91a-47a2-b8ef-bd2c21b9e41c" active="true">
+        <database>
+          <name value="Connection 10" />
+          <description value="" />
+          <database-type value="SQLITE" />
+          <config-type value="BASIC" />
+          <database-version value="3.21" />
+          <driver-source value="BUILTIN" />
+          <driver-library value="" />
+          <driver value="" />
+          <url-type value="FILE" />
+          <host value="localhost" />
+          <port value="1234" />
+          <database value="database" />
+          <files>
+            <file path="C:\Users\Administrator\Desktop\history17" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

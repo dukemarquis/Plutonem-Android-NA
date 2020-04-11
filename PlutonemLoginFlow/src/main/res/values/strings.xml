@@ -46,7 +46,7 @@
     <string name="problem_connecting_to_accounts">Unable to connect to multiple accounts</string>
     <string name="touch_to_fix">Touch here to manage your accounts</string>
     <string name="send_failed">delivery failed</string>
-    <string name="send_unencrypted_message">Send unencrypted message</string>
+    <string name="send_presell_message"> </string>
     <string name="send_message">Send message</string>
     <string name="send_message_to_x">Send message to %s</string>
     <string name="waiting">waiting…</string>
@@ -126,4 +126,5 @@
     <string name="silent_messages_channel_name">Silent messages</string>
     <string name="silent_messages_channel_description">This notification group is used to display notifications that should not trigger any sound. For example when being active on another device (Grace Period).</string>
     <string name="cancelled">cancelled</string>
+    <string name="fetch_xmpp_chat_service_fail">Chat service initialization failed. Please try again later</string>
 </resources>
