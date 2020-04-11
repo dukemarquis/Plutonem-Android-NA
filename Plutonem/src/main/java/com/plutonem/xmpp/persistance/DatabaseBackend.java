@@ -27,8 +27,10 @@ import com.plutonem.xmpp.utils.CursorUtils;
 import com.plutonem.xmpp.utils.MimeUtils;
 import com.plutonem.xmpp.utils.Resolver;
 import com.plutonem.xmpp.xmpp.InvalidJid;
+import com.plutonem.xmpp.xmpp.mam.MamReference;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.whispersystems.libsignal.IdentityKey;
 import org.whispersystems.libsignal.IdentityKeyPair;
 import org.whispersystems.libsignal.InvalidKeyException;
@@ -642,6 +644,11 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         db.insert(Message.TABLENAME, null, message.getContentValues());
     }
 
+    public void createAccount(Account account) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(Account.TABLENAME, null, account.getContentValues());
+    }
+
     public void insertDiscoveryResult(ServiceDiscoveryResult result) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(ServiceDiscoveryResult.TABLENAME, null, result.getContentValues());
@@ -799,6 +806,13 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         return rows == 1;
     }
 
+    public boolean deleteAccount(Account account) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String[] args = {account.getUuid()};
+        final int rows = db.update(Account.TABLENAME, account.getContentValues(), Account.UUID + "=?", args);
+        return rows == 1;
+    }
+
     public boolean updateMessage(Message message, boolean includeBody) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] args = {message.getUuid()};
@@ -826,6 +840,28 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         db.endTransaction();
     }
 
+    public MamReference getLastMessageReceived(Account account) {
+        Cursor cursor = null;
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String sql = "select messages.timeSent,messages.serverMsgId from accounts join conversations on accounts.uuid=conversations.accountUuid join messages on conversations.uuid=messages.conversationUuid where accounts.uuid=? and (messages.status=0 or messages.carbon=1 or messages.serverMsgId not null) and (conversations.mode=0 or (messages.serverMsgId not null and messages.type=4)) order by messages.timesent desc limit 1";
+            String[] args = {account.getUuid()};
+            cursor = db.rawQuery(sql, args);
+            if (cursor.getCount() == 0) {
+                return null;
+            } else {
+                cursor.moveToFirst();
+                return new MamReference(cursor.getLong(0), cursor.getString(1));
+            }
+        } catch (Exception e) {
+            return null;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
     public long getLastTimeFingerprintUsed(Account account, String fingerprint) {
         String SQL = "select messages.timeSent from accounts join conversations on accounts.uuid=conversations.accountUuid join messages on conversations.uuid=messages.conversationUuid where accounts.uuid=? and messages.axolotl_fingerprint=? order by messages.timesent desc limit 1";
         String[] args = {account.getUuid(), fingerprint};
@@ -838,6 +874,25 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         }
         cursor.close();
         return time;
+    }
+
+    public MamReference getLastClearDate(Account account) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] columns = {Conversation.ATTRIBUTES};
+        String selection = Conversation.ACCOUNT + "=?";
+        String[] args = {account.getUuid()};
+        Cursor cursor = db.query(Conversation.TABLENAME, columns, selection, args, null, null, null);
+        MamReference maxClearDate = new MamReference(0);
+        while (cursor.moveToNext()) {
+            try {
+                final JSONObject o = new JSONObject(cursor.getString(0));
+                maxClearDate = MamReference.max(maxClearDate, MamReference.fromAttribute(o.getString(Conversation.ATTRIBUTE_LAST_CLEAR_HISTORY)));
+            } catch (Exception e) {
+                //ignored
+            }
+        }
+        cursor.close();
+        return maxClearDate;
     }
 
     private Cursor getCursorForSession(Account account, SignalProtocolAddress contact) {

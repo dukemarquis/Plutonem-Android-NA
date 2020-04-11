@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -101,16 +102,11 @@ public class EditOrderActivity extends AppCompatActivity implements
 
     private boolean mIsNewOrder;
 
-    @Inject
-    Dispatcher mDispatcher;
-    @Inject
-    OrderStore mOrderStore;
-    @Inject
-    EditOrderRepository mEditOrderRepository;
-    @Inject
-    OrderUtilsWrapper mOrderUtils;
-    @Inject
-    EditorActionsProvider mEditorActionsProvider;
+    @Inject Dispatcher mDispatcher;
+    @Inject OrderStore mOrderStore;
+    @Inject EditOrderRepository mEditOrderRepository;
+    @Inject OrderUtilsWrapper mOrderUtils;
+    @Inject EditorActionsProvider mEditorActionsProvider;
 
     private BuyerModel mBuyer;
     private String mInfoDispatch;
@@ -167,7 +163,6 @@ public class EditOrderActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
         super.onCreate(savedInstanceState);
         ((Plutonem) getApplication()).component().inject(this);
         mDispatcher.register(this);
@@ -180,6 +175,8 @@ public class EditOrderActivity extends AppCompatActivity implements
         }
 
         // Set up the action bar.
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);

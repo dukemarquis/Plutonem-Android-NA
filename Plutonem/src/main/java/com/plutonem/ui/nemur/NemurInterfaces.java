@@ -24,4 +24,11 @@ public class NemurInterfaces {
     public interface DataLoadedListener {
         void onDataLoaded(boolean isEmpty);
     }
+
+    /*
+     * used to show Chat interface when users what to connect to the sellers
+     */
+    public interface ChatInterfaceListener {
+        void onShowChat();
+    }
 }

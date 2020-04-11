@@ -23,53 +23,122 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="771753d8-f504-4547-889a-0306688a830a">
+        <schema name="main" object-types="table, view" />
+      </connection>
+      <connection connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff">
+        <schema name="main" object-types="table, view" />
+      </connection>
+      <connection connection-id="6ddd641d-daaf-4068-9a23-59316d605a21">
+        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
+      </connection>
+      <connection connection-id="e9b765aa-55ba-461d-a813-9e1eca56a9c8">
+        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
+      </connection>
+      <connection connection-id="40da0708-3a60-4200-89af-9004a7ed3a46">
+        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
+      </connection>
+      <connection connection-id="be7b08c4-45df-4e65-b811-842a4de6ac77">
+        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
+      </connection>
+      <connection connection-id="bf121184-9114-406a-b83e-084d72164394">
+        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
+      </connection>
+      <connection connection-id="db4ceb3d-fcaa-4fee-8225-f93e495860db">
+        <schema name="main" object-types="table, constraint, index, dataset trigger, view, column" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="56e738f7-5cdc-4df3-8c7b-76bfe879d8d8">
+    <connection id="771753d8-f504-4547-889a-0306688a830a">
       <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
-    <connection id="f7968faf-38d2-455c-8d5a-1cb6d2ac9ff7">
+    <connection id="c1adbe39-dc60-4bd6-afec-ef3acd44d066">
       <console name="Connection 1" type="STANDARD" schema="main" session="Main" />
     </connection>
-    <connection id="61889953-7a7a-4e01-950d-dd79fcfa5e6b">
+    <connection id="ae57b72c-9ea9-4d2b-91f4-ab892517d211">
       <console name="Connection 2" type="STANDARD" schema="main" session="Main" />
     </connection>
-    <connection id="7f2520b6-2670-4aed-ab93-12514956f520">
+    <connection id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff">
       <console name="Connection 3" type="STANDARD" schema="main" session="Main" />
     </connection>
-    <connection id="53adf353-576d-4525-9015-8fdb99273436">
+    <connection id="6ddd641d-daaf-4068-9a23-59316d605a21">
       <console name="Connection 4" type="STANDARD" schema="main" session="Main" />
     </connection>
-    <connection id="5b4a3baa-415d-4b04-9f68-990b81c488a0">
+    <connection id="e9b765aa-55ba-461d-a813-9e1eca56a9c8">
       <console name="Connection 5" type="STANDARD" schema="main" session="Main" />
     </connection>
-    <connection id="01ee3566-7985-4b10-98f3-885df37cf78e">
+    <connection id="40da0708-3a60-4200-89af-9004a7ed3a46">
       <console name="Connection 6" type="STANDARD" schema="main" session="Main" />
+    </connection>
+    <connection id="be7b08c4-45df-4e65-b811-842a4de6ac77">
+      <console name="Connection 7" type="STANDARD" schema="main" session="Main" />
+    </connection>
+    <connection id="bf121184-9114-406a-b83e-084d72164394">
+      <console name="Connection 8" type="STANDARD" schema="main" session="Main" />
+    </connection>
+    <connection id="db4ceb3d-fcaa-4fee-8225-f93e495860db">
+      <console name="Connection 9" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="40da0708-3a60-4200-89af-9004a7ed3a46" object-ref="schemas/main/tables/messages_index_content" />
+      <object connection-id="bf121184-9114-406a-b83e-084d72164394" object-ref="schemas/main/tables/accounts" />
+      <object connection-id="db4ceb3d-fcaa-4fee-8225-f93e495860db" object-ref="schemas/main/tables/accounts" />
+      <object connection-id="40da0708-3a60-4200-89af-9004a7ed3a46" object-ref="schemas/main/tables/messages_index" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="56e738f7-5cdc-4df3-8c7b-76bfe879d8d8" />
-    <connection id="f7968faf-38d2-455c-8d5a-1cb6d2ac9ff7" />
-    <connection id="61889953-7a7a-4e01-950d-dd79fcfa5e6b" />
-    <connection id="7f2520b6-2670-4aed-ab93-12514956f520" />
-    <connection id="53adf353-576d-4525-9015-8fdb99273436" />
-    <connection id="5b4a3baa-415d-4b04-9f68-990b81c488a0" />
-    <connection id="01ee3566-7985-4b10-98f3-885df37cf78e" />
+    <connection id="771753d8-f504-4547-889a-0306688a830a" />
+    <connection id="c1adbe39-dc60-4bd6-afec-ef3acd44d066" />
+    <connection id="ae57b72c-9ea9-4d2b-91f4-ab892517d211" />
+    <connection id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" />
+    <connection id="6ddd641d-daaf-4068-9a23-59316d605a21" />
+    <connection id="e9b765aa-55ba-461d-a813-9e1eca56a9c8" />
+    <connection id="40da0708-3a60-4200-89af-9004a7ed3a46" />
+    <connection id="be7b08c4-45df-4e65-b811-842a4de6ac77" />
+    <connection id="bf121184-9114-406a-b83e-084d72164394" />
+    <connection id="db4ceb3d-fcaa-4fee-8225-f93e495860db" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="f7968faf-38d2-455c-8d5a-1cb6d2ac9ff7" dataset="main.tbl_orders" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="7f2520b6-2670-4aed-ab93-12514956f520" dataset="main.tbl_orders" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="7f2520b6-2670-4aed-ab93-12514956f520" dataset="main.tbl_search_suggestions" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="53adf353-576d-4525-9015-8fdb99273436" dataset="main.tbl_orders" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="53adf353-576d-4525-9015-8fdb99273436" dataset="main.tbl_search_suggestions" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="56e738f7-5cdc-4df3-8c7b-76bfe879d8d8" dataset="main.tbl_orders" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="5b4a3baa-415d-4b04-9f68-990b81c488a0" dataset="main.tbl_orders" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="01ee3566-7985-4b10-98f3-885df37cf78e" dataset="main.tbl_orders" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="01ee3566-7985-4b10-98f3-885df37cf78e" dataset="main.tbl_search_suggestions" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="40da0708-3a60-4200-89af-9004a7ed3a46" dataset="main.messages_index_content" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="40da0708-3a60-4200-89af-9004a7ed3a46" dataset="main.accounts" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="40da0708-3a60-4200-89af-9004a7ed3a46" dataset="main.messages" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="40da0708-3a60-4200-89af-9004a7ed3a46" dataset="main.messages_index" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.messages_index_segments" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.messages_index_content" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.accounts" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.messages_index_segdir" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.prekeys" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.messages_index" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.messages_index_stat" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.sessions" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.conversations" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.signed_prekeys" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.presence_templates" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.messages_index_docsize" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.messages" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" dataset="main.resolver_results" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="ae57b72c-9ea9-4d2b-91f4-ab892517d211" dataset="main.accounts" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="ae57b72c-9ea9-4d2b-91f4-ab892517d211" dataset="main.conversations" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="ae57b72c-9ea9-4d2b-91f4-ab892517d211" dataset="main.discovery_results" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="771753d8-f504-4547-889a-0306688a830a" dataset="main.accounts" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="771753d8-f504-4547-889a-0306688a830a" dataset="main.conversations" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="771753d8-f504-4547-889a-0306688a830a" dataset="main.messages" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="771753d8-f504-4547-889a-0306688a830a" dataset="main.android_metadata" active-filter-id="" />
+    <filter-actions connection-id="db4ceb3d-fcaa-4fee-8225-f93e495860db" dataset="main.accounts" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="c1adbe39-dc60-4bd6-afec-ef3acd44d066" dataset="main.accounts" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="c1adbe39-dc60-4bd6-afec-ef3acd44d066" dataset="main.conversations" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="c1adbe39-dc60-4bd6-afec-ef3acd44d066" dataset="main.contacts" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="bf121184-9114-406a-b83e-084d72164394" dataset="main.accounts" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="bf121184-9114-406a-b83e-084d72164394" dataset="main.messages" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="bf121184-9114-406a-b83e-084d72164394" dataset="main.messages_index" active-filter-id="" />
+    <filter-actions connection-id="be7b08c4-45df-4e65-b811-842a4de6ac77" dataset="main.discovery_results" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="be7b08c4-45df-4e65-b811-842a4de6ac77" dataset="main.resolver_results" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="6ddd641d-daaf-4068-9a23-59316d605a21" dataset="main.messages" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="e9b765aa-55ba-461d-a813-9e1eca56a9c8" dataset="main.messages" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -94,7 +163,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="56e738f7-5cdc-4df3-8c7b-76bfe879d8d8" active="true">
+      <connection id="771753d8-f504-4547-889a-0306688a830a" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -109,7 +178,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="C:\Users\Administrator\Desktop\pnnemur.db" schema="main" />
+            <file path="C:\Users\Administrator\Desktop\history" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
@@ -180,7 +249,7 @@
           <object-name-filters />
         </object-filters>
       </connection>
-      <connection id="f7968faf-38d2-455c-8d5a-1cb6d2ac9ff7" active="true">
+      <connection id="c1adbe39-dc60-4bd6-afec-ef3acd44d066" active="true">
         <database>
           <name value="Connection 1" />
           <description value="" />
@@ -195,7 +264,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="C:\Users\Administrator\Desktop\pnnemur2.db" schema="main" />
+            <file path="C:\Users\Administrator\Desktop\history1" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
@@ -266,7 +335,7 @@
           <object-name-filters />
         </object-filters>
       </connection>
-      <connection id="61889953-7a7a-4e01-950d-dd79fcfa5e6b" active="true">
+      <connection id="ae57b72c-9ea9-4d2b-91f4-ab892517d211" active="true">
         <database>
           <name value="Connection 2" />
           <description value="" />
@@ -281,7 +350,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="C:\Users\Administrator\Desktop\pnnemur2.db" schema="main" />
+            <file path="C:\Users\Administrator\Desktop\history2" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
@@ -352,7 +421,7 @@
           <object-name-filters />
         </object-filters>
       </connection>
-      <connection id="7f2520b6-2670-4aed-ab93-12514956f520" active="true">
+      <connection id="b0a3a264-3cf9-47fe-82f8-0c80570d7aff" active="true">
         <database>
           <name value="Connection 3" />
           <description value="" />
@@ -367,7 +436,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="C:\Users\Administrator\Desktop\pnnemur3.db" schema="main" />
+            <file path="C:\Users\Administrator\Desktop\history3" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
@@ -438,7 +507,7 @@
           <object-name-filters />
         </object-filters>
       </connection>
-      <connection id="53adf353-576d-4525-9015-8fdb99273436" active="true">
+      <connection id="6ddd641d-daaf-4068-9a23-59316d605a21" active="true">
         <database>
           <name value="Connection 4" />
           <description value="" />
@@ -453,7 +522,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="C:\Users\Administrator\Desktop\pnnemur4.db" schema="main" />
+            <file path="C:\Users\Administrator\Desktop\history5" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
@@ -524,7 +593,7 @@
           <object-name-filters />
         </object-filters>
       </connection>
-      <connection id="5b4a3baa-415d-4b04-9f68-990b81c488a0" active="true">
+      <connection id="e9b765aa-55ba-461d-a813-9e1eca56a9c8" active="true">
         <database>
           <name value="Connection 5" />
           <description value="" />
@@ -539,7 +608,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="C:\Users\Administrator\Desktop\pnnemur5.db" schema="main" />
+            <file path="C:\Users\Administrator\Desktop\history7" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
@@ -610,7 +679,7 @@
           <object-name-filters />
         </object-filters>
       </connection>
-      <connection id="01ee3566-7985-4b10-98f3-885df37cf78e" active="true">
+      <connection id="40da0708-3a60-4200-89af-9004a7ed3a46" active="true">
         <database>
           <name value="Connection 6" />
           <description value="" />
@@ -625,7 +694,265 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="C:\Users\Administrator\Desktop\pnnemur6.db" schema="main" />
+            <file path="C:\Users\Administrator\Desktop\history8" schema="main" />
+          </files>
+          <type value="NONE" />
+          <user value="" />
+          <deprecated-pwd value="" />
+        </database>
+        <properties>
+          <auto-commit value="false" />
+        </properties>
+        <ssh-settings>
+          <active value="false" />
+          <proxy-host value="" />
+          <proxy-port value="22" />
+          <proxy-user value="" />
+          <deprecated-proxy-pwd value="" />
+          <auth-type value="PASSWORD" />
+          <key-file value="" />
+          <key-passphrase value="" />
+        </ssh-settings>
+        <ssl-settings>
+          <active value="false" />
+          <certificate-authority-file value="" />
+          <client-certificate-file value="" />
+          <client-key-file value="" />
+        </ssl-settings>
+        <details>
+          <charset value="UTF-8" />
+          <session-management value="true" />
+          <ddl-file-binding value="true" />
+          <database-logging value="false" />
+          <connect-automatically value="true" />
+          <restore-workspace value="true" />
+          <restore-workspace-deep value="true" />
+          <environment-type value="default" />
+          <idle-time-to-disconnect value="30" />
+          <idle-time-to-disconnect-pool value="5" />
+          <credential-expiry-time value="10" />
+          <max-connection-pool-size value="7" />
+          <alternative-statement-delimiter value="" />
+        </details>
+        <object-filters hide-empty-schemas="false" hide-pseudo-columns="false">
+          <object-type-filter use-master-settings="true">
+            <object-type name="SCHEMA" enabled="true" />
+            <object-type name="USER" enabled="true" />
+            <object-type name="ROLE" enabled="true" />
+            <object-type name="PRIVILEGE" enabled="true" />
+            <object-type name="CHARSET" enabled="true" />
+            <object-type name="TABLE" enabled="true" />
+            <object-type name="VIEW" enabled="true" />
+            <object-type name="MATERIALIZED_VIEW" enabled="true" />
+            <object-type name="NESTED_TABLE" enabled="true" />
+            <object-type name="COLUMN" enabled="true" />
+            <object-type name="INDEX" enabled="true" />
+            <object-type name="CONSTRAINT" enabled="true" />
+            <object-type name="DATASET_TRIGGER" enabled="true" />
+            <object-type name="DATABASE_TRIGGER" enabled="true" />
+            <object-type name="SYNONYM" enabled="true" />
+            <object-type name="SEQUENCE" enabled="true" />
+            <object-type name="PROCEDURE" enabled="true" />
+            <object-type name="FUNCTION" enabled="true" />
+            <object-type name="PACKAGE" enabled="true" />
+            <object-type name="TYPE" enabled="true" />
+            <object-type name="TYPE_ATTRIBUTE" enabled="true" />
+            <object-type name="ARGUMENT" enabled="true" />
+            <object-type name="DIMENSION" enabled="true" />
+            <object-type name="CLUSTER" enabled="true" />
+            <object-type name="DBLINK" enabled="true" />
+          </object-type-filter>
+          <object-name-filters />
+        </object-filters>
+      </connection>
+      <connection id="be7b08c4-45df-4e65-b811-842a4de6ac77" active="true">
+        <database>
+          <name value="Connection 7" />
+          <description value="" />
+          <database-type value="SQLITE" />
+          <config-type value="BASIC" />
+          <database-version value="3.21" />
+          <driver-source value="BUILTIN" />
+          <driver-library value="" />
+          <driver value="" />
+          <url-type value="FILE" />
+          <host value="localhost" />
+          <port value="1234" />
+          <database value="database" />
+          <files>
+            <file path="C:\Users\Administrator\Desktop\history9" schema="main" />
+          </files>
+          <type value="NONE" />
+          <user value="" />
+          <deprecated-pwd value="" />
+        </database>
+        <properties>
+          <auto-commit value="false" />
+        </properties>
+        <ssh-settings>
+          <active value="false" />
+          <proxy-host value="" />
+          <proxy-port value="22" />
+          <proxy-user value="" />
+          <deprecated-proxy-pwd value="" />
+          <auth-type value="PASSWORD" />
+          <key-file value="" />
+          <key-passphrase value="" />
+        </ssh-settings>
+        <ssl-settings>
+          <active value="false" />
+          <certificate-authority-file value="" />
+          <client-certificate-file value="" />
+          <client-key-file value="" />
+        </ssl-settings>
+        <details>
+          <charset value="UTF-8" />
+          <session-management value="true" />
+          <ddl-file-binding value="true" />
+          <database-logging value="false" />
+          <connect-automatically value="true" />
+          <restore-workspace value="true" />
+          <restore-workspace-deep value="true" />
+          <environment-type value="default" />
+          <idle-time-to-disconnect value="30" />
+          <idle-time-to-disconnect-pool value="5" />
+          <credential-expiry-time value="10" />
+          <max-connection-pool-size value="7" />
+          <alternative-statement-delimiter value="" />
+        </details>
+        <object-filters hide-empty-schemas="false" hide-pseudo-columns="false">
+          <object-type-filter use-master-settings="true">
+            <object-type name="SCHEMA" enabled="true" />
+            <object-type name="USER" enabled="true" />
+            <object-type name="ROLE" enabled="true" />
+            <object-type name="PRIVILEGE" enabled="true" />
+            <object-type name="CHARSET" enabled="true" />
+            <object-type name="TABLE" enabled="true" />
+            <object-type name="VIEW" enabled="true" />
+            <object-type name="MATERIALIZED_VIEW" enabled="true" />
+            <object-type name="NESTED_TABLE" enabled="true" />
+            <object-type name="COLUMN" enabled="true" />
+            <object-type name="INDEX" enabled="true" />
+            <object-type name="CONSTRAINT" enabled="true" />
+            <object-type name="DATASET_TRIGGER" enabled="true" />
+            <object-type name="DATABASE_TRIGGER" enabled="true" />
+            <object-type name="SYNONYM" enabled="true" />
+            <object-type name="SEQUENCE" enabled="true" />
+            <object-type name="PROCEDURE" enabled="true" />
+            <object-type name="FUNCTION" enabled="true" />
+            <object-type name="PACKAGE" enabled="true" />
+            <object-type name="TYPE" enabled="true" />
+            <object-type name="TYPE_ATTRIBUTE" enabled="true" />
+            <object-type name="ARGUMENT" enabled="true" />
+            <object-type name="DIMENSION" enabled="true" />
+            <object-type name="CLUSTER" enabled="true" />
+            <object-type name="DBLINK" enabled="true" />
+          </object-type-filter>
+          <object-name-filters />
+        </object-filters>
+      </connection>
+      <connection id="bf121184-9114-406a-b83e-084d72164394" active="true">
+        <database>
+          <name value="Connection 8" />
+          <description value="" />
+          <database-type value="SQLITE" />
+          <config-type value="BASIC" />
+          <database-version value="3.21" />
+          <driver-source value="BUILTIN" />
+          <driver-library value="" />
+          <driver value="" />
+          <url-type value="FILE" />
+          <host value="localhost" />
+          <port value="1234" />
+          <database value="database" />
+          <files>
+            <file path="C:\Users\Administrator\Desktop\history14" schema="main" />
+          </files>
+          <type value="NONE" />
+          <user value="" />
+          <deprecated-pwd value="" />
+        </database>
+        <properties>
+          <auto-commit value="false" />
+        </properties>
+        <ssh-settings>
+          <active value="false" />
+          <proxy-host value="" />
+          <proxy-port value="22" />
+          <proxy-user value="" />
+          <deprecated-proxy-pwd value="" />
+          <auth-type value="PASSWORD" />
+          <key-file value="" />
+          <key-passphrase value="" />
+        </ssh-settings>
+        <ssl-settings>
+          <active value="false" />
+          <certificate-authority-file value="" />
+          <client-certificate-file value="" />
+          <client-key-file value="" />
+        </ssl-settings>
+        <details>
+          <charset value="UTF-8" />
+          <session-management value="true" />
+          <ddl-file-binding value="true" />
+          <database-logging value="false" />
+          <connect-automatically value="true" />
+          <restore-workspace value="true" />
+          <restore-workspace-deep value="true" />
+          <environment-type value="default" />
+          <idle-time-to-disconnect value="30" />
+          <idle-time-to-disconnect-pool value="5" />
+          <credential-expiry-time value="10" />
+          <max-connection-pool-size value="7" />
+          <alternative-statement-delimiter value="" />
+        </details>
+        <object-filters hide-empty-schemas="false" hide-pseudo-columns="false">
+          <object-type-filter use-master-settings="true">
+            <object-type name="SCHEMA" enabled="true" />
+            <object-type name="USER" enabled="true" />
+            <object-type name="ROLE" enabled="true" />
+            <object-type name="PRIVILEGE" enabled="true" />
+            <object-type name="CHARSET" enabled="true" />
+            <object-type name="TABLE" enabled="true" />
+            <object-type name="VIEW" enabled="true" />
+            <object-type name="MATERIALIZED_VIEW" enabled="true" />
+            <object-type name="NESTED_TABLE" enabled="true" />
+            <object-type name="COLUMN" enabled="true" />
+            <object-type name="INDEX" enabled="true" />
+            <object-type name="CONSTRAINT" enabled="true" />
+            <object-type name="DATASET_TRIGGER" enabled="true" />
+            <object-type name="DATABASE_TRIGGER" enabled="true" />
+            <object-type name="SYNONYM" enabled="true" />
+            <object-type name="SEQUENCE" enabled="true" />
+            <object-type name="PROCEDURE" enabled="true" />
+            <object-type name="FUNCTION" enabled="true" />
+            <object-type name="PACKAGE" enabled="true" />
+            <object-type name="TYPE" enabled="true" />
+            <object-type name="TYPE_ATTRIBUTE" enabled="true" />
+            <object-type name="ARGUMENT" enabled="true" />
+            <object-type name="DIMENSION" enabled="true" />
+            <object-type name="CLUSTER" enabled="true" />
+            <object-type name="DBLINK" enabled="true" />
+          </object-type-filter>
+          <object-name-filters />
+        </object-filters>
+      </connection>
+      <connection id="db4ceb3d-fcaa-4fee-8225-f93e495860db" active="true">
+        <database>
+          <name value="Connection 9" />
+          <description value="" />
+          <database-type value="SQLITE" />
+          <config-type value="BASIC" />
+          <database-version value="3.21" />
+          <driver-source value="BUILTIN" />
+          <driver-library value="" />
+          <driver value="" />
+          <url-type value="FILE" />
+          <host value="localhost" />
+          <port value="1234" />
+          <database value="database" />
+          <files>
+            <file path="C:\Users\Administrator\Desktop\history16" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

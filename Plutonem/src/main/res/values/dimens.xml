@@ -42,27 +42,32 @@
 
     <dimen name="elevation_default_top_app_bar">4dp</dimen>
 
-    <!--Emphasis modifiers for "on" colors-->
-<!--    <dimen name="alpha_emphasis_high">@dimen/material_emphasis_high_type</dimen>-->
-<!--    <dimen name="alpha_emphasis_medium">@dimen/material_emphasis_medium</dimen>-->
-<!--    <dimen name="alpha_emphasis_disabled">@dimen/material_emphasis_disabled</dimen>-->
-
-    <!-- Wordpress -->
+    <!-- PlutoNem -->
 
     <dimen name="min_touch_target_sz">48dp</dimen>
 
-    <dimen name="wordpress_tab_height">48dp</dimen>
-    <dimen name="wordpress_toolbar_height">56dp</dimen>
+    <dimen name="tab_height">48dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>
+
+    <item name="primary_button_disabled_alpha" format="float" type="dimen">
+        @dimen/disabled_alpha
+    </item>
+
+    <item name="disabled_alpha" format="float" type="dimen">0.12</item>
+
+    <dimen name="divider_size">1dp</dimen>
 
     <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
     <dimen name="wordpress_list_with_fab_endlist_indicator_height">86dp</dimen>
 
     <!-- http://www.google.com/design/spec/what-is-material/elevation-shadows.html#elevation-shadows-shadows -->
-    <dimen name="wordpress_appbar_elevation">4dp</dimen>
+    <dimen name="appbar_elevation">4dp</dimen>
+    <dimen name="navbar_elevation">8dp</dimen>
 
-    <dimen name="wordpress_card_elevation">2dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+
     <dimen name="snackbar_height_minimum">48dp</dimen>
     <dimen name="card_elevation_pressed">8dp</dimen>
 
@@ -71,26 +76,28 @@
 
     <dimen name="default_cardview_radius">2dp</dimen>
 
-    <!-- left/right margin for content such as My Buyer fragment -->
-    <dimen name="wordpress_content_margin_normal">@dimen/wordpress_margin_medium</dimen>
-    <dimen name="wordpress_content_margin_tablet">48dp</dimen>
-    <dimen name="wordpress_content_margin_tablet_big">96dp</dimen>
-    <dimen name="wordpress_content_margin">@dimen/wordpress_content_margin_normal</dimen>
+    <!-- bottom navigation bar -->
+    <dimen name="bottom_nav_bar_badge_size">12dp</dimen>
 
-    <dimen name="content_margin_none">0dp</dimen>
+    <!-- left/right margin for content such as My Buyer fragment -->
+    <dimen name="content_margin_normal">@dimen/margin_medium</dimen>
     <dimen name="content_margin_tablet">48dp</dimen>
     <dimen name="content_margin_tablet_big">96dp</dimen>
+    <dimen name="content_margin">@dimen/content_margin_normal</dimen>
+
+    <dimen name="content_margin_none">0dp</dimen>
     <dimen name="order_list_content_margin_standard">@dimen/content_margin_none</dimen>
 
     <!--
         native nemur dimens
     -->
+    <dimen name="margin_extra_extra_small">1dp</dimen>
     <dimen name="margin_extra_small">2dp</dimen>
-    <dimen name="wordpress_margin_small">4dp</dimen>
-    <dimen name="wordpress_margin_medium">8dp</dimen>
-    <dimen name="wordpress_margin_large">12dp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_medium">8dp</dimen>
+    <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_extra_large">16dp</dimen>
-    <dimen name="wordpress_margin_extra_medium_large">24dp</dimen>
+    <dimen name="margin_extra_medium_large">24dp</dimen>
     <dimen name="wordpress_margin_extra_extra_medium_large">32dp</dimen>
     <dimen name="negative_margin_medium">-8dp</dimen>
     <dimen name="wordpress_margin_my_buyer_quick_actions_bottom">40dp</dimen>
@@ -120,7 +127,8 @@
 
     <dimen name="wordpress_text_sz_small">12sp</dimen>
     <dimen name="wordpress_text_sz_medium">14sp</dimen>
-    <dimen name="wordpress_text_sz_large">16sp</dimen>
+<!--    <dimen name="wordpress_text_sz_large">16sp</dimen>-->
+    <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
 
     <dimen name="wordpress_blavatar_sz_small">32dp</dimen>
@@ -142,7 +150,8 @@
 
     <!-- my buyer -->
     <dimen name="wordpress_my_buyer_blavatar_container_corner_radius">4dp</dimen>
-    <dimen name="wordpress_my_buyer_blavatar_container_border_width">1dp</dimen>
+<!--    <dimen name="wordpress_my_buyer_blavatar_container_border_width">1dp</dimen>-->
+    <dimen name="my_buyer_blavatar_container_border_width">0.5dp</dimen>
     <dimen name="wordpress_my_buyer_blavatar_corner_radius">2dp</dimen>
 
     <!-- Buyer Settings -->
@@ -168,5 +177,16 @@
     <dimen name="products_list_spinner_avatar_padding">2dp</dimen>
     <dimen name="products_list_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
     <dimen name="products_list_tab_layout_fading_edge_width">16dp</dimen>
+
+    <!-- shimmering skeleton -->
+    <dimen name="skeleton_shimmer_base_alpha">0.33</dimen>
+    <dimen name="skeleton_shimmer_highlight_alpha">0.15</dimen>
+
+    <dimen name="bottom_sheet_handle_container_radius">8dp</dimen>
+
+    <!-- Xmpp Chat Specification -->
+
+    <dimen name="avatar_on_status_message">32dp</dimen>
+    <dimen name="avatar">48dp</dimen>
 
 </resources>

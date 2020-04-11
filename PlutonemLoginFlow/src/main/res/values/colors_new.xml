@@ -26,15 +26,15 @@
     <color name="background_default">@color/brown_lighten_30</color>
 
     <!-- ==================================== -->
-    <!-- Plutonem Colors                 -->
-    <!-- plutonem/design-handbook/colors -->
+    <!-- PlutoNem.com Colors                 -->
+    <!-- PlutoNem.com/design-handbook/colors -->
     <!-- Pinks -->
     <color name="pink_plutonem">#f48fb1</color>
     <color name="pink_light">#ffc1e3</color>
     <color name="pink_medium">#f8bbd0</color>
     <color name="pink_dark">#bf5f82</color>
 
-    <!-- Primary Greys -->
+    <!-- Primary Browns -->
     <color name="brown">#bcaaa4</color>
     <color name="brown_light">#fce4db</color>
     <color name="brown_dark">#786d68</color>
@@ -42,7 +42,7 @@
 
     <color name="brown_text_min">@color/brown_darken_20</color>
 
-    <!-- Secondary Greys -->
+    <!-- Secondary Browns -->
     <color name="brown_lighten_30">#f2dbd4</color>
     <color name="brown_lighten_20">#e2cdc9</color>
     <color name="brown_lighten_10">#d6c2be</color>

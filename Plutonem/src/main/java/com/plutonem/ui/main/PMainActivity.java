@@ -30,6 +30,7 @@ import com.plutonem.ui.news.NewsManager;
 import com.plutonem.ui.prefs.AppPrefs;
 import com.plutonem.ui.submits.SubmitUtilsWrapper;
 import com.plutonem.utilities.FluxCUtils;
+import com.plutonem.xmpp.ui.XmppActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,7 +49,7 @@ import static androidx.lifecycle.Lifecycle.State.STARTED;
 /**
  * Main activity which hosts homepage and me pages
  */
-public class PMainActivity extends AppCompatActivity implements
+public class PMainActivity extends XmppActivity implements
         OnPageListener,
         BottomNavController {
     private PMainNavigationView mBottomNav;
@@ -76,6 +77,12 @@ public class PMainActivity extends AppCompatActivity implements
     public interface OnActivityBackPressedListener {
         boolean onActivityBackPressed();
     }
+
+    @Override
+    protected void refreshUiReal() {}
+
+    @Override
+    public void onBackendConnected() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,7 +127,7 @@ public class PMainActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         // Load selected buyer
@@ -354,7 +361,7 @@ public class PMainActivity extends AppCompatActivity implements
 
     // (weird) - XD
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
     }
 }

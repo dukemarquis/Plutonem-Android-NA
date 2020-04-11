@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="?attr/selectableItemBackground"
-    android:layout_height="wrap_content"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:minHeight="@dimen/nemur_button_minimum_height"
     android:orientation="horizontal"
-    android:paddingEnd="@dimen/margin_medium"
-    android:paddingStart="@dimen/margin_medium" >
+    android:paddingStart="@dimen/margin_medium"
+    android:paddingEnd="@dimen/margin_medium">
 
     <com.plutonem.widgets.PNTextView
         android:id="@+id/icon_price_button"
-        android:importantForAccessibility="no"
-        android:layout_gravity="center_vertical"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/on_surface_medium_primary_selector"
+        android:importantForAccessibility="no"
         android:text="@string/nemur_btn_price_icon_CNm"
-        android:textColor="@color/neutral_primary_40_neutral_40_selector"
-        android:textSize="@dimen/wordpress_text_sz_medium" >
-    </com.plutonem.widgets.PNTextView>
+        android:textAppearance="?attr/textAppearanceBody2"/>
 
     <com.plutonem.widgets.PNTextView
         android:id="@+id/label_price_button"
-        android:importantForAccessibility="no"
-        android:layout_gravity="center_vertical"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/wordpress_margin_small"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/margin_small"
+        android:textColor="@color/on_surface_medium_primary_selector"
+        android:importantForAccessibility="no"
         android:text="@string/nemur_btn_price"
-        android:textColor="@color/neutral_primary_40_neutral_40_selector"
-        android:textSize="@dimen/wordpress_text_sz_medium" >
-    </com.plutonem.widgets.PNTextView>
+        android:textAppearance="?attr/textAppearanceBody2" />
 
 </LinearLayout>

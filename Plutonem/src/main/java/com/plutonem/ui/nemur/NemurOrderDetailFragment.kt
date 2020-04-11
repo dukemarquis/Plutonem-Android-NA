@@ -22,6 +22,7 @@ import com.plutonem.datasets.NemurOrderTable
 import com.plutonem.models.NemurOrder
 import com.plutonem.ui.main.PMainActivity
 import com.plutonem.ui.nemur.NemurInterfaces.AutoHideToolbarListener
+import com.plutonem.ui.nemur.NemurInterfaces.ChatInterfaceListener
 import com.plutonem.ui.nemur.NemurTypes.NemurOrderListType
 import com.plutonem.ui.nemur.actions.NemurActions
 import com.plutonem.ui.nemur.actions.NemurOrderActions
@@ -31,6 +32,7 @@ import com.plutonem.ui.nemur.views.NemurPriceButton
 import com.plutonem.utilities.AniUtils
 import com.plutonem.utilities.PNSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import com.plutonem.widgets.PNScrollView.ScrollDirectionListener
+import com.plutonem.widgets.PNScrollView.VISIBLE
 import kohii.v1.core.*
 import kohii.v1.exoplayer.DefaultControlDispatcher
 import kohii.v1.exoplayer.Kohii
@@ -61,19 +63,16 @@ class NemurOrderDetailFragment : Fragment(),
 
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
 
-    //    private lateinit var scrollView: PNScrollView
     private lateinit var layoutFooter: ViewGroup
     private lateinit var nemurPriceButton: NemurPriceButton
-//    private lateinit var playerView: PlayerView
-//    private lateinit var layoutContainer:ViewGroup
 
     private var hasAlreadyRequestedOrder: Boolean = false
 
     private var toolbarHeight: Int = 0
     private var errorMessage: String? = null
 
-    //    private var isToolbarShowing = true
     private var autoHideToolbarListener: AutoHideToolbarListener? = null
+    private var chatInterfaceListener: ChatInterfaceListener? = null
 
     /*
      * AsyncTask to retrieve this order from SQLite and display it
@@ -103,7 +102,10 @@ class NemurOrderDetailFragment : Fragment(),
         if (context is AutoHideToolbarListener) {
             autoHideToolbarListener = context
         }
-        toolbarHeight = context.resources.getDimensionPixelSize(R.dimen.wordpress_toolbar_height)
+        if (context is ChatInterfaceListener) {
+            chatInterfaceListener = context
+        }
+        toolbarHeight = context.resources.getDimensionPixelSize(R.dimen.toolbar_height)
     }
 
     override fun onCreateView(
@@ -128,24 +130,9 @@ class NemurOrderDetailFragment : Fragment(),
             }
         }
 
-//        scrollView = view.findViewById(R.id.scroll_view_nemur)
-//        scrollView.setScrollDirectionListener(this)
-
         layoutFooter = view.findViewById(R.id.layout_order_detail_footer)
-
-        // hide footer and scrollView until the post is loaded
         layoutFooter.visibility = View.INVISIBLE
-//        scrollView.visibility = View.INVISIBLE
-
         nemurPriceButton = view.findViewById(R.id.price_button)
-
-//        playerView = view.findViewById(R.id.playerView)
-
-//        layoutContainer = view.findViewById(R.id.layout_order_detail_container)
-
-//        layoutContainer.setOnClickListener {
-//            ToastUtils.showToast(context, "Success");
-//        }
 
         showOrder()
 
@@ -173,18 +160,13 @@ class NemurOrderDetailFragment : Fragment(),
 
         val videoTag = "PAGE::$pagePos::${orderVideo!!.featuredVideo}"
         val videoCustomController = VideoCustomController(manager, playerView)
+
         kohii.setUp(orderVideo!!.featuredVideo) {
                     tag = videoTag
                     delay = 500
                     repeatMode = Common.REPEAT_MODE_ALL
                     preload = true
                     controller = videoCustomController
-//            controller = DefaultControlDispatcher(
-//                    manager,
-//                    playerView,
-//                    kohiiCanStart = false, // set to false -> if user pause it, Kohii will not start it
-//                    kohiiCanPause = true // set to true -> Kohii will pause it automatically
-//            )
                 }
                 .bind(playerView) { playback = it }
 
@@ -200,18 +182,7 @@ class NemurOrderDetailFragment : Fragment(),
             }
         }
 
-        val playerContainer = view.findViewById<AspectRatioFrameLayout>(R.id.playerContainer);
-//
-////        playerView.useController = true;
-//        playerContainer.setOnClickListener {
-//            manager.apply {
-//                playable = findPlayableForContainer(playback?.container!!)!!.apply {
-//                    if (this.isPlaying()) this.onPause()
-//                    else this.onPlay()
-//                }
-//            }
-//            playback.onPause()
-//        }
+        val playerContainer = view.findViewById<AspectRatioFrameLayout>(R.id.playerContainer)
         playerContainer.setOnClickListener(videoCustomController)
     }
 
@@ -314,13 +285,13 @@ class NemurOrderDetailFragment : Fragment(),
             return
         }
 
-        val viewBuy = view!!.findViewById<NemurIconView>(R.id.view_buy)
-//        val playerView = view!!.findViewById<PlayerView>(R.id.playerView)
+        val actionBuy = view!!.findViewById<NemurIconView>(R.id.view_buy)
+        val actionChat = view!!.findViewById<NemurIconView>(R.id.view_chat)
 
         if (canShowBuyView()) {
-            viewBuy.setView()
-            viewBuy.visibility = View.VISIBLE
-            viewBuy.setOnClickListener {
+            actionBuy.setAction(0)
+            actionBuy.visibility = View.VISIBLE
+            actionBuy.setOnClickListener {
                 NemurActivityLauncher.showEditOrderView(
                         activity,
                         "official flagship store of plutonem",
@@ -330,37 +301,22 @@ class NemurOrderDetailFragment : Fragment(),
 
                 )
             }
-
-//            viewBuy.setOnClickListener {
-//                manager.pause(manager.findPlayableForContainer(playerView)!!)
-//            }
-
-//            if (order.price.indexOf("$") == -1) {
-//                viewBuy.setOnClickListener {
-//                    NemurActivityLauncher.showEditOrderView(
-//                            activity,
-//                            "official flagship store of plutonem",
-//                            order.title,
-//                            order.price,
-//                            "express delivery ￥0.00"
-//
-//                    )
-//                }
-//            } else {
-//                viewBuy.setOnClickListener {
-//                    NemurActivityLauncher.showEditOrderView(
-//                            activity,
-//                            "official flagship store of plutonem",
-//                            order.title,
-//                            order.price,
-//                            "express delivery $0.00"
-//
-//                    )
-//                }
-//            }
         } else {
-            viewBuy.visibility = View.INVISIBLE
-            viewBuy.setOnClickListener(null)
+            actionBuy.visibility = View.INVISIBLE
+            actionBuy.setOnClickListener(null)
+        }
+
+        if (canShowChatView()) {
+            actionChat.setAction(1)
+            actionChat.visibility = View.VISIBLE
+            actionChat.setOnClickListener {
+                if (chatInterfaceListener != null) {
+                    chatInterfaceListener!!.onShowChat();
+                }
+            }
+        } else {
+            actionChat.visibility = View.INVISIBLE
+            actionChat.setOnClickListener(null)
         }
     }
 
@@ -548,14 +504,18 @@ class NemurOrderDetailFragment : Fragment(),
      * can we show the footer bar which contains the price & buy view?
      */
     private fun canShowFooter(): Boolean {
-        return canShowPriceView() || canShowBuyView()
-    }
-
-    private fun canShowPriceView(): Boolean {
-        return hasOrder()
+        return canShowPriceView() || canShowBuyView() || canShowChatView()
     }
 
     private fun canShowBuyView(): Boolean {
+        return hasOrder()
+    }
+
+    private fun canShowChatView(): Boolean {
+        return hasOrder()
+    }
+
+    private fun canShowPriceView(): Boolean {
         return hasOrder()
     }
 

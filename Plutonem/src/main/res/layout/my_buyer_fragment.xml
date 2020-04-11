@@ -10,7 +10,7 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/wordpress_toolbar_height">
+        android:layout_marginTop="@dimen/toolbar_height">
 
         <!-- used to host quick start focus view - must be RelativeLayout or FrameLayout -->
         <RelativeLayout
@@ -32,16 +32,15 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/wordpress_margin_extra_extra_medium_large"
-                    app:cardBackgroundColor="@android:color/white"
                     app:cardCornerRadius="@dimen/wordpress_my_buyer_blavatar_container_corner_radius"
                     app:cardElevation="0dp"
-                    app:strokeColor="@color/brown_5"
-                    app:strokeWidth="@dimen/wordpress_my_buyer_blavatar_container_border_width">
+                    app:strokeColor="?attr/pnColorOnSurfaceMedium"
+                    app:strokeWidth="@dimen/my_buyer_blavatar_container_border_width">
 
-                    <androidx.cardview.widget.CardView
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="@dimen/wordpress_my_buyer_blavatar_sz"
                         android:layout_height="@dimen/wordpress_my_buyer_blavatar_sz"
-                        android:layout_margin="@dimen/wordpress_margin_small"
+                        android:layout_margin="@dimen/margin_small"
                         app:cardCornerRadius="@dimen/wordpress_my_buyer_blavatar_corner_radius"
                         app:cardElevation="0dp">
 
@@ -50,7 +49,7 @@
                             android:layout_width="@dimen/wordpress_my_buyer_blavatar_sz"
                             android:layout_height="@dimen/wordpress_my_buyer_blavatar_sz"
                             android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/wordpress_margin_large"
+                            android:layout_marginEnd="@dimen/margin_large"
                             android:gravity="center_vertical"
                             android:indeterminate="true"
                             android:visibility="gone" />
@@ -66,7 +65,7 @@
                             android:gravity="center_vertical"
                             tools:ignore="UnusedAttribute"
                             tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
-                    </androidx.cardview.widget.CardView>
+                    </com.google.android.material.card.MaterialCardView>
 
                 </com.google.android.material.card.MaterialCardView>
 
@@ -74,11 +73,11 @@
                     android:id="@+id/buyer_info_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/wordpress_margin_medium"
+                    android:layout_marginTop="@dimen/margin_medium"
                     android:background="?attr/selectableItemBackground"
                     android:orientation="vertical"
-                    android:paddingStart="@dimen/wordpress_content_margin"
-                    android:paddingEnd="@dimen/wordpress_content_margin">
+                    android:paddingStart="@dimen/content_margin"
+                    android:paddingEnd="@dimen/content_margin">
 
                     <com.plutonem.widgets.PNTextView
                         android:id="@+id/my_buyer_title_label"
@@ -90,8 +89,7 @@
                         android:gravity="center_vertical"
                         android:maxLines="2"
                         android:textAlignment="center"
-                        android:textColor="?attr/wpColorText"
-                        android:textSize="@dimen/text_sz_extra_large"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
                         tools:text="Example" />
 
                     <com.plutonem.widgets.PNTextView
@@ -99,32 +97,27 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/wordpress_margin_small"
+                        android:layout_marginTop="@dimen/margin_small"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:maxLines="1"
-                        android:textColor="?attr/wpColorTextSubtle"
-                        android:textSize="@dimen/wordpress_text_sz_medium"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?attr/pnColorOnSurfaceMedium"
                         tools:text="enjoy shopping in plutonem !" />
                 </LinearLayout>
 
                 <com.plutonem.widgets.PNTextView
                     android:id="@+id/my_order"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/wordpress_margin_medium"
+                    android:layout_marginTop="@dimen/margin_medium"
                     android:layout_marginBottom="@dimen/wordpress_margin_extra_extra_medium_large"
-                    android:background="?attr/selectableItemBackground"
                     android:ellipsize="end"
-                    android:fontFamily="sans-serif-medium"
                     android:gravity="center_vertical"
                     android:maxLines="1"
-                    android:padding="@dimen/wordpress_margin_medium"
-                    android:text="@string/my_buyer_btn_my_order"
-                    android:textAllCaps="true"
-                    android:textColor="@color/plutonem_pink_50"
-                    android:textSize="@dimen/wordpress_text_sz_medium" />
+                    android:text="@string/my_buyer_btn_my_order" />
 
                 <LinearLayout
                     android:id="@+id/quick_action_buttons_container"
@@ -132,20 +125,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/wordpress_margin_my_buyer_quick_actions_bottom"
                     android:orientation="horizontal"
-                    android:paddingStart="@dimen/wordpress_content_margin"
-                    android:paddingEnd="@dimen/wordpress_content_margin"
+                    android:paddingStart="@dimen/content_margin"
+                    android:paddingEnd="@dimen/content_margin"
                     android:weightSum="50">
-
-                    <!--                    <LinearLayout-->
-                    <!--                        style="@style/MyBuyerQuickActionButtonContainer">-->
-
-                    <!--                        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-                    <!--                            style="@style/MyBuyerQuickActionButton" />-->
-
-                    <!--                        <com.plutonem.widgets.PNTextView-->
-                    <!--                            style="@style/MyBuyerQuickActionButtonLabel" />-->
-
-                    <!--                    </LinearLayout>-->
 
                     <LinearLayout
                         android:id="@+id/quick_action_await_delivery_container"
@@ -172,17 +154,6 @@
                             style="@style/MyBuyerQuickActionButtonLabel"
                             android:text="@string/await_receive" />
                     </LinearLayout>
-
-                    <!--                    <LinearLayout-->
-                    <!--                        style="@style/MyBuyerQuickActionButtonContainer">-->
-
-                    <!--                        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-                    <!--                            style="@style/MyBuyerQuickActionButton" />-->
-
-                    <!--                        <com.plutonem.widgets.PNTextView-->
-                    <!--                            style="@style/MyBuyerQuickActionButtonLabel" />-->
-
-                    <!--                    </LinearLayout>-->
 
                 </LinearLayout>
 

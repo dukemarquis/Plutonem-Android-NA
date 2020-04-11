@@ -724,26 +724,17 @@ public class MemorizingTrustManager {
     void interactCert(final X509Certificate[] chain, String authType, CertificateException cause)
             throws CertificateException
     {
-        switch (interact(certChainMessage(chain, cause), R.string.mtm_accept_cert)) {
-            case MTMDecision.DECISION_ALWAYS:
-                storeCert(chain[0]); // only store the server cert, not the whole chain
-            case MTMDecision.DECISION_ONCE:
-                break;
-            default:
-                throw (cause);
-        }
+
+        // currently we just want the user to be granted generally cause the connection is to our own server in Aws.
+        storeCert(chain[0]); // only store the server cert, not the whole chain
     }
 
     boolean interactHostname(X509Certificate cert, String hostname)
     {
-        switch (interact(hostNameMessage(cert, hostname), R.string.mtm_accept_servername)) {
-            case MTMDecision.DECISION_ALWAYS:
-                storeCert(hostname, cert);
-            case MTMDecision.DECISION_ONCE:
-                return true;
-            default:
-                return false;
-        }
+
+        // currently we just want the user to be granted generally cause the connection is to our own server in Aws.
+        storeCert(hostname, cert);
+        return true;
     }
 
     public static void interactResult(int decisionId, int choice) {

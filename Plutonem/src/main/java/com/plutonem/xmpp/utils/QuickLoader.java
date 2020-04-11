@@ -9,6 +9,12 @@ public class QuickLoader {
     private static String CONVERSATION_UUID = null;
     private static Object LOCK = new Object();
 
+    public static void set(final String uuid) {
+        synchronized (LOCK) {
+            CONVERSATION_UUID = uuid;
+        }
+    }
+
     public static Conversation get(List<Conversation> haystack) {
         synchronized (LOCK) {
             if (CONVERSATION_UUID == null) {

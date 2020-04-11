@@ -16,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.plutonem.android.login.SignupPnService.SignupState;
-import com.plutonem.android.login.widgets.PLoginInputRow;
-import com.plutonem.android.login.widgets.PLoginInputRow.OnEditorCommitListener;
+import com.plutonem.android.login.widgets.PNLoginInputRow;
+import com.plutonem.android.login.widgets.PNLoginInputRow.OnEditorCommitListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -40,7 +40,7 @@ public class SignupPhonePasswordFragment extends LoginBaseFormFragment<LoginList
 
     public static final String TAG = "signup_phone_password_fragment_tag";
 
-    private PLoginInputRow mPasswordInput;
+    private PNLoginInputRow mPasswordInput;
 
     private String mRequestedPassword;
 
@@ -185,7 +185,8 @@ public class SignupPhonePasswordFragment extends LoginBaseFormFragment<LoginList
         mRequestedPassword = mPasswordInput.getEditText().getText().toString();
 
         SignupPnService.signupWithPhoneAndPassword(getContext(), mPhoneNumber, mRequestedPassword, mIdToken, mService,
-                mIsSocialLogin);
+                    mIsSocialLogin);
+
 //        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
     }
 
@@ -220,10 +221,11 @@ public class SignupPhonePasswordFragment extends LoginBaseFormFragment<LoginList
 
     @Override
     protected void onLoginFinished() {
+        // Next we need to register a new xmpp account for communication in Plutonem, be careful with Stream Error.
         if (mIsSocialLogin) {
-            mLoginListener.loggedInViaSocialAccount();
+            mLoginListener.signUpXmppAccount(mPhoneNumber, mRequestedPassword);
         } else {
-            mLoginListener.loggedInViaPassword();
+            mLoginListener.signUpXmppAccount(mPhoneNumber, mRequestedPassword);
         }
     }
 

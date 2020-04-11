@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/wordpress_margin_large"
+    android:layout_marginBottom="@dimen/margin_large"
     android:background="@android:color/white">
 
     <RelativeLayout
@@ -15,7 +15,7 @@
         android:background="?android:selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:padding="@dimen/wordpress_margin_large">
+        android:padding="@dimen/margin_large">
 
         <ImageView
             android:id="@+id/news_dismiss"
@@ -26,8 +26,8 @@
             android:clickable="true"
             android:contentDescription="@string/dismiss"
             android:focusable="true"
-            android:padding="@dimen/wordpress_margin_small"
-            android:tint="@color/neutral_30"
+            android:padding="@dimen/margin_small"
+            app:tint="@color/neutral_30"
             android:src="@drawable/ic_close_white_24dp"/>
 
         <ImageView

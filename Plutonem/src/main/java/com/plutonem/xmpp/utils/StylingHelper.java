@@ -6,13 +6,16 @@ import android.text.Editable;
 import android.text.ParcelableSpan;
 import android.text.Spannable;
 import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
+import android.widget.EditText;
 
 import androidx.annotation.ColorInt;
 
+import com.plutonem.xmpp.entities.Message;
 import com.plutonem.xmpp.ui.text.QuoteSpan;
 
 import java.util.Arrays;
@@ -27,6 +30,15 @@ public class StylingHelper {
             ForegroundColorSpan.class
     );
 
+    public static void clear(final Editable editable) {
+        final int end = editable.length() - 1;
+        for (Class<? extends ParcelableSpan> clazz : SPAN_CLASSES) {
+            for (ParcelableSpan span : editable.getSpans(0, end, clazz)) {
+                editable.removeSpan(span);
+            }
+        }
+    }
+
     public static void format(final Editable editable, int start, int end, @ColorInt int textColor) {
         for (ImStyleParser.Style style : ImStyleParser.parse(editable, start, end)) {
             final int keywordLength = style.getKeyword().length();
@@ -34,6 +46,16 @@ public class StylingHelper {
             makeKeywordOpaque(editable, style.getStart(), style.getStart() + keywordLength, textColor);
             makeKeywordOpaque(editable, style.getEnd() - keywordLength + 1, style.getEnd() + 1, textColor);
         }
+    }
+
+    public static void format(final Editable editable, @ColorInt int textColor) {
+        int end = 0;
+        Message.MergeSeparator[] spans = editable.getSpans(0, editable.length() - 1, Message.MergeSeparator.class);
+        for (Message.MergeSeparator span : spans) {
+            format(editable, end, editable.getSpanStart(span), textColor);
+            end = editable.getSpanEnd(span);
+        }
+        format(editable, end, editable.length() - 1, textColor);
     }
 
     static CharSequence subSequence(CharSequence charSequence, int start, int end) {
@@ -101,5 +123,31 @@ public class StylingHelper {
     @ColorInt
     int transformColor(@ColorInt int c) {
         return Color.argb(Math.round(Color.alpha(c) * 0.45f), Color.red(c), Color.green(c), Color.blue(c));
+    }
+
+    public static class MessageEditorStyler implements TextWatcher {
+
+        private final EditText mEditText;
+
+        public MessageEditorStyler(EditText editText) {
+            this.mEditText = editText;
+        }
+
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            clear(editable);
+            format(editable, mEditText.getCurrentTextColor());
+        }
     }
 }

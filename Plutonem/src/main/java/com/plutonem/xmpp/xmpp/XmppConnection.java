@@ -234,6 +234,14 @@ public class XmppConnection implements Runnable {
         this.changeStatus(Account.State.CONNECTING);
     }
 
+    public boolean isWaitingForSmCatchup() {
+        return mWaitingForSmCatchup.get();
+    }
+
+    public void incrementSmCatchupMessageCounter() {
+        this.mSmCatchupMessageCounter.incrementAndGet();
+    }
+
     protected void connect() {
         if (mXmppConnectionService.areMessagesInitialized()) {
             mXmppConnectionService.resetSendingToWaiting(account);
@@ -748,6 +756,12 @@ public class XmppConnection implements Runnable {
         this.presenceListener.onPresencePacketReceived(account, packet);
     }
 
+    private void sendStartTLS() throws IOException {
+        final Tag startTLS = Tag.empty("starttls");
+        startTLS.setAttribute("xmlns", Namespace.TLS);
+        tagWriter.writeTag(startTLS);
+    }
+
     private void switchOverToTls() throws XmlPullParserException, IOException {
         tagReader.readTag();
         final Socket socket = this.socket;
@@ -791,7 +805,10 @@ public class XmppConnection implements Runnable {
         this.streamFeatures = tagReader.readElement(currentTag);
         final boolean isSecure = features.encryptionEnabled || Config.ALLOW_NON_TLS_CONNECTIONS || account.isOnion();
         final boolean needsBinding = !isBound && !account.isOptionSet(Account.OPTION_REGISTER);
-        if (this.streamFeatures.hasChild("register") && account.isOptionSet(Account.OPTION_REGISTER)) {
+        if (this.streamFeatures.hasChild("starttls") && !features.encryptionEnabled) {
+            // we need to send Tls first as ejabberd server default configuration need Tls to be enabled
+            sendStartTLS();
+        } else if (this.streamFeatures.hasChild("register") && account.isOptionSet(Account.OPTION_REGISTER)) {
             if (isSecure) {
                 register();
             } else {

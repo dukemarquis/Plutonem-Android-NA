@@ -191,9 +191,7 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
         if (changed) {
             final AxolotlService oldAxolotlService = this.axolotlService;
             if (oldAxolotlService != null) {
-
                 // apparently we don't need this logic since we are not going to support Axolotl Service right now
-
             }
         }
         this.jid = next;
@@ -331,13 +329,13 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public AxolotlService getAxolotlService() {
-
-        // simply we don't want Axolotl Encrytion Service so we set this value default to false or if future plan changes it
-        return null;
+        // simply we don't want Axolotl Encryption Service so we set this value default to null or if future plan changes it
+        return axolotlService;
     }
 
     public void initAccountServices(final XmppConnectionService context) {
         // omit initialization of Axolotl Service and Pgp Decryption Service for now
+        this.axolotlService = null;
     }
 
     public XmppConnection getXmppConnection() {

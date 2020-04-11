@@ -31,6 +31,10 @@ import com.plutonem.utilities.AniUtils;
 import com.plutonem.widgets.PNSwipeSnackbar;
 import com.plutonem.widgets.PNViewPager;
 import com.plutonem.widgets.PNViewPagerTransformer;
+import com.plutonem.xmpp.entities.Account;
+import com.plutonem.xmpp.entities.Conversation;
+import com.plutonem.xmpp.ui.XmppActivity;
+import com.plutonem.xmpp.utils.AccountUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,16 +42,21 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import kohii.v1.core.MemoryMode;
 import kohii.v1.exoplayer.Kohii;
+import rocks.xmpp.addr.Jid;
 
 /*
  * shows nemur order detail fragments in a ViewPager - primarily used for easy swiping between
  * orders with a specific tag or in a specific buyer, but can also be used to show a single
  * order detail.
  */
-public class NemurOrderPagerActivity extends AppCompatActivity
-        implements NemurInterfaces.AutoHideToolbarListener {
+public class NemurOrderPagerActivity extends XmppActivity
+        implements NemurInterfaces.AutoHideToolbarListener,
+        NemurInterfaces.ChatInterfaceListener {
     private PNViewPager mViewPager;
     private ProgressBar mProgress;
     private Toolbar mToolbar;
@@ -60,7 +69,13 @@ public class NemurOrderPagerActivity extends AppCompatActivity
     private boolean mIsRequestingMoreOrders;
     private boolean mIsSingleOrderView;
 
+    // Kohii Video Specification
     private Kohii kohii;
+
+    // Xmpp Chat Specification
+    private static final String XMPP_CONNECTION_SELLER_UNIQUE_ID = "han@3.15.14.1";
+
+    private List<String> mActivatedAccounts = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +84,7 @@ public class NemurOrderPagerActivity extends AppCompatActivity
 
         setContentView(R.layout.nemur_activity_order_pager);
 
-        mToolbar = findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -156,7 +171,7 @@ public class NemurOrderPagerActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
 
@@ -166,7 +181,7 @@ public class NemurOrderPagerActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
     }
@@ -461,5 +476,48 @@ public class NemurOrderPagerActivity extends AppCompatActivity
                 return null;
             }
         }
+    }
+
+    // Xmpp Chat Specification Part.
+
+    @Override
+    protected void refreshUiReal() {}
+
+    @Override
+    public void onBackendConnected() {
+        this.mActivatedAccounts.clear();
+        this.mActivatedAccounts.addAll(AccountUtils.getEnabledAccounts(xmppConnectionService));
+    }
+
+    @Override
+    public void onShowChat() {
+        final Jid accountJid;
+        final Jid contactJid;
+
+        if (this.mActivatedAccounts.size() != 1) {
+            // skip Multi User Accounts
+            accountJid = null;
+            contactJid = null;
+        } else {
+             accountJid = Jid.of(mActivatedAccounts.get(0));
+             contactJid = Jid.of(XMPP_CONNECTION_SELLER_UNIQUE_ID);
+        }
+
+        if (!xmppConnectionServiceBound) {
+            return;
+        }
+
+        final Account account = xmppConnectionService.findAccountByJid(accountJid);
+        if (account == null) {
+            return;
+        }
+
+        // skip Create Contact Part.
+        switchToConversationDoNotAppend(account, contactJid, null);
+    }
+
+    protected void switchToConversationDoNotAppend(Account account, Jid contactJid, String body) {
+        Conversation conversation = xmppConnectionService.findOrCreateConversation(account, contactJid, false, true);
+        switchToConversationDoNotAppend(conversation, body);
     }
 }

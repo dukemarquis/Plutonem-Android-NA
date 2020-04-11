@@ -18,11 +18,16 @@
 <resources>
 
     <!-- Semantic colors -->
-    <attr name="wpColorText" format="reference|color" />
-    <attr name="wpColorTextSubtle" format="reference|color" />
-    <attr name="wpColorError" format="reference|color" />
+    <attr name="pnColorText" format="reference|color" />
+    <attr name="pnColorTextSubtle" format="reference|color" />
+    <attr name="pnColorError" format="reference|color" />
+    <attr name="pnColorSuccess" format="reference|color" />
+    <attr name="pnColorAppBar" format="reference|color" />
+    <attr name="pnColorOnSurfaceMedium" format="reference|color" />
 
-    <attr name="wpColorWarningDark" format="reference|color" />
+    <attr name="pnColorWarningDark" format="reference|color" />
+    <attr name="pnColorWarningLight" format="reference|color" />
+    <attr name="pnColorActionModeIcon" format="reference|color" />
 
     <attr name="alphaEmphasisHigh" format="float"/>
     <attr name="alphaEmphasisMedium" format="float"/>
@@ -43,6 +48,7 @@
     <declare-styleable name="NemurIconBuyView">
         <attr name="nemurIcon" format="enum">
             <enum name="buy" value="0" />
+            <enum name="chat" value="1" />
         </attr>
     </declare-styleable>
 
@@ -83,6 +89,37 @@
         <attr name="aevSubtitle" format="string"/>
         <!-- Required: string text of title -->
         <attr name="aevTitle" format="string"/>
+    </declare-styleable>
+
+    <!--
+        Xmpp Chat Specification
+    -->
+    <attr name="extraColorAccent" format="reference|color"/>
+
+    <attr name="TextSizeCaption" format="dimension"/>
+    <attr name="TextSizeSubhead" format="dimension"/>
+    <attr name="TextSizeBody1" format="dimension"/>
+    <attr name="TextSizeBody2" format="dimension"/>
+    <attr name="TextSizeInput" format="dimension"/>
+
+    <attr name="IconSize" format="dimension"/>
+
+    <attr name="color_background_secondary" format="reference|color" />
+    <attr name="color_background_primary" format="reference|color"/>
+    <attr name="EmojiColor" format="reference|color"/>
+
+    <attr name="ic_send_text_offline" format="reference"/>
+
+    <attr name="message_bubble_received_monochrome" format="reference"/>
+    <attr name="message_bubble_sent" format="reference"/>
+    <attr name="message_bubble_received_green" format="reference"/>
+
+    <attr name="unread_count" format="reference|color"/>
+
+    <attr name="icon_scroll_down" format="reference"/>
+
+    <declare-styleable name="UnreadCountCustomView">
+        <attr name="backgroundColor" format="reference|color"/>
     </declare-styleable>
 
 </resources>

@@ -262,7 +262,7 @@ public class NemurOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.mImageManager = imageManager;
         this.mKohii = kohii;
         mOrderListType = orderListType;
-        mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.wordpress_margin_large);
+        mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
 
 //        int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
 //        int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.nemur_card_margin);

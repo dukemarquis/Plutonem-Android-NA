@@ -31,7 +31,7 @@ internal class NemurOrderViewHolder(
         frameVideo.isVisible = true
     }
 
-    internal val cardView = itemView.findViewById(R.id.card_view) as CardView
+    internal val orderContainer = itemView.findViewById(R.id.order_container) as LinearLayout
     internal val txtTitle = itemView.findViewById(R.id.text_title) as PNTextView
     internal val txtPrice = itemView.findViewById(R.id.text_price) as PNTextView
     internal val playerView = frameVideo.findViewById(R.id.player_view) as ViewGroup
@@ -72,7 +72,7 @@ internal class NemurOrderViewHolder(
             if (it.hasFeaturedImage() && it.hasFeaturedVideo()) {
                 videoImage = it.featuredImage
                 imageManager.load(imgFeatured, ImageType.PHOTO,
-                        it.getFeaturedImageForDisplay(photonWidth, photonHeight), ScaleType.CENTER_INSIDE)
+                        it.getFeaturedImageForDisplay(photonWidth, photonHeight), ScaleType.CENTER_CROP)
                 kohii.setUp(it.featuredVideo, params)
                         .bind(playerView) { pk ->
                             pk.addStateListener(this@NemurOrderViewHolder)
@@ -89,7 +89,7 @@ internal class NemurOrderViewHolder(
             val layoutParams: LinearLayout.LayoutParams = txtTitle.layoutParams as LinearLayout.LayoutParams
             layoutParams.topMargin = titleMargin;
 
-            cardView.setOnClickListener {
+            orderContainer.setOnClickListener {
                 onOrderSelectedListener.onOrderSelected(order as NemurOrder?)
             }
 

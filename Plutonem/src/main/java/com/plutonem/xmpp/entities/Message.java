@@ -3,11 +3,14 @@ package com.plutonem.xmpp.entities;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 
 import com.plutonem.Config;
 import com.plutonem.xmpp.services.AvatarService;
 import com.plutonem.xmpp.utils.CryptoHelper;
+import com.plutonem.xmpp.utils.Emoticons;
+import com.plutonem.xmpp.utils.MessageUtils;
 import com.plutonem.xmpp.utils.UIHelper;
 
 import org.json.JSONException;
@@ -15,6 +18,7 @@ import org.json.JSONException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,6 +76,8 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     public static final String MARKABLE = "markable";
     public static final String DELETED = "deleted";
     public static final String ME_COMMAND = "/me ";
+
+    public static final String ERROR_MESSAGE_CANCELLED = "eu.siacs.conversations.cancelled";
 
     public boolean markable = false;
     protected String conversationUuid;
@@ -208,6 +214,21 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         return null;
     }
 
+    public static Message createStatusMessage(Conversation conversation, String body) {
+        final Message message = new Message(conversation);
+        message.setType(Message.TYPE_STATUS);
+        message.setStatus(Message.STATUS_RECEIVED);
+        message.body = body;
+        return message;
+    }
+
+    public static Message createLoadMoreMessage(Conversation conversation) {
+        final Message message = new Message(conversation);
+        message.setType(Message.TYPE_STATUS);
+        message.body = "LOAD_MORE";
+        return message;
+    }
+
     @Override
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
@@ -288,6 +309,10 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         this.fileParams = null;
     }
 
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
     public boolean setErrorMessage(String message) {
         boolean changed = (message != null && !message.equals(errorMessage))
                 || (message == null && errorMessage != null);
@@ -335,6 +360,14 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         return this.deleted;
     }
 
+    public void markRead() {
+        this.read = true;
+    }
+
+    public void markUnread() {
+        this.read = false;
+    }
+
     public void setTime(long time) {
         this.timeSent = time;
     }
@@ -376,26 +409,12 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public Transferable getTransferable() {
-
         // we don't allow the file transferring by now
-
         return null;
     }
 
-
-    @Override
-    public int getAvatarBackgroundColor() {
-
-        // since we are not supporting Muc option for Group Chat right now, we only set one option here.
-
-        return UIHelper.getColorForName(UIHelper.getMessageDisplayName(this));
-    }
-
-    public boolean isOOb() {
-
-        // we don't allow file transferring right now
-
-        return false;
+    public Set<ReadByMarker> getReadByMarkers() {
+        return Collections.unmodifiableSet(this.readByMarkers);
     }
 
     boolean similar(Message message) {
@@ -412,6 +431,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
             String body, otherBody;
             body = this.body;
             otherBody = message.body;
+
             final boolean matchingCounterpart = this.counterpart.equals(message.getCounterpart());
             if (message.getRemoteMsgId() != null) {
                 final boolean hasUuid = CryptoHelper.UUID_PATTERN.matcher(message.getRemoteMsgId()).matches();
@@ -428,6 +448,151 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                         && Math.abs(this.getTimeSent() - message.getTimeSent()) < Config.MESSAGE_MERGE_WINDOW * 1000;
             }
         }
+    }
+
+    public Message next() {
+        if (this.conversation instanceof Conversation) {
+            final Conversation conversation = (Conversation) this.conversation;
+            synchronized (conversation.messages) {
+                if (this.mNextMessage == null) {
+                    int index = conversation.messages.indexOf(this);
+                    if (index < 0 || index >= conversation.messages.size() - 1) {
+                        this.mNextMessage = null;
+                    } else {
+                        this.mNextMessage = conversation.messages.get(index + 1);
+                    }
+                }
+                return this.mNextMessage;
+            }
+        } else {
+            throw new AssertionError("Calling next should be disabled for stubs");
+        }
+    }
+
+    public Message prev() {
+        if (this.conversation instanceof Conversation) {
+            final Conversation conversation = (Conversation) this.conversation;
+            synchronized (conversation.messages) {
+                if (this.mPreviousMessage == null) {
+                    int index = conversation.messages.indexOf(this);
+                    if (index <= 0 || index > conversation.messages.size()) {
+                        this.mPreviousMessage = null;
+                    } else {
+                        this.mPreviousMessage = conversation.messages.get(index - 1);
+                    }
+                }
+            }
+            return this.mPreviousMessage;
+        } else {
+            throw new AssertionError("Calling prev should be disabled for stubs");
+        }
+    }
+
+    public boolean mergeable(final Message message) {
+        return message != null &&
+                (message.getType() == Message.TYPE_TEXT &&
+                        this.getTransferable() == null &&
+                        message.getTransferable() == null &&
+                        message.getEncryption() != Message.ENCRYPTION_PGP &&
+                        message.getEncryption() != Message.ENCRYPTION_DECRYPTION_FAILED &&
+                        this.getType() == message.getType() &&
+                        isStatusMergeable(this.getStatus(), message.getStatus()) &&
+                        this.getEncryption() == message.getEncryption() &&
+                        this.getCounterpart() != null &&
+                        this.getCounterpart().equals(message.getCounterpart()) &&
+                        this.edited() == message.edited() &&
+                        (message.getTimeSent() - this.getTimeSent()) <= (Config.MESSAGE_MERGE_WINDOW * 1000) &&
+                        this.getBody().length() + message.getBody().length() <= Config.MAX_DISPLAY_MESSAGE_CHARS &&
+                        !message.isGeoUri() &&
+                        !this.isGeoUri() &&
+                        !message.isOOb() &&
+                        !this.isOOb() &&
+                        !message.treatAsDownloadable() &&
+                        !this.treatAsDownloadable() &&
+                        !message.getBody().startsWith(ME_COMMAND) &&
+                        !this.getBody().startsWith(ME_COMMAND) &&
+                        !this.bodyIsOnlyEmojis() &&
+                        !message.bodyIsOnlyEmojis() &&
+                        ((this.axolotlFingerprint == null && message.axolotlFingerprint == null) || this.axolotlFingerprint.equals(message.getFingerprint())) &&
+                        UIHelper.sameDay(message.getTimeSent(), this.getTimeSent()) &&
+                        this.getReadByMarkers().equals(message.getReadByMarkers()) &&
+                        !this.conversation.getJid().asBareJid().equals(Config.BUG_REPORTS)
+                );
+    }
+
+    private static boolean isStatusMergeable(int a, int b) {
+        return a == b || (
+                (a == Message.STATUS_SEND_RECEIVED && b == Message.STATUS_UNSEND)
+                        || (a == Message.STATUS_SEND_RECEIVED && b == Message.STATUS_SEND)
+                        || (a == Message.STATUS_SEND_RECEIVED && b == Message.STATUS_WAITING)
+                        || (a == Message.STATUS_SEND && b == Message.STATUS_UNSEND)
+                        || (a == Message.STATUS_SEND && b == Message.STATUS_WAITING)
+        );
+    }
+
+    @Override
+    public int getAvatarBackgroundColor() {
+        // since we are not supporting Muc option for Group Chat right now, we only set one option here.
+        return UIHelper.getColorForName(UIHelper.getMessageDisplayName(this));
+    }
+
+    public boolean isOOb() {
+        // we don't allow file transferring right now
+        return false;
+    }
+
+    public static class MergeSeparator {}
+
+    public SpannableStringBuilder getMergedBody() {
+        SpannableStringBuilder body = new SpannableStringBuilder(MessageUtils.filterLtrRtl(this.body).trim());
+        Message current = this;
+        while (current.mergeable(current.next())) {
+            current = current.next();
+            if (current == null) {
+                break;
+            }
+            body.append("\n\n");
+            body.setSpan(new MergeSeparator(), body.length() - 2, body.length(),
+                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+            body.append(MessageUtils.filterLtrRtl(current.getBody()).trim());
+        }
+        return body;
+    }
+
+    public int getMergedStatus() {
+        int status = this.status;
+        Message current = this;
+        while (current.mergeable(current.next())) {
+            current = current.next();
+            if (current == null) {
+                break;
+            }
+            status = current.status;
+        }
+        return status;
+    }
+
+    public long getMergedTimeSent() {
+        long time = this.timeSent;
+        Message current = this;
+        while (current.mergeable(current.next())) {
+            current = current.next();
+            if (current == null) {
+                break;
+            }
+            time = current.timeSent;
+        }
+        return time;
+    }
+
+    public boolean wasMergedIntoPrevious() {
+        Message prev = this.prev();
+        return prev != null && prev.mergeable(this);
+    }
+
+    public boolean trusted() {
+        Contact contact = this.getContact();
+        return status > STATUS_RECEIVED || (contact != null && (contact.showInContactList() || contact.isSelf()));
     }
 
     public String getEditedId() {
@@ -447,12 +612,21 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public synchronized boolean treatAsDownloadable() {
-        //omit this part by now
+        // omit this part by now,
+        // we don't allow file that can be downloaded to transfer by now.
         return false;
     }
 
+    public synchronized boolean bodyIsOnlyEmojis() {
+        if (isEmojisOnly == null) {
+            isEmojisOnly = Emoticons.isOnlyEmoji(body.replaceAll("\\s", ""));
+        }
+        return isEmojisOnly;
+    }
+
     public synchronized boolean isGeoUri() {
-        // omit this part by now
+        // omit this part by now,
+        // we don't have GeoUri sharing event through conversation right now.
         return false;
     }
 
@@ -541,5 +715,60 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         public int width = 0;
         public int height = 0;
         public int runtime = 0;
+    }
+
+    public String getFingerprint() {
+        return axolotlFingerprint;
+    }
+
+    public boolean isTrusted() {
+        // skip Axolotl Encryption Service.
+        return false;
+    }
+
+    private int getPreviousEncryption() {
+        for (Message iterator = this.prev(); iterator != null; iterator = iterator.prev()) {
+            if (iterator.isCarbon() || iterator.getStatus() == STATUS_RECEIVED) {
+                continue;
+            }
+            return iterator.getEncryption();
+        }
+        return ENCRYPTION_NONE;
+    }
+
+    private int getNextEncryption() {
+        if (this.conversation instanceof Conversation) {
+            Conversation conversation = (Conversation) this.conversation;
+            for (Message iterator = this.next(); iterator != null; iterator = iterator.next()) {
+                if (iterator.isCarbon() || iterator.getStatus() == STATUS_RECEIVED) {
+                    continue;
+                }
+                return iterator.getEncryption();
+            }
+            return conversation.getNextEncryption();
+        } else {
+            throw new AssertionError("This should never be called since isInValidSession should be disabled for stubs");
+        }
+    }
+
+    public boolean isValidInSession() {
+        int pastEncryption = getCleanedEncryption(this.getPreviousEncryption());
+        int futureEncryption = getCleanedEncryption(this.getNextEncryption());
+
+        boolean inUnencryptedSession = pastEncryption == ENCRYPTION_NONE
+                || futureEncryption == ENCRYPTION_NONE
+                || pastEncryption != futureEncryption;
+
+        return inUnencryptedSession || getCleanedEncryption(this.getEncryption()) == pastEncryption;
+    }
+
+    private static int getCleanedEncryption(int encryption) {
+        if (encryption == ENCRYPTION_DECRYPTED || encryption == ENCRYPTION_DECRYPTION_FAILED) {
+            return ENCRYPTION_PGP;
+        }
+        if (encryption == ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE || encryption == ENCRYPTION_AXOLOTL_FAILED) {
+            return ENCRYPTION_AXOLOTL;
+        }
+        return encryption;
     }
 }

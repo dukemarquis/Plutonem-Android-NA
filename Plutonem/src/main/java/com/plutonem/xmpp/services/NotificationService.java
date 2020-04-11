@@ -48,6 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -69,6 +70,8 @@ public class NotificationService {
     private final XmppConnectionService mXmppConnectionService;
     private final LinkedHashMap<String, ArrayList<Message>> notifications = new LinkedHashMap<>();
     private final HashMap<Conversation, AtomicInteger> mBacklogMessageCounter = new HashMap<>();
+    private Conversation mOpenConversation;
+    private boolean mIsInForeground;
     private long mLastNotification;
 
     NotificationService(final XmppConnectionService service) {
@@ -196,6 +199,13 @@ public class NotificationService {
         }
     }
 
+    public void pushFromDirectReply(final Message message) {
+        synchronized (notifications) {
+            pushToStack(message);
+            updateNotification(false);
+        }
+    }
+
     private AtomicInteger getBacklogMessageCount(Conversation conversation) {
         synchronized (mBacklogMessageCounter) {
             if (!mBacklogMessageCounter.containsKey(conversation)) {
@@ -257,6 +267,78 @@ public class NotificationService {
             final ArrayList<Message> mList = new ArrayList<>();
             mList.add(message);
             notifications.put(conversationUuid, mList);
+        }
+    }
+
+    public void push(final Message message) {
+        synchronized (CATCHUP_LOCK) {
+            final XmppConnection connection = message.getConversation().getAccount().getXmppConnection();
+            if (connection != null && connection.isWaitingForSmCatchup()) {
+                connection.incrementSmCatchupMessageCounter();
+                pushFromBacklog(message);
+            } else {
+                pushNow(message);
+            }
+        }
+    }
+
+    private void pushNow(final Message message) {
+        mXmppConnectionService.updateUnreadCountBadge();
+        if (!notify(message)) {
+            Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": suppressing notification because turned off");
+            return;
+        }
+        final boolean isScreenOn = mXmppConnectionService.isInteractive();
+        if (this.mIsInForeground && isScreenOn && this.mOpenConversation == message.getConversation()) {
+            Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": suppressing notification because conversation is open");
+            return;
+        }
+        synchronized (notifications) {
+            pushToStack(message);
+            final Conversational conversation = message.getConversation();
+            final Account account = conversation.getAccount();
+            final boolean doNotify = (!(this.mIsInForeground && this.mOpenConversation == null) || !isScreenOn)
+                    && !account.inGracePeriod()
+                    && !this.inMiniGracePeriod(account);
+            updateNotification(doNotify, Collections.singletonList(conversation.getUuid()));
+        }
+    }
+
+    public void clear() {
+        synchronized (notifications) {
+            for (ArrayList<Message> messages : notifications.values()) {
+                markAsReadIfHasDirectReply(messages);
+            }
+            notifications.clear();
+            updateNotification(false);
+        }
+    }
+
+    public void clear(final Conversation conversation) {
+        synchronized (this.mBacklogMessageCounter) {
+            this.mBacklogMessageCounter.remove(conversation);
+        }
+        synchronized (notifications) {
+            markAsReadIfHasDirectReply(conversation);
+            if (notifications.remove(conversation.getUuid()) != null) {
+                cancel(conversation.getUuid(), NOTIFICATION_ID);
+                updateNotification(false, null, true);
+            }
+        }
+    }
+
+    private void markAsReadIfHasDirectReply(final Conversation conversation) {
+        markAsReadIfHasDirectReply(notifications.get(conversation.getUuid()));
+    }
+
+    private void markAsReadIfHasDirectReply(final ArrayList<Message> messages) {
+        if (messages != null && messages.size() > 0) {
+            Message last = messages.get(messages.size() - 1);
+            if (last.getStatus() != Message.STATUS_RECEIVED) {
+                if (mXmppConnectionService.markRead((Conversation) last.getConversation(), false)) {
+                    mXmppConnectionService.updateConversationUi();
+                }
+            }
         }
     }
 
@@ -418,8 +500,8 @@ public class NotificationService {
                     modifyForTextOnly(mBuilder, messages);
                 }
                 RemoteInput remoteInput = new RemoteInput.Builder("text_reply").setLabel(UIHelper.getMessageHint(mXmppConnectionService, conversation)).build();
-                PendingIntent markAsReadPendingIntent = createReadPendingIntent(conversation);
 
+                PendingIntent markAsReadPendingIntent = createReadPendingIntent(conversation);
                 NotificationCompat.Action markReadAction = new NotificationCompat.Action.Builder(
                         R.drawable.ic_drafts_white_24dp,
                         mXmppConnectionService.getString(R.string.mark_as_read),
@@ -427,8 +509,8 @@ public class NotificationService {
                         .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_MARK_AS_READ)
                         .setShowsUserInterface(false)
                         .build();
-                String replyLabel = mXmppConnectionService.getString(R.string.reply);
 
+                String replyLabel = mXmppConnectionService.getString(R.string.reply);
                 NotificationCompat.Action replyAction = new NotificationCompat.Action.Builder(
                         R.drawable.ic_send_text_offline,
                         replyLabel,
@@ -646,8 +728,22 @@ public class NotificationService {
         return false;
     }
 
+    public void setOpenConversation(final Conversation conversation) {
+        this.mOpenConversation = conversation;
+    }
+
+    public void setIsInForeground(final boolean foreground) {
+        this.mIsInForeground = foreground;
+    }
+
     private void markLastNotification() {
         this.mLastNotification = SystemClock.elapsedRealtime();
+    }
+
+    private boolean inMiniGracePeriod(final Account account) {
+        final int miniGrace = account.getStatus() == Account.State.ONLINE ? Config.MINI_GRACE_PERIOD
+                : Config.MINI_GRACE_PERIOD * 2;
+        return SystemClock.elapsedRealtime() < (this.mLastNotification + miniGrace);
     }
 
     Notification createForegroundNotification() {
@@ -771,6 +867,15 @@ public class NotificationService {
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mXmppConnectionService);
         try {
             notificationManager.cancel(id);
+        } catch (RuntimeException e) {
+            Log.d(Config.LOGTAG, "unable to cancel notification", e);
+        }
+    }
+
+    private void cancel(String tag, int id) {
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mXmppConnectionService);
+        try {
+            notificationManager.cancel(tag, id);
         } catch (RuntimeException e) {
             Log.d(Config.LOGTAG, "unable to cancel notification", e);
         }

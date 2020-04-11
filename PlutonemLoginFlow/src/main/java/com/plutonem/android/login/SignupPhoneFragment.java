@@ -18,8 +18,8 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.plutonem.android.fluxc.generated.AccountActionBuilder;
 import com.plutonem.android.fluxc.store.AccountStore.OnAvailabilityChecked;
-import com.plutonem.android.login.widgets.PLoginInputRow;
-import com.plutonem.android.login.widgets.PLoginInputRow.OnEditorCommitListener;
+import com.plutonem.android.login.widgets.PNLoginInputRow;
+import com.plutonem.android.login.widgets.PNLoginInputRow.OnEditorCommitListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -40,7 +40,7 @@ public class SignupPhoneFragment extends LoginBaseFormFragment<LoginListener> im
     private String mRequestedPhone;
 
     protected Button mPrimaryButton;
-    protected PLoginInputRow mPhoneInput;
+    protected PNLoginInputRow mPhoneInput;
 
     @Override
     protected @LayoutRes int getContentLayout() {

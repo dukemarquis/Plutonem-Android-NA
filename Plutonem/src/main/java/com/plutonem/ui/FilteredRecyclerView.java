@@ -215,15 +215,17 @@ public class FilteredRecyclerView extends RelativeLayout {
             mSpinner = findViewById(R.id.filter_spinner);
         }
 
-        mViewPager = findViewById(R.id.pager);
-        mTabLayout = findViewById(R.id.tab_layout);
+//        mViewPager = findViewById(R.id.pager);
+        if (mTabLayout == null) {
+            mTabLayout = findViewById(R.id.tab_layout);
+        }
 
         if (mUseTabsForFiltering) {
-            mViewPager.setVisibility(View.VISIBLE);
+//            mViewPager.setVisibility(View.VISIBLE);
             mTabLayout.setVisibility(View.VISIBLE);
             mSpinner.setVisibility(View.GONE);
         } else {
-            mViewPager.setVisibility(View.GONE);
+//            mViewPager.setVisibility(View.GONE);
             mTabLayout.setVisibility(View.GONE);
             mSpinner.setVisibility(View.VISIBLE);
         }

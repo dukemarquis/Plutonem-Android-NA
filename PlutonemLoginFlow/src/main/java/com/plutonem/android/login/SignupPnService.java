@@ -21,8 +21,6 @@ import com.plutonem.android.fluxc.store.AccountStore.RegistrationErrorType;
 import com.plutonem.android.fluxc.store.BuyerStore.BuyerErrorType;
 import com.plutonem.android.fluxc.store.BuyerStore.OnBuyerChanged;
 import com.plutonem.android.login.SignupPnService.SignupState;
-import com.plutonem.xmpp.entities.Account;
-import com.plutonem.xmpp.xmpp.XmppConnection;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -37,7 +35,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import rocks.xmpp.addr.Jid;
 
 public class SignupPnService extends AutoForeground<SignupState> {
     private static final String ARG_PHONE = "ARG_PHONE";
@@ -46,12 +43,12 @@ public class SignupPnService extends AutoForeground<SignupState> {
     private static final String ARG_SOCIAL_LOGIN = "ARG_SOCIAL_LOGIN";
     private static final String ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE";
 
-    private static final String XMPP_SERVER_DOMAIN = "3.15.14.1";
-
-    private boolean mInitMode = true;
-    private Boolean mForceRegister = true;
-    private boolean mUsernameMode = Config.DOMAIN_LOCK != null;
-    private Account mAccount;
+//    private static final String XMPP_SERVER_DOMAIN = "3.15.14.1";
+//
+//    private boolean mInitMode = true;
+//    private Boolean mForceRegister = true;
+//    private boolean mUsernameMode = Config.DOMAIN_LOCK != null;
+//    private Account mAccount;
 
     public enum SignupStep {
         IDLE,
@@ -203,91 +200,6 @@ public class SignupPnService extends AutoForeground<SignupState> {
         String phone = intent.getStringExtra(ARG_PHONE);
         String password = intent.getStringExtra(ARG_PASSWORD);
 
-        // now time to create Xmpp account in North America Amazon Web Service for chatting
-        final String xmppPassword = password;
-        final String xmppAccountJid = phone + '@' + XMPP_SERVER_DOMAIN;
-        final boolean wasDisabled = mAccount != null && mAccount.getStatus() == Account.State.DISABLED;
-        final boolean accountInfoEdited = accountInfoEdited();
-
-        if (mInitMode && mAccount != null) {
-            mAccount.setOption(Account.OPTION_DISABLED, false);
-        }
-        if (mAccount != null && mAccount.getStatus() == Account.State.DISABLED && !accountInfoEdited) {
-            // omit by now
-            return START_NOT_STICKY;
-        }
-        final boolean registerNewAccount;
-        if (mForceRegister != null) {
-            registerNewAccount = mForceRegister;
-        } else {
-            registerNewAccount = true && !Config.DISALLOW_REGISTRATION_IN_UI;
-        }
-        if (mUsernameMode && xmppAccountJid.contains("@")) {
-            setState(SignupStep.FAILUER_FETCHING_XMPP);
-            return START_NOT_STICKY;
-        }
-
-        XmppConnection connection = mAccount == null ? null : mAccount.getXmppConnection();
-        final boolean startOrbot = mAccount != null && mAccount.getStatus() == Account.State.TOR_NOT_AVAILABLE;
-        if (startOrbot) {
-            // omit by now
-            return START_NOT_STICKY;
-        }
-
-        if (inNeedOfSaslAccept()) {
-            // omit by now
-            return START_NOT_STICKY;
-        }
-
-        final boolean openRegistrationUrl = registerNewAccount && !accountInfoEdited && mAccount != null && mAccount.getStatus() == Account.State.REGISTRATION_WEB;
-        final boolean openPaymentUrl = mAccount != null && mAccount.getStatus() == Account.State.PAYMENT_REQUIRED;
-        final boolean redirectionWorthyStatus = openPaymentUrl || openRegistrationUrl;
-        URL url = connection != null && redirectionWorthyStatus ? connection.getRedirectionUrl() : null;
-        if (url != null && !wasDisabled) {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url.toString())));
-                return START_NOT_STICKY;
-            } catch (ActivityNotFoundException e) {
-                setState(SignupStep.FAILUER_FETCHING_XMPP);
-                return START_NOT_STICKY;
-            }
-        }
-
-        final Jid jid;
-        try {
-            if (mUsernameMode) {
-                jid = Jid.of(xmppAccountJid, getUserModeDomain(), null);
-            } else {
-                jid = Jid.of(phone + '@' + XMPP_SERVER_DOMAIN);
-            }
-        } catch (final NullPointerException | IllegalArgumentException e) {
-            if (mUsernameMode) {
-                setState(SignupStep.FAILUER_FETCHING_XMPP);
-            } else {
-                setState(SignupStep.FAILUER_FETCHING_XMPP);
-            }
-            return START_NOT_STICKY;
-        }
-
-        String hostname = null;
-        int numericPort = 5222;
-
-        if (jid.getLocal() == null) {
-            setState(SignupStep.FAILUER_FETCHING_XMPP);
-            return START_NOT_STICKY;
-        }
-
-        if (mAccount != null) {
-            // omit by now
-        } else {
-            mAccount = new Account(jid.asBareJid(), xmppPassword);
-            mAccount.setPort(numericPort);
-            mAccount.setHostname(hostname);
-            mAccount.setOption(Account.OPTION_USETLS, true);
-            mAccount.setOption(Account.OPTION_USECOMPRESSION, true);
-            mAccount.setOption(Account.OPTION_REGISTER, true);
-        }
-
         mIdToken = intent.getStringExtra(ARG_SOCIAL_ID_TOKEN);
         mService = intent.getStringExtra(ARG_SOCIAL_SERVICE);
         mIsSocialLogin = intent.getBooleanExtra(ARG_SOCIAL_LOGIN, false);
@@ -298,34 +210,6 @@ public class SignupPnService extends AutoForeground<SignupState> {
 
         return START_REDELIVER_INTENT;
     }
-
-    protected boolean accountInfoEdited() {
-        // omit by now
-        return false;
-    }
-
-    private String getUserModeDomain() {
-        if (mAccount != null && mAccount.getJid().getDomain() != null) {
-            return mAccount.getJid().getDomain();
-        } else {
-            return Config.DOMAIN_LOCK;
-        }
-    }
-
-    private boolean inNeedOfSaslAccept() {
-        return mAccount != null && mAccount.getLastErrorStatus() == Account.State.DOWNGRADE_ATTACK && mAccount.getKeyAsInt(Account.PINNED_MECHANISM_KEY, -1) >= 0 && !accountInfoEdited();
-    }
-
-//    private void handleAuthError(AuthenticationErrorType error, String errorMessage) {
-//        switch (error) {
-//            default:
-//                setState(SignupStep.FAILURE);
-//                AppLog.e(T.NUX, "Server response: " + errorMessage);
-//
-//                ToastUtils.showToast(this, errorMessage == null ? getString(R.string.error_generic) : errorMessage);
-//                break;
-//        }
-//    }
 
     private void handleRegError(RegistrationErrorType error, String errorMessage) {
         switch (error) {

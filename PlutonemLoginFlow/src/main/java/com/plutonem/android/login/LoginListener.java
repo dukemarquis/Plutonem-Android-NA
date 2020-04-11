@@ -15,4 +15,7 @@ public interface LoginListener {
     // Signup
     void doStartSignup();
     void showSignupPhonePassword(String phone);
+
+    // Xmpp specification
+    void signUpXmppAccount(String phone, String password);
 }

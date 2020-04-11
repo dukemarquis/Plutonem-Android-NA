@@ -11,19 +11,31 @@
     android:paddingEnd="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large" >
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_extra_large"
+        style="@style/LoginTheme.TextLabel"
         android:layout_width="match_parent"
-        android:textAlignment="viewStart"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"
         android:gravity="start"
-        tools:text="@string/enter_phone_plutonem"
-        style="@style/LoginTheme.TextLabel" >
-    </TextView>
+        android:textAlignment="viewStart"
+        tools:text="@string/enter_phone_plutonem" />
 
-    <com.plutonem.android.login.widgets.PLoginInputRow
+
+<!--    <TextView-->
+<!--        android:id="@+id/label"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="@dimen/margin_extra_large"-->
+<!--        android:layout_marginTop="@dimen/margin_extra_large"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:textAlignment="viewStart"-->
+<!--        android:gravity="start"-->
+<!--        tools:text="@string/enter_phone_plutonem"-->
+<!--        style="@style/LoginTheme.TextLabel" >-->
+<!--    </TextView>-->
+
+    <com.plutonem.android.login.widgets.PNLoginInputRow
         android:id="@+id/login_phone_row"
         android:hint="@string/phone_number"
         android:imeOptions="actionNext"
@@ -31,55 +43,96 @@
         android:inputType="phone"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        app:pIconDrawable="@drawable/ic_user_grey_24dp"
         android:textAlignment="viewStart"
         android:gravity="start"
-        tools:ignore="UnusedAttribute" >
-    </com.plutonem.android.login.widgets.PLoginInputRow>
+        tools:ignore="UnusedAttribute" />
 
-    <TextView
-        android:gravity="center_vertical"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_extra_large"
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/LoginTheme.TextLabel"
         android:layout_width="wrap_content"
-        android:text="@string/alternatively"
-        style="@style/LoginTheme.TextLabel" >
-    </TextView>
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:gravity="center_vertical"
+        android:text="@string/alternatively" />
+
+<!--    <TextView-->
+<!--        android:gravity="center_vertical"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginBottom="@dimen/margin_medium"-->
+<!--        android:layout_marginTop="@dimen/margin_extra_large"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:text="@string/alternatively"-->
+<!--        style="@style/LoginTheme.TextLabel" >-->
+<!--    </TextView>-->
 
     <LinearLayout
         android:id="@+id/signup_phone_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:layout_width="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_medium"
-        android:paddingEnd="@dimen/margin_medium"
-        android:paddingTop="@dimen/margin_medium"
         android:gravity="center_vertical"
-        tools:ignore="RtlSymmetry" >
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
+        tools:ignore="RtlSymmetry">
 
         <ImageView
             android:id="@+id/login_site_button_icon"
+            style="@style/LoginTheme.TextLabel.Icon"
             android:importantForAccessibility="no"
             android:layout_height="@dimen/google_button_icon_sz"
             android:layout_marginEnd="@dimen/margin_medium"
             android:layout_width="@dimen/google_button_icon_sz"
-            app:srcCompat="@drawable/ic_domains_grey_24dp" >
-        </ImageView>
+            app:srcCompat="@drawable/ic_domains_grey_24dp" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/login_site_button_text"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content"
+            style="@style/LoginTheme.Button.LoginOption"
             android:layout_width="wrap_content"
-            android:text="@string/sign_up_instead"
-            style="@style/LoginTheme.Button.SignUp" >
-        </TextView>
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/sign_up_instead" />
 
     </LinearLayout>
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/signup_phone_button"-->
+<!--        android:background="?attr/selectableItemBackground"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="@dimen/margin_extra_large"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:paddingBottom="@dimen/margin_medium"-->
+<!--        android:paddingEnd="@dimen/margin_medium"-->
+<!--        android:paddingTop="@dimen/margin_medium"-->
+<!--        android:gravity="center_vertical"-->
+<!--        tools:ignore="RtlSymmetry" >-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/login_site_button_icon"-->
+<!--            android:importantForAccessibility="no"-->
+<!--            android:layout_height="@dimen/google_button_icon_sz"-->
+<!--            android:layout_marginEnd="@dimen/margin_medium"-->
+<!--            android:layout_width="@dimen/google_button_icon_sz"-->
+<!--            app:srcCompat="@drawable/ic_domains_grey_24dp" >-->
+<!--        </ImageView>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/login_site_button_text"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:text="@string/sign_up_instead"-->
+<!--            style="@style/LoginTheme.Button.SignUp" >-->
+<!--        </TextView>-->
+
+<!--    </LinearLayout>-->
 
 </LinearLayout>

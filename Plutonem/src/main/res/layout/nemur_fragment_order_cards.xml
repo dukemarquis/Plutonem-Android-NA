@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -18,38 +17,44 @@
         android:id="@+id/empty_custom_view"
         layout="@layout/nemur_empty_view"/>
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/layout_new_orders"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:background="@drawable/nemur_new_orders_bar_background"
-        android:elevation="@dimen/message_bar_elevation"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/wordpress_margin_large"
-        android:paddingEnd="24dp"
-        android:paddingStart="24dp"
-        android:paddingTop="@dimen/wordpress_margin_large"
         android:visibility="gone"
-        tools:visibility="visible"
-        tools:targetApi="lollipop">
+        app:cardBackgroundColor="?attr/colorPrimaryVariant"
+        app:cardCornerRadius="24dp"
+        tools:visibility="visible">
 
-        <com.plutonem.widgets.PNTextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/nemur_label_new_orders"
-            android:textColor="@color/neutral_0"
-            android:textSize="@dimen/wordpress_text_sz_large"/>
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="@dimen/margin_large"
+            android:paddingEnd="24dp"
+            android:paddingBottom="@dimen/margin_large">
 
-        <com.plutonem.widgets.PNTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/nemur_label_new_orders_subtitle"
-            android:textColor="@color/neutral_0"
-            android:textSize="@dimen/wordpress_text_sz_small"/>
-    </LinearLayout>
+            <com.plutonem.widgets.PNTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nemur_label_new_orders"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/colorOnPrimarySurface" />
+
+            <com.plutonem.widgets.PNTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nemur_label_new_orders_subtitle"
+                android:textAppearance="?attr/textAppearanceCaption"
+                android:textColor="?attr/colorOnPrimarySurface" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <ProgressBar
         android:id="@+id/progress_footer"

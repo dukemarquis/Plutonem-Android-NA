@@ -4,9 +4,9 @@
     android:id="@+id/text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/wordpress_margin_large"
-    android:textColor="?attr/wpColorText"
-    android:textSize="@dimen/wordpress_text_sz_large"
+    android:padding="@dimen/margin_large"
+    android:textColor="?attr/pnColorText"
+    android:textSize="@dimen/text_sz_large"
     android:textAlignment="viewStart"
     android:gravity="start"
     tools:text="spinner dropdown item" />

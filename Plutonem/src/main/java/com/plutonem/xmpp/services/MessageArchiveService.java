@@ -97,7 +97,44 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
 
     private void catchup(final Account account) {
 
-        // we will skip this part by now for future modification
+        // we will skip this part by now for future modification;
+        // and here we are Now.
+
+        synchronized (this.queries) {
+            for (Iterator<Query> iterator = this.queries.iterator(); iterator.hasNext(); ) {
+                Query query = iterator.next();
+                if (query.getAccount() == account) {
+                    iterator.remove();
+                }
+            }
+        }
+
+        MamReference mamReference = MamReference.max(
+                mXmppConnectionService.databaseBackend.getLastMessageReceived(account),
+                mXmppConnectionService.databaseBackend.getLastClearDate(account)
+        );
+        mamReference = MamReference.max(mamReference, mXmppConnectionService.getAutomaticMessageDeletionDate());
+
+        long endCatchup = account.getXmppConnection().getLastSessionEstablished();
+        final Query query;
+        if (mamReference.getTimestamp() == 0) {
+            return;
+        } else if (endCatchup - mamReference.getTimestamp() >= Config.MAM_MAX_CATCHUP) {
+            long startCatchup = endCatchup - Config.MAM_MAX_CATCHUP;
+            List<Conversation> conversations = mXmppConnectionService.getConversations();
+            for (Conversation conversation : conversations) {
+                if (conversation.getMode() == Conversation.MODE_SINGLE && conversation.getAccount() == account && startCatchup > conversation.getLastMessageTransmitted().getTimestamp()) {
+                    this.query(conversation, startCatchup, true);
+                }
+            }
+            query = new Query(account, new MamReference(startCatchup), 0);
+        } else {
+            query = new Query(account, mamReference, 0);
+        }
+        synchronized (this.queries) {
+            this.queries.add(query);
+        }
+        this.execute(query);
     }
 
     public Query query(final Conversation conversation) {
@@ -111,6 +148,22 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
                     conversation.getLastMessageTransmitted(),
                     conversation.getAccount().getXmppConnection().getLastSessionEstablished(),
                     false);
+        }
+    }
+
+    public boolean isCatchingUp(Conversation conversation) {
+        final Account account = conversation.getAccount();
+        if (account.getXmppConnection().isWaitingForSmCatchup()) {
+            return true;
+        } else {
+            synchronized (this.queries) {
+                for (Query query : this.queries) {
+                    if (query.getAccount() == account && query.isCatchup() && ((conversation.getMode() == Conversation.MODE_SINGLE && query.getWith() == null) || query.getConversation() == conversation)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 
@@ -216,6 +269,17 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
         }
     }
 
+    boolean inCatchup(Account account) {
+        synchronized (this.queries) {
+            for (Query query : queries) {
+                if (query.account == account && query.isCatchup() && query.getWith() == null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean isCatchupInProgress(Conversation conversation) {
         synchronized (this.queries) {
             for(Query query : queries) {
@@ -228,6 +292,24 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
             }
         }
         return false;
+    }
+
+    boolean queryInProgress(Conversation conversation, XmppConnectionService.OnMoreMessagesLoaded callback) {
+        synchronized (this.queries) {
+            for (Query query : this.queries) {
+                if (query.conversation == conversation) {
+                    if (!query.hasCallback() && callback != null) {
+                        query.setCallback(callback);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public boolean queryInProgress(Conversation conversation) {
+        return queryInProgress(conversation, null);
     }
 
     public void processFinLegacy(Element fin, Jid from) {
@@ -288,7 +370,7 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     private void processPostponed(Query query) {
-        query.account.getAxolotlService().processPostponed();
+//        query.account.getAxolotlService().processPostponed();
         query.pendingReceiptRequests.removeAll(query.receiptRequests);
         Log.d(Config.LOGTAG, query.getAccount().getJid().asBareJid() + ": found " + query.pendingReceiptRequests.size() + " pending receipt requests");
         Iterator<ReceiptRequest> iterator = query.pendingReceiptRequests.iterator();

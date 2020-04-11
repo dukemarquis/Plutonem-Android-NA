@@ -6,22 +6,24 @@
 <resources>
     <!-- TextViews -->
     <style name="NemurTextView" parent="android:Widget.TextView">
-        <item name="android:textColorLink">@color/link_nemur</item>
+        <item name="android:textColorLink">?attr/colorPrimary</item>
     </style>
+
     <style name="NemurTextView.Order.Title" parent="NemurTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/wordpress_text_sz_large</item>
-        <item name="android:textColor">?attr/wpColorText</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">3</item>
         <item name="android:fontFamily">serif</item>
     </style>
+
     <style name="NemurTextView.Order.Price" parent="NemurTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/wordpress_text_sz_medium</item>
-        <item name="android:textColor">?attr/wpColorText</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>

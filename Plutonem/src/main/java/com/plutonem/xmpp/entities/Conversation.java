@@ -2,6 +2,7 @@ package com.plutonem.xmpp.entities;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -61,6 +63,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     private Jid nextCounterpart;
     private boolean messagesLeftOnServer = true;
     private ChatState mOutgoingChatState = Config.DEFAULT_CHAT_STATE;
+    private ChatState mIncomingChatState = Config.DEFAULT_CHAT_STATE;
     private String mFirstMamReference = null;
 
     public Conversation(final String name, final Account account, final Jid contactJid,
@@ -101,8 +104,38 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                 cursor.getString(cursor.getColumnIndex(ATTRIBUTES)));
     }
 
+    public boolean hasMessagesLeftOnServer() {
+        return messagesLeftOnServer;
+    }
+
     public void setHasMessagesLeftOnServer(boolean value) {
         this.messagesLeftOnServer = value;
+    }
+
+    public Message getFirstUnreadMessage() {
+        Message first = null;
+        synchronized (this.messages) {
+            for (int i = messages.size() - 1; i >= 0; --i) {
+                if (messages.get(i).isRead()) {
+                    return first;
+                } else {
+                    first = messages.get(i);
+                }
+            }
+        }
+        return first;
+    }
+
+    public Message findUnsentMessageWithUuid(String uuid) {
+        synchronized (this.messages) {
+            for (final Message message : this.messages) {
+                final int s = message.getStatus();
+                if ((s == Message.STATUS_UNSEND || s == Message.STATUS_WAITING) && message.getUuid().equals(uuid)) {
+                    return message;
+                }
+            }
+        }
+        return null;
     }
 
     public void findWaitingMessages(OnMessageFound onMessageFound) {
@@ -133,6 +166,18 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         }
     }
 
+    public boolean setIncomingChatState(ChatState state) {
+        if (this.mIncomingChatState == state) {
+            return false;
+        }
+        this.mIncomingChatState = state;
+        return true;
+    }
+
+    public ChatState getIncomingChatState() {
+        return this.mIncomingChatState;
+    }
+
     public boolean setOutgoingChatState(ChatState state) {
         if (mode == MODE_SINGLE && !getContact().isSelf() || (isPrivateAndNonAnonymous() && getNextCounterpart() == null)) {
             if (this.mOutgoingChatState != state) {
@@ -145,6 +190,18 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 
     public ChatState getOutgoingChatState() {
         return this.mOutgoingChatState;
+    }
+
+    public void trim() {
+        synchronized (this.messages) {
+            final int size = messages.size();
+            final int maxsize = Config.PAGE_SIZE * Config.MAX_NUM_PAGES;
+            if (size > maxsize) {
+                List<Message> discards = this.messages.subList(0, size - maxsize);
+                discards.clear();
+                untieMessages();
+            }
+        }
     }
 
     public void findUnsentTextMessages(OnMessageFound onMessageFound) {
@@ -195,6 +252,18 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
             }
         }
         return null;
+    }
+
+    public void populateWithMessages(final List<Message> messages) {
+        synchronized (this.messages) {
+            messages.clear();
+            messages.addAll(this.messages);
+        }
+        for (Iterator<Message> iterator = messages.iterator(); iterator.hasNext(); ) {
+            if (iterator.next().wasMergedIntoPrevious()) {
+                iterator.remove();
+            }
+        }
     }
 
     @Override
@@ -251,6 +320,38 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         } else {
             return Math.max(messageTime, draft.getTimestamp());
         }
+    }
+
+    public boolean isRead() {
+        return (this.messages.size() == 0) || this.messages.get(this.messages.size() - 1).isRead();
+    }
+
+    public List<Message> markRead(String upToUuid) {
+        final List<Message> unread = new ArrayList<>();
+        synchronized (this.messages) {
+            for (Message message : this.messages) {
+                if (!message.isRead()) {
+                    message.markRead();
+                    unread.add(message);
+                }
+                if (message.getUuid().equals(upToUuid)) {
+                    return unread;
+                }
+            }
+        }
+        return unread;
+    }
+
+    public static Message getLatestMarkableMessage(final List<Message> messages, boolean isPrivateAndNonAnonymousMuc) {
+        for (int i = messages.size() -1; i >= 0; --i) {
+            final Message message = messages.get(i);
+            if (message.getStatus() <= Message.STATUS_RECEIVED
+                    && (message.markable || isPrivateAndNonAnonymousMuc)
+                    && !message.isPrivateMessage()) {
+                return message;
+            }
+        }
+        return null;
     }
 
     public Message getLatestMessage() {
@@ -337,8 +438,8 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     /**
      * short for is Private and Non-anonymous
      */
-    public boolean isSingle() {
-        return mode == MODE_SINGLE;
+    public boolean isSingleOrPrivateAndNonAnonymous() {
+        return mode == MODE_SINGLE|| isPrivateAndNonAnonymous();
     }
 
     public boolean isPrivateAndNonAnonymous() {
@@ -359,10 +460,13 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     }
 
     public int getNextEncryption() {
-
         // omit the part to push Omemo and Pgp selection, for now we only need none encryption
-
         return Message.ENCRYPTION_NONE;
+    }
+
+    public String getNextMessage() {
+        final String nextMessage = getAttribute(ATTRIBUTE_NEXT_MESSAGE);
+        return nextMessage == null ? "" : nextMessage;
     }
 
     public @Nullable
@@ -375,6 +479,16 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
             }
         }
         return null;
+    }
+
+    public boolean setNextMessage(final String input) {
+        final String message = input == null || input.trim().isEmpty() ? null : input;
+        boolean changed = !getNextMessage().equals(message);
+        this.setAttribute(ATTRIBUTE_NEXT_MESSAGE, message);
+        if (changed) {
+            this.setAttribute(ATTRIBUTE_NEXT_MESSAGE_TIMESTAMP, message == null ? 0 : System.currentTimeMillis());
+        }
+        return changed;
     }
 
     public Message findDuplicateMessage(Message message) {
@@ -406,12 +520,16 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         return MamReference.max(lastClear, lastReceived);
     }
 
+    public void setMutedTill(long value) {
+        this.setAttribute(ATTRIBUTE_MUTED_TILL, String.valueOf(value));
+    }
+
     public boolean isMuted() {
         return System.currentTimeMillis() < this.getLongAttribute(ATTRIBUTE_MUTED_TILL, 0);
     }
 
     public boolean alwaysNotify() {
-        return mode == MODE_SINGLE || getBooleanAttribute(ATTRIBUTE_ALWAYS_NOTIFY, Config.ALWAYS_NOTIFY_BY_DEFAULT || false);
+        return mode == MODE_SINGLE || getBooleanAttribute(ATTRIBUTE_ALWAYS_NOTIFY, Config.ALWAYS_NOTIFY_BY_DEFAULT || isPrivateAndNonAnonymous());
     }
 
     public boolean setAttribute(String key, boolean value) {
@@ -575,6 +693,25 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                 && !Config.QUICKSY_DOMAIN.equals(contact.getJid().toEscapedString())
                 && sentMessagesCount() == 0;
 
+    }
+
+    public int getReceivedMessagesCountSinceUuid(String uuid) {
+        if (uuid == null) {
+            return 0;
+        }
+        int count = 0;
+        synchronized (this.messages) {
+            for (int i = messages.size() - 1; i >= 0; i--) {
+                final Message message = messages.get(i);
+                if (uuid.equals(message.getUuid())) {
+                    return count;
+                }
+                if (message.getStatus() <= Message.STATUS_RECEIVED) {
+                    ++count;
+                }
+            }
+        }
+        return 0;
     }
 
     @Override

@@ -50,6 +50,13 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         return (int) (SYSTEM_UI_AVATAR_SIZE * context.getResources().getDisplayMetrics().density);
     }
 
+    public Bitmap get(final Avatarable avatarable, final int size, final boolean cachedOnly) {
+        if (avatarable instanceof Message) {
+            return get((Message) avatarable, size, cachedOnly);
+        }
+        throw new AssertionError("AvatarService does not know how to generate avatar from "+avatarable.getClass().getName());
+    }
+
     private Bitmap get(final Contact contact, final int size, boolean cachedOnly) {
         if (contact.isSelf()) {
             return get(contact.getAccount(), size, cachedOnly);
@@ -83,7 +90,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
             }
         }
 
-        // since we are not supporting contact in conference situation, ignoring the clear process for now
+        // skip Multi User Chat part.
     }
 
     private String key(Contact contact, int size) {
@@ -136,13 +143,13 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 
     public Bitmap get(Message message, int size, boolean cachedOnly) {
         final Conversational conversation = message.getConversation();
-        // omit the situation of Muc operation and go straight to the Next part
+        // skip Multi User Chat part.
         if (message.getStatus() == Message.STATUS_RECEIVED) {
             Contact c = message.getContact();
             if (c != null && (c.getProfilePhoto() != null || c.getAvatarFilename() != null)) {
                 return get(c, size, cachedOnly);
             } else if (conversation instanceof Conversation && message.getConversation().getMode() == Conversation.MODE_MULTI) {
-                // omit this part by now -- ignore the Muc option
+                // skip Multi User Chat part.
             } else if (c != null) {
                 return get(c, size, cachedOnly);
             }

@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputLayout;
 import com.plutonem.R;
 
 import org.wordpress.android.util.ActivityUtils;
@@ -80,8 +82,7 @@ public class OrderSettingsInputDialogFragment extends DialogFragment implements 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         //noinspection InflateParams
         View dialogView = layoutInflater.inflate(R.layout.order_settings_input_dialog, null);
@@ -93,10 +94,13 @@ public class OrderSettingsInputDialogFragment extends DialogFragment implements 
             editText.setSelection(mCurrentInput.length());
         }
         editText.addTextChangedListener(this);
-        TextView hintTextView = (TextView) dialogView.findViewById(R.id.order_settings_input_dialog_hint);
+
+        TextInputLayout textInputLayout = dialogView.findViewById(R.id.order_settings_input_dialog_input_layout);
+        textInputLayout.setHint(mTitle);
+
+        TextView hintTextView = dialogView.findViewById(R.id.order_settings_input_dialog_hint);
         hintTextView.setText(mHint);
 
-        builder.setTitle(mTitle);
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override

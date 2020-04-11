@@ -38,7 +38,6 @@ public class EditOrderSettingsFragment extends Fragment {
     private TextView mDeliveryInformationHeaderTextView;
     private TextView mDetailHeaderTextView;
 
-//    @Inject Dispatcher mDispatcher;
     @Inject OrderSettingsUtils mOrderSettingsUtils;
 
     protected EditorFragmentListener mEditorFragmentListener;
@@ -66,7 +65,6 @@ public class EditOrderSettingsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((Plutonem) getActivity().getApplicationContext()).component().inject(this);
-//        mDispatcher.register(this);
     }
 
     @Override
@@ -78,7 +76,6 @@ public class EditOrderSettingsFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-//        mDispatcher.unregister(this);
         super.onDestroy();
     }
 

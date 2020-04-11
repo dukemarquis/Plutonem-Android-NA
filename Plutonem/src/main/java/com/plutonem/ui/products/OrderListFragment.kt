@@ -111,7 +111,7 @@ class OrderListFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(OrderListViewModel::class.java)
 
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
-        val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.wordpress_content_margin)
+        val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)
 
         // since the MainViewModel has been already started, we need to manually update the authorFilterSelection value
         viewModel.start(

@@ -15,9 +15,6 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.plutonem.android.login.widgets.PLoginInputRow;
-import com.plutonem.android.login.widgets.PLoginInputRow.OnEditorCommitListener;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.util.AppLog;
@@ -25,6 +22,8 @@ import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.NetworkUtils;
 
 import com.plutonem.android.login.LoginPncomService.LoginState;
+import com.plutonem.android.login.widgets.PNLoginInputRow;
+import com.plutonem.android.login.widgets.PNLoginInputRow.OnEditorCommitListener;
 
 import dagger.android.support.AndroidSupportInjection;
 
@@ -40,7 +39,7 @@ public class LoginPhonePasswordFragment extends LoginBaseFormFragment<LoginListe
 
     public static final String TAG = "login_phone_password_fragment_tag";
 
-    private PLoginInputRow mPasswordInput;
+    private PNLoginInputRow mPasswordInput;
 
     private String mRequestedPassword;
 

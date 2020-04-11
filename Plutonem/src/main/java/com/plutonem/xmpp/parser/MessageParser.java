@@ -5,9 +5,11 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.plutonem.Config;
+import com.plutonem.R;
 import com.plutonem.xmpp.entities.Account;
 import com.plutonem.xmpp.entities.Conversation;
 import com.plutonem.xmpp.entities.Message;
+import com.plutonem.xmpp.entities.ReceiptRequest;
 import com.plutonem.xmpp.services.MessageArchiveService;
 import com.plutonem.xmpp.services.XmppConnectionService;
 import com.plutonem.xmpp.xml.Element;
@@ -15,11 +17,24 @@ import com.plutonem.xmpp.xml.LocalizedContent;
 import com.plutonem.xmpp.xml.Namespace;
 import com.plutonem.xmpp.xmpp.InvalidJid;
 import com.plutonem.xmpp.xmpp.OnMessagePacketReceived;
+import com.plutonem.xmpp.xmpp.chatstate.ChatState;
 import com.plutonem.xmpp.xmpp.stanzas.MessagePacket;
+
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import rocks.xmpp.addr.Jid;
 
 public class MessageParser extends AbstractParser implements OnMessagePacketReceived {
+
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
+
+    public MessageParser(XmppConnectionService service) {
+        super(service);
+    }
 
     private static String extractStanzaId(Element packet, boolean isTypeGroupChat, Conversation conversation) {
         final Jid by;
@@ -47,8 +62,27 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
         return null;
     }
 
-    public MessageParser(XmppConnectionService service) {
-        super(service);
+    private boolean extractChatState(Conversation c, final boolean isTypeGroupChat, final MessagePacket packet) {
+        ChatState state = ChatState.parse(packet);
+        if (state != null && c != null) {
+            final Account account = c.getAccount();
+            Jid from = packet.getFrom();
+            if (from.asBareJid().equals(account.getJid().asBareJid())) {
+                c.setOutgoingChatState(state);
+                if (state == ChatState.ACTIVE || state == ChatState.COMPOSING) {
+                    mXmppConnectionService.markRead(c);
+                    activateGracePeriod(account);
+                }
+                return false;
+            } else {
+                if (isTypeGroupChat) {
+                    // skip the logic about Multi User Chat
+                } else {
+                    return c.setIncomingChatState(state);
+                }
+            }
+        }
+        return false;
     }
 
     private boolean handleErrorMessage(Account account, MessagePacket packet) {
@@ -116,16 +150,17 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             timestamp = AbstractParser.parseTimestamp(original, AbstractParser.parseTimestamp(packet));
         }
 
+        // set several variable default to null cause all about Multi User Chat or Encryption Chat.
         final LocalizedContent body = packet.getBody();
-        // omit create object of mucUserElement
-        // omit create object of pgpEncrypted
-        final Element replaceElement = packet.findChild("replace", "urn:xmpp:message-correct:0");
-        final Element oob = packet.findChild("x", Namespace.OOB);
-        // omit create object of xP1S3
-        // omit create object of xP1S3Url
-        // omit create object of oob
-        final String replacementId = replaceElement == null ? null : replaceElement.getAttribute("id");
-        // omit create object of axolotlEncrypted
+        final Element mucUserElement = null;
+        final String pgpEncrypted = null;
+        final Element replaceElement = null;
+        final Element oob = null;
+        final Element xP1S3 = null;
+        final URL xP1S3url = null;
+        final String oobUrl = null;
+        final String replacementId = null;
+        final Element axolotlEncrypted = null;
         int status;
         final Jid counterpart;
         final Jid to = packet.getTo();
@@ -144,13 +179,15 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             return;
         }
 
+        // set several variable default to false cause all about Multi User Chat or Encryption Chat.
         boolean isTypeGroupChat = false;
-
-        // omit ensuring whether we received groupchat message on regular MAM request since we are support multi chat function
-
-        // we don't need object about Muc right now so MucStatusMessage is set to false
-
+        if (query != null && !query.muc() && isTypeGroupChat) {
+            Log.e(Config.LOGTAG, account.getJid().asBareJid() + ": received groupchat (" + from + ") message on regular MAM request. skipping");
+            return;
+        }
+        boolean isMucStatusMessage = false;
         boolean selfAddressed;
+
         if (packet.fromAccount(account)) {
             status = Message.STATUS_SEND;
             selfAddressed = to == null || account.getJid().asBareJid().equals(to.asBareJid());
@@ -167,7 +204,8 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 
         // omit the part of invitation from Muc or Conference since Plutonem not support any of these right now
 
-        if (body != null) {
+        if ((body != null || pgpEncrypted != null || (axolotlEncrypted != null && axolotlEncrypted.hasChild("payload")) || oobUrl !=null || xP1S3 != null) && !isMucStatusMessage) {
+            // set several variable default to false cause all about Multi User Chat or Encryption Chat.
             final boolean conversationIsProbablyMuc = false;
             final Conversation conversation = mXmppConnectionService.findOrCreateConversation(account, counterpart.asBareJid(), conversationIsProbablyMuc, false, query, false);
             final boolean conversationMultiMode = false;
@@ -263,11 +301,140 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 
             if (query == null || query.isCatchup()) { // either no mam or catchup
                 if (status == Message.STATUS_SEND || status == Message.STATUS_SEND_RECEIVED) {
-//                    mXmppConnectionService.mark
+                    mXmppConnectionService.markRead(conversation);
+                    if (query == null) {
+                        activateGracePeriod(account);
+                    }
+                } else {
+                    message.markUnread();
+                    notify = true;
+                }
+            }
+
+            if (message.getEncryption() == Message.ENCRYPTION_PGP) {
+                // skip the logic about ENCRYPTION Chat
+            } else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE || message.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED) {
+                notify = false;
+            }
+
+            if (query == null) {
+                extractChatState(mXmppConnectionService.find(account, counterpart.asBareJid()), isTypeGroupChat, packet);
+                mXmppConnectionService.updateConversationUi();
+            }
+
+            if (mXmppConnectionService.confirmMessages()
+                    && message.getStatus() == Message.STATUS_RECEIVED
+                    && (message.trusted() || message.isPrivateMessage())
+                    && remoteMsgId != null
+                    && !selfAddressed
+                    && !isTypeGroupChat) {
+                processMessageReceipts(account, packet, query);
+            }
+
+            mXmppConnectionService.databaseBackend.createMessage(message);
+
+            // skip the logic about File Transfer Chat logic
+            if (notify) {
+                if (query != null && query.isCatchup()) {
+                    mXmppConnectionService.getNotificationService().pushFromBacklog(message);
+                } else {
+                    mXmppConnectionService.getNotificationService().push(message);
+                }
+            }
+        } else if (!packet.hasChild("body")) {
+            final Conversation conversation = mXmppConnectionService.find(account, from.asBareJid());
+
+            // skip Axolotl Encrypted Chat logic now
+
+            if (query == null && extractChatState(mXmppConnectionService.find(account, counterpart.asBareJid()), isTypeGroupChat, packet)) {
+                mXmppConnectionService.updateConversationUi();
+            }
+
+            // skip Group Chat logic now
+
+            // skip Multi User Chat logic now
+
+            Element received = packet.findChild("received", "urn:xmpp:chat-markers:0");
+            if (received == null) {
+                received = packet.findChild("received", "urn:xmpp:receipts");
+            }
+            if (received != null) {
+                String id = received.getAttribute("id");
+                if (packet.fromAccount(account)) {
+                    if (query != null && id != null && packet.getTo() != null) {
+                        query.removePendingReceiptRequest(new ReceiptRequest(packet.getTo(), id));
+                    }
+                } else {
+                    mXmppConnectionService.markMessage(account, from.asBareJid(), received.getAttribute("id"), Message.STATUS_SEND_RECEIVED);
+                }
+            }
+            Element displayed = packet.findChild("displayed", "urn:xmpp:chat-markers:0");
+            if (displayed != null) {
+                final String id = displayed.getAttribute("id");
+                final Jid sender = InvalidJid.getNullForInvalid(displayed.getAttributeAsJid("sender"));
+                if (packet.fromAccount(account) && !selfAddressed) {
+                    dismissNotification(account, counterpart, query);
+                    if (query == null) {
+                        activateGracePeriod(account);
+                    }
+                } else if (isTypeGroupChat) {
+                    // skip Group Chat logic consideration here
+                } else {
+                    final Message displayedMessage = mXmppConnectionService.markMessage(account, from.asBareJid(), id, Message.STATUS_SEND_DISPLAYED);
+                    Message message = displayedMessage == null ? null : displayedMessage.prev();
+                    while (message != null
+                            && message.getStatus() == Message.STATUS_SEND_RECEIVED
+                            && message.getTimeSent() < displayedMessage.getTimeSent()) {
+                        mXmppConnectionService.markMessage(message, Message.STATUS_SEND_DISPLAYED);
+                        message = message.prev();
+                    }
+                    if (displayedMessage != null && selfAddressed) {
+                        dismissNotification(account, counterpart, query);
+                    }
                 }
             }
         }
 
-        // we currently omit the afterward implementation after we determine the utilization of function
+        // save event of pubsub logic for later processing
+
+        // save nick setting logic for later processing
+    }
+
+    private void dismissNotification(Account account, Jid counterpart, MessageArchiveService.Query query) {
+        Conversation conversation = mXmppConnectionService.find(account, counterpart.asBareJid());
+        if (conversation != null && (query == null || query.isCatchup())) {
+            mXmppConnectionService.markRead(conversation); //TODO only mark messages read that are older than timestamp
+        }
+    }
+
+    private void processMessageReceipts(Account account, MessagePacket packet, MessageArchiveService.Query query) {
+        final boolean markable = packet.hasChild("markable", "urn:xmpp:chat-markers:0");
+        final boolean request = packet.hasChild("request", "urn:xmpp:receipts");
+        if (query == null) {
+            final ArrayList<String> receiptsNamespaces = new ArrayList<>();
+            if (markable) {
+                receiptsNamespaces.add("urn:xmpp:chat-markers:0");
+            }
+            if (request) {
+                receiptsNamespaces.add("urn:xmpp:receipts");
+            }
+            if (receiptsNamespaces.size() > 0) {
+                MessagePacket receipt = mXmppConnectionService.getMessageGenerator().received(account,
+                        packet,
+                        receiptsNamespaces,
+                        packet.getType());
+                mXmppConnectionService.sendMessagePacket(account, receipt);
+            }
+        } else if (query.isCatchup()) {
+            if (request) {
+                query.addPendingReceiptRequest(new ReceiptRequest(packet.getFrom(), packet.getId()));
+            }
+        }
+    }
+
+    private void activateGracePeriod(Account account) {
+        long duration = mXmppConnectionService.getLongPreference("grace_period_length", R.integer.grace_period) * 1000;
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": activating grace period till " + TIME_FORMAT.format(new Date(System.currentTimeMillis() + duration)));
+        account.activateGracePeriod(duration);
     }
 }

@@ -35,14 +35,21 @@
     <string name="signup_phone_screen_title">Phone signup</string>
 
     <!-- xmpp connection -->
+    <string name="just_now">just now</string>
+    <string name="minute_ago">1 min ago</string>
+    <string name="minutes_ago">%d mins ago</string>
     <string name="x_unread_conversations">%d unread conversations</string>
+    <string name="sending">sending…</string>
     <string name="blocked">Blocked</string>
     <string name="cancel">Cancel</string>
     <string name="problem_connecting_to_account">Unable to connect to account</string>
     <string name="problem_connecting_to_accounts">Unable to connect to multiple accounts</string>
     <string name="touch_to_fix">Touch here to manage your accounts</string>
+    <string name="send_failed">delivery failed</string>
     <string name="send_unencrypted_message">Send unencrypted message</string>
+    <string name="send_message">Send message</string>
     <string name="send_message_to_x">Send message to %s</string>
+    <string name="waiting">waiting…</string>
     <string name="account_status_unknown">Unknown</string>
     <string name="account_status_disabled">Temporarily disabled</string>
     <string name="account_status_online">Online</string>
@@ -61,12 +68,19 @@
     <string name="account_status_incompatible_server">Incompatible server</string>
     <string name="account_status_stream_error">Stream error</string>
     <string name="account_status_stream_opening_error">Stream opening error</string>
+    <string name="invalid_jid">This is not a valid XMPP address</string>
+    <string name="contact_has_read_up_to_this_point">%s has read up to this point</string>
+    <string name="account_already_exists">This account already exists</string>
     <string name="title_pref_quiet_hours">Quiet Hours</string>
     <string name="try_again">Try again</string>
+    <string name="no_application_found_to_open_link">No application found to open link</string>
+    <string name="fetching_history_from_server">Fetching history from server</string>
     <string name="no_more_history_on_server">No more history on server</string>
     <string name="snooze">Snooze</string>
     <string name="reply">Reply</string>
     <string name="mark_as_read">Mark as read</string>
+    <string name="contact_is_typing">%s is typing…</string>
+    <string name="contact_has_stopped_typing">%s has stopped typing</string>
     <string name="account_status_tor_unavailable">Tor network unavailable</string>
     <string name="account_status_bind_failure">Bind failure</string>
     <string name="account_status_host_unknown">Server not responsible for domain</string>
@@ -75,6 +89,7 @@
         <item quantity="one">%d message</item>
         <item quantity="other">%d messages</item>
     </plurals>
+    <string name="load_more_messages">Load more messages</string>
     <string name="always">Always</string>
     <string name="presence_chat">Free for Chat</string>
     <string name="presence_online">Online</string>
@@ -86,9 +101,13 @@
     <string name="payment_required">Payment required</string>
     <string name="missing_internet_permission">Missing internet permission</string>
     <string name="me">Me</string>
+    <string name="unable_to_update_account">Unable to update account</string>
+    <string name="not_fetching_history_retention_period">Not fetching messages due to local retention period.</string>
     <string name="session_failure">Session failure</string>
     <string name="sasl_downgrade">Downgraded SASL mechanism</string>
     <string name="account_status_regis_web">Server requires registration on website</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="mtm_accept_cert">Accept Unknown Certificate?</string>
     <string name="mtm_trust_anchor">The server certificate is not signed by a known Certificate Authority.</string>
     <string name="mtm_accept_servername">Accept Mismatching Server Name?</string>
@@ -106,4 +125,5 @@
     <string name="messages_channel_name">Messages</string>
     <string name="silent_messages_channel_name">Silent messages</string>
     <string name="silent_messages_channel_description">This notification group is used to display notifications that should not trigger any sound. For example when being active on another device (Grace Period).</string>
+    <string name="cancelled">cancelled</string>
 </resources>

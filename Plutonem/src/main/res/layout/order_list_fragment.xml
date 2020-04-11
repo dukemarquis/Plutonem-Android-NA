@@ -26,12 +26,10 @@
                 android:id="@+id/actionable_empty_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/background_default"
                 android:visibility="gone"
                 app:aevImage="@drawable/img_illustration_orders_75dp"
                 app:aevTitle="@string/orders_empty_list"
-                tools:visibility="visible">
-            </com.plutonem.ui.ActionableEmptyView>
+                tools:visibility="visible" />
 
         </RelativeLayout>
 
@@ -44,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/wordpress_margin_large"
+        android:layout_marginBottom="@dimen/margin_large"
         android:visibility="gone"
         tools:visibility="visible"/>
 

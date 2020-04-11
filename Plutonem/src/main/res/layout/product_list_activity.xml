@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
@@ -11,22 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
-        android:fitsSystemWindows="true">
+        android:elevation="@dimen/appbar_elevation"
+        android:fitsSystemWindows="true"
+        tools:targetApi="21">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_collapseMode="pin"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        </androidx.appcompat.widget.Toolbar>
+            android:elevation="0dp"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <RelativeLayout
             android:id="@+id/tabContainer"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/wordpress_tab_height">
+            android:layout_height="@dimen/tab_height"
+            android:elevation="0dp">
 
             <!--Padding start and end is set programmatically based on if the fading edge is visible-->
             <com.google.android.material.tabs.TabLayout
@@ -36,11 +35,9 @@
                 android:layout_alignStart="@+id/product_list_tab_layout_fading_edge"
                 android:layout_gravity="start"
                 android:clipToPadding="false"
+                android:elevation="0dp"
                 app:tabGravity="fill"
-                app:tabIndicatorColor="@android:color/white"
                 app:tabMode="scrollable"
-                app:tabSelectedTextColor="@android:color/white"
-                app:tabTextColor="@android:color/white"
                 tools:paddingEnd="0dp"
                 tools:paddingStart="@dimen/products_list_tab_layout_fading_edge_width"/>
 
@@ -49,15 +46,18 @@
                 android:layout_width="@dimen/products_list_tab_layout_fading_edge_width"
                 android:layout_height="match_parent"
                 android:layout_alignEnd="@+id/product_list_account_selection"
-                android:background="@drawable/bg_rectangle_gradient_primary_50_transparent"/>
+                android:elevation="0dp" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/product_list_account_selection"
                 android:layout_width="@dimen/products_list_spinner_width"
+                android:contentDescription="@string/order_list_account"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"
-                android:paddingEnd="@dimen/wordpress_margin_small"
-                android:paddingStart="0dp"/>
+                android:elevation="0dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="@dimen/margin_small" />
+
         </RelativeLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

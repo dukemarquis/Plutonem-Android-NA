@@ -10,12 +10,13 @@ import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.google.android.material.textview.MaterialTextView;
 import com.plutonem.R;
 
 /**
  * Custom TextView - with an option to auto fix widow words.
  */
-public class PNTextView extends AppCompatTextView {
+public class PNTextView extends MaterialTextView {
     protected boolean mFixWidowWordEnabled;
 
     public PNTextView(Context context) {
@@ -77,4 +78,5 @@ public class PNTextView extends AppCompatTextView {
         return source;
     }
 }
+
 

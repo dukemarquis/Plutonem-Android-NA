@@ -135,7 +135,8 @@
     <string name="namur_label_acuser_count">%,d active users</string>
     <string name="nemur_label_gap_marker">Load more orders</string>
     <string name="nemur_label_order_search_explainer">What would you like to find?</string>
-    <string name="nemur_buy_orders">Buy orders</string>
+    <string name="nemur_buy_orders">Buy</string>
+    <string name="nemur_chat">Chat</string>
 
     <!-- toast messages -->
     <string name="nemur_toast_err_get_buyer_info">Unable to show this buyer</string>
@@ -206,6 +207,7 @@
     <string name="nemur_list_item_suggestion_remove_desc">delete</string>
 
     <!-- Orders -->
+    <string name="order_list_account">Order account</string>
     <string name="order_list_account_me">Me</string>
     <string name="order_list_delivering">Delivering</string>
     <string name="order_list_receiving">Receiving</string>

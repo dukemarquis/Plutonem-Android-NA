@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.cursoradapter.widget.CursorAdapter;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.plutonem.R;
 import com.plutonem.datasets.NemurSearchTable;
 
@@ -165,19 +166,13 @@ public class NemurSearchSuggestionAdapter extends CursorAdapter {
     }
 
     private void confirmClearSavedSearches(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(context, R.style.Calypso_Dialog_Alert));
-        builder.setMessage(R.string.dlg_confirm_clear_search_history)
+        new MaterialAlertDialogBuilder(context)
+                .setMessage(R.string.dlg_confirm_clear_search_history)
                 .setCancelable(true)
                 .setNegativeButton(R.string.no, null)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        clearSavedSearches();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
+                .setPositiveButton(R.string.yes, (dialog, id) -> clearSavedSearches())
+                .create()
+                .show();
     }
 
     private synchronized void clearSavedSearches() {

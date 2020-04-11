@@ -6,9 +6,11 @@ import com.plutonem.xmpp.entities.Message;
 import com.plutonem.xmpp.services.XmppConnectionService;
 import com.plutonem.xmpp.xml.Element;
 import com.plutonem.xmpp.xml.Namespace;
+import com.plutonem.xmpp.xmpp.chatstate.ChatState;
 import com.plutonem.xmpp.xmpp.stanzas.MessagePacket;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -32,11 +34,11 @@ public class MessageGenerator extends AbstractGenerator {
                 packet.addChild("request", "urn:xmpp:receipts");
             }
         } else if (message.isPrivateMessage()) {
-            // omit by now
+            // skip Multi Mode Chat part.
         } else {
-            // omit by now
+            // skip Multi Mode Chat part.
         }
-        if (conversation.isSingle() && !message.isPrivateMessage()) {
+        if (conversation.isSingleOrPrivateAndNonAnonymous() && !message.isPrivateMessage()) {
             packet.addChild("markable", "urn:xmpp:chat-markers:0");
         }
         packet.setFrom(account.getJid());
@@ -69,6 +71,45 @@ public class MessageGenerator extends AbstractGenerator {
         packet.setBody(content);
         return packet;
     }
+
+    public MessagePacket generateChatState(Conversation conversation) {
+        final Account account = conversation.getAccount();
+        MessagePacket packet = new MessagePacket();
+        packet.setType(MessagePacket.TYPE_CHAT);
+        packet.setTo(conversation.getJid().asBareJid());
+        packet.setFrom(account.getJid());
+        packet.addChild(ChatState.toElement(conversation.getOutgoingChatState()));
+        packet.addChild("no-store", "urn:xmpp:hints");
+//        packet.addChild("no-storage", "urn:xmpp:hints"); //wrong! don't copy this. Its *store*
+        return packet;
+    }
+
+    public MessagePacket confirm(final Account account, final Jid to, final String id, final Jid counterpart, final boolean groupChat) {
+        MessagePacket packet = new MessagePacket();
+        packet.setType(groupChat ? MessagePacket.TYPE_GROUPCHAT : MessagePacket.TYPE_CHAT);
+        packet.setTo(groupChat ? to.asBareJid() : to);
+        packet.setFrom(account.getJid());
+        Element displayed = packet.addChild("displayed", "urn:xmpp:chat-markers:0");
+        displayed.setAttribute("id", id);
+        if (groupChat && counterpart != null) {
+            displayed.setAttribute("sender", counterpart.toString());
+        }
+        packet.addChild("store", "urn:xmpp:hints");
+        return packet;
+    }
+
+    public MessagePacket received(Account account, MessagePacket originalMessage, ArrayList<String> namespaces, int type) {
+        MessagePacket receivedPacket = new MessagePacket();
+        receivedPacket.setType(type);
+        receivedPacket.setTo(originalMessage.getFrom());
+        receivedPacket.setFrom(account.getJid());
+        for (String namespace : namespaces) {
+            receivedPacket.addChild("received", namespace).setAttribute("id", originalMessage.getId());
+        }
+        receivedPacket.addChild("store", "urn:xmpp:hints");
+        return receivedPacket;
+    }
+
 
     public MessagePacket received(Account account, Jid to, String id) {
         MessagePacket packet = new MessagePacket();

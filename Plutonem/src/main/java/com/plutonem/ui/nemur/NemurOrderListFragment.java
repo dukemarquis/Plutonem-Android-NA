@@ -844,7 +844,7 @@ public class NemurOrderListFragment extends Fragment
     }
 
     private int getEmptyViewTopMargin() {
-        int totalMargin = getActivity().getResources().getDimensionPixelSize(R.dimen.wordpress_toolbar_height);
+        int totalMargin = getActivity().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
 
         return totalMargin;
     }
@@ -854,8 +854,8 @@ public class NemurOrderListFragment extends Fragment
             return;
         }
 
-        int heightToolbar = getActivity().getResources().getDimensionPixelSize(R.dimen.wordpress_toolbar_height);
-        int heightTabs = getActivity().getResources().getDimensionPixelSize(R.dimen.wordpress_tab_height);
+        int heightToolbar = getActivity().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
+        int heightTabs = getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
         mActionableEmptyView.updateLayoutForSearch(false, getEmptyViewTopMargin());
         mActionableEmptyView.subtitle.setContentDescription(null);
         boolean isSearching = false;

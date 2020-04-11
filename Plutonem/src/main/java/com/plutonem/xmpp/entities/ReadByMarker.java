@@ -10,6 +10,32 @@ import java.util.Set;
 import rocks.xmpp.addr.Jid;
 
 public class ReadByMarker {
+
+    private ReadByMarker() {
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ReadByMarker marker = (ReadByMarker) o;
+
+        if (fullJid != null ? !fullJid.equals(marker.fullJid) : marker.fullJid != null)
+            return false;
+        return realJid != null ? realJid.equals(marker.realJid) : marker.realJid == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = fullJid != null ? fullJid.hashCode() : 0;
+        result = 31 * result + (realJid != null ? realJid.hashCode() : 0);
+        return result;
+    }
+
+
     private Jid fullJid;
     private Jid realJid;
 
