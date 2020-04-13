@@ -1,5 +1,6 @@
 package com.plutonem.ui.nemur;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.SparseArray;
@@ -19,8 +20,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.plutonem.Plutonem;
 import com.plutonem.R;
+import com.plutonem.android.fluxc.store.AccountStore;
 import com.plutonem.datasets.NemurOrderTable;
 import com.plutonem.models.NemurTag;
+import com.plutonem.ui.ActivityLauncher;
+import com.plutonem.ui.RequestCodes;
 import com.plutonem.ui.nemur.NemurTypes.NemurOrderListType;
 import com.plutonem.ui.nemur.actions.NemurActions;
 import com.plutonem.ui.nemur.models.NemurBuyerIdOrderId;
@@ -28,6 +32,7 @@ import com.plutonem.ui.nemur.models.NemurBuyerIdOrderIdList;
 import com.plutonem.ui.nemur.services.order.NemurOrderServiceStarter;
 import com.plutonem.ui.prefs.AppPrefs;
 import com.plutonem.utilities.AniUtils;
+import com.plutonem.utilities.FluxCUtils;
 import com.plutonem.widgets.PNSwipeSnackbar;
 import com.plutonem.widgets.PNViewPager;
 import com.plutonem.widgets.PNViewPagerTransformer;
@@ -44,6 +49,8 @@ import org.wordpress.android.util.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import kohii.v1.core.MemoryMode;
 import kohii.v1.exoplayer.Kohii;
@@ -76,6 +83,8 @@ public class NemurOrderPagerActivity extends XmppActivity
     private static final String XMPP_CONNECTION_SELLER_UNIQUE_ID = "seller@3.15.14.1";
 
     private List<String> mActivatedAccounts = new ArrayList<>();
+
+    @Inject AccountStore mAccountStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -490,30 +499,48 @@ public class NemurOrderPagerActivity extends XmppActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.DO_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                // login successfully,
+                // skip Show Chat Ui part.
+            }
+        }
+    }
+
+    @Override
     public void onShowChat() {
-        final Jid accountJid;
-        final Jid contactJid;
+        if (FluxCUtils.isSignedInPN(mAccountStore)) {
 
-        if (this.mActivatedAccounts.size() != 1) {
-            // skip Multi User Accounts
-            accountJid = null;
-            contactJid = null;
+            final Jid accountJid;
+            final Jid contactJid;
+
+            if (this.mActivatedAccounts.size() != 1) {
+
+                // skip Multi User Chat part.
+                accountJid = null;
+                contactJid = null;
+            } else {
+                accountJid = Jid.of(mActivatedAccounts.get(0));
+                contactJid = Jid.of(XMPP_CONNECTION_SELLER_UNIQUE_ID);
+            }
+
+            if (!xmppConnectionServiceBound) {
+                return;
+            }
+
+            final Account account = xmppConnectionService.findAccountByJid(accountJid);
+            if (account == null) {
+                return;
+            }
+
+            // skip Create Contact Part.
+            switchToConversationDoNotAppend(account, contactJid, null);
         } else {
-             accountJid = Jid.of(mActivatedAccounts.get(0));
-             contactJid = Jid.of(XMPP_CONNECTION_SELLER_UNIQUE_ID);
+            // start the login flow and wait onActivityResult
+            ActivityLauncher.loginForChatIntent(this);
         }
-
-        if (!xmppConnectionServiceBound) {
-            return;
-        }
-
-        final Account account = xmppConnectionService.findAccountByJid(accountJid);
-        if (account == null) {
-            return;
-        }
-
-        // skip Create Contact Part.
-        switchToConversationDoNotAppend(account, contactJid, null);
     }
 
     protected void switchToConversationDoNotAppend(Account account, Jid contactJid, String body) {

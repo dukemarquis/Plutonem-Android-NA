@@ -4,7 +4,8 @@ import android.content.Intent;
 
 public enum LoginMode {
     FULL,
-    BUY_INTENT;
+    BUY_INTENT,
+    CHAT_INTENT;
 
     private static final String ARG_LOGIN_MODE = "ARG_LOGIN_MODE";
 

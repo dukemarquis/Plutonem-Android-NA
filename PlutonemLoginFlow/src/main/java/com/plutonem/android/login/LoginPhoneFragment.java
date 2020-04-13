@@ -65,6 +65,7 @@ public class LoginPhoneFragment extends LoginBaseFormFragment<LoginListener> imp
         switch (mLoginListener.getLoginMode()) {
             case FULL:
             case BUY_INTENT:
+            case CHAT_INTENT:
                 label.setText(R.string.enter_phone_plutonem);
                 break;
         }

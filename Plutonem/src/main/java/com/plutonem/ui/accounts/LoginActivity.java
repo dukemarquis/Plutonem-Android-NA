@@ -112,6 +112,7 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
                     showFragment(new LoginPhoneFragment(), LoginPhoneFragment.TAG);
                     break;
                 case BUY_INTENT:
+                case CHAT_INTENT:
                     checkNothingAndStartLogin();
                     break;
             }
@@ -204,6 +205,7 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
                 finish();
                 break;
             case BUY_INTENT:
+            case CHAT_INTENT:
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;

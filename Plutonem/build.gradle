@@ -40,13 +40,13 @@ android {
     defaultConfig {
         applicationId "com.plutonem"
 
-        // Allow versionName to be overridden with property. e.g. -PversionName=1234
+        // Allow versionName to be overridden with property. e.g. -PNversionName=1234
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "1.0.3"
+            versionName "1.0.4"
         }
-        versionCode 3
+        versionCode 4
         minSdkVersion 19
         targetSdkVersion 29
 

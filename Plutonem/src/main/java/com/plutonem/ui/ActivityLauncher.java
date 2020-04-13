@@ -43,4 +43,10 @@ public class ActivityLauncher {
         LoginMode.BUY_INTENT.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
+
+    public static void loginForChatIntent(Activity activity) {
+        Intent intent = new Intent(activity, LoginActivity.class);
+        LoginMode.CHAT_INTENT.putInto(intent);
+        activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
 }
