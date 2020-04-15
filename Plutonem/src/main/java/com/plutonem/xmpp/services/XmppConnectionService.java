@@ -1236,11 +1236,11 @@ public class XmppConnectionService extends Service {
         final boolean connected = account.getStatus() == Account.State.ONLINE;
         synchronized (this.conversations) {
             if (connected) {
-                // currently we don't want be paired with Axolotl Service.
+                // skip Axolotl Encryption Service part.
             }
             for (final Conversation conversation : conversations) {
                 if (conversation.getAccount() == account) {
-                    // currently we don't need to deal with the Multi Mode Conversation logic
+                    // skip Multi Mode Chat part.
                     conversations.remove(conversation);
                     mNotificationService.clear(conversation);
                 }
@@ -1255,7 +1255,7 @@ public class XmppConnectionService extends Service {
             };
             mDatabaseWriterExecutor.execute(runnable);
             this.accounts.remove(account);
-            // Skip the Roster Sync Cleaning part by now.
+            // skip Roster Contact part.
             updateAccountUi();
             mNotificationService.updateErrorNotification();
             syncEnabledAccountSetting();

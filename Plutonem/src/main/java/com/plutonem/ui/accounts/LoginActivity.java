@@ -28,6 +28,7 @@ import com.plutonem.xmpp.entities.Avatar;
 import com.plutonem.xmpp.services.XmppConnectionService.OnAccountUpdate;
 import com.plutonem.xmpp.ui.UiCallback;
 import com.plutonem.xmpp.ui.XmppActivity;
+import com.plutonem.xmpp.ui.util.MenuDoubleTabUtil;
 import com.plutonem.xmpp.ui.util.SoftKeyboardUtils;
 import com.plutonem.xmpp.xmpp.XmppConnection;
 
@@ -176,12 +177,13 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
         }
-
-        return false;
+        if (item.getItemId() == android.R.id.home) {
+            deleteAccountAndReturnIfNecessary();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
