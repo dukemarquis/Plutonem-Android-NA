@@ -18,4 +18,4 @@ This topic has been around for two to three years, but we still think today's te
 
 # Last wish
 
-Thanks again guys for all of the hard work you do by now and wish we could go further and stronger.
+Thanks again guys for all of the hard work you do and wish we could go further and stronger.
