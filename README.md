@@ -12,6 +12,7 @@ As you probably know tiktok has about billion users all around the world, people
 
 2. Do it with augmented reality
 
-this topic has been around for two to three years, but we still think today's technology with augmented reality still has long way to go. We want the users could see their wishing-things right in front of their faces and they can use their finger to move, flip, do anything they want with this virtual product so they could know everything detailed about this product. We think this gonna be magical. We really hope someone in the world that enthusiam about augmented reality could join us to create this shopping experience.
+This topic has been around for two to three years, but we still think today's technology with augmented reality still has long way to go. We want the users could see their wishing-things right in front of their faces and they can use their finger to move, flip, do anything they want with this virtual product so they could know everything detailed about this product. We think this gonna be magical. We really hope someone in the world that enthusiam about augmented reality could join us to create this shopping experience.
+
 
 Thanks again guys for all of the hard work you do by now and wish we could go further and stronger.
