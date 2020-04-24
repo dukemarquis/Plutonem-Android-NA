@@ -190,8 +190,6 @@ public class SignupPhonePasswordFragment extends LoginBaseFormFragment<LoginList
 
         SignupPnService.signupWithPhoneAndPassword(getContext(), mPhoneNumber, mRequestedPassword, mIdToken, mService,
                     mIsSocialLogin);
-
-//        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
     }
 
     @Override
@@ -227,9 +225,9 @@ public class SignupPhonePasswordFragment extends LoginBaseFormFragment<LoginList
     protected void onLoginFinished() {
         // Next we need to register a new xmpp account for communication in Plutonem, be careful with Stream Error.
         if (mIsSocialLogin) {
-            mLoginListener.signUpXmppAccount(mPhoneNumber, mRequestedPassword, mNextButton);
+            mLoginListener.logInXmppAccount(mPhoneNumber, mRequestedPassword, mNextButton, true);
         } else {
-            mLoginListener.signUpXmppAccount(mPhoneNumber, mRequestedPassword, mNextButton);
+            mLoginListener.logInXmppAccount(mPhoneNumber, mRequestedPassword, mNextButton, true);
         }
     }
 

@@ -1,9 +1,6 @@
 package com.plutonem.xmpp.ui;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +10,9 @@ import android.widget.Toast;
 
 import androidx.annotation.IdRes;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.plutonem.Config;
 import com.plutonem.R;
@@ -34,7 +32,7 @@ import java.util.List;
 
 public class ConversationsActivity extends XmppActivity implements OnConversationArchived, OnConversationsListItemUpdated, OnConversationRead, XmppConnectionService.OnAccountUpdate, XmppConnectionService.OnConversationUpdate, XmppConnectionService.OnShowErrorToast {
 
-    public static final String ACTION_VIEW_CONVERSATION = "eu.siacs.conversations.action.VIEW";
+    public static final String ACTION_VIEW_CONVERSATION = "com.plutonem.action.VIEW";
     public static final String EXTRA_CONVERSATION = "conversationUuid";
     public static final String EXTRA_DOWNLOAD_UUID = "eu.siacs.conversations.download_uuid";
     public static final String EXTRA_DO_NOT_APPEND = "do_not_append";
@@ -75,7 +73,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
 
     @Override
     protected void refreshUiReal() {
-        for(@IdRes int id : FRAGMENT_ID_NOTIFICATION_ORDER) {
+        for (@IdRes int id : FRAGMENT_ID_NOTIFICATION_ORDER) {
             refreshFragment(id);
         }
     }
@@ -98,14 +96,14 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     }
 
     private void notifyFragmentOfBackendConnected(@IdRes int id) {
-        final Fragment fragment = getFragmentManager().findFragmentById(id);
+        final Fragment fragment = getSupportFragmentManager().findFragmentById(id);
         if (fragment instanceof OnBackendConnected) {
             ((OnBackendConnected) fragment).onBackendConnected();
         }
     }
 
     private void refreshFragment(@IdRes int id) {
-        final Fragment fragment = getFragmentManager().findFragmentById(id);
+        final Fragment fragment = getSupportFragmentManager().findFragmentById(id);
         if (fragment instanceof XmppFragment) {
             ((XmppFragment) fragment).refresh();
         }
@@ -126,9 +124,8 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_conversations);
-//        setSupportActionBar((Toolbar) binding.toolbarMain);
         configureActionBar(getSupportActionBar());
-        this.getFragmentManager().addOnBackStackChangedListener(this::invalidateActionBarTitle);
+        this.getSupportFragmentManager().addOnBackStackChangedListener(this::invalidateActionBarTitle);
         this.initializeFragments();
         this.invalidateActionBarTitle();
         final Intent intent;
@@ -150,7 +147,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     }
 
     private void openConversation(Conversation conversation, Bundle extras) {
-        Fragment mainFragment = getFragmentManager().findFragmentById(R.id.main_fragment);
+        Fragment mainFragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment);
         ConversationFragment conversationFragment = (ConversationFragment) mainFragment;
         conversationFragment.reInit(conversation, extras == null ? new Bundle() : extras);
         invalidateActionBarTitle();
@@ -203,7 +200,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     }
 
     private void initializeFragments() {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_fragment, new ConversationFragment());
         transaction.commit();
     }
@@ -211,7 +208,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     private void invalidateActionBarTitle() {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            Fragment mainFragment = getFragmentManager().findFragmentById(R.id.main_fragment);
+            Fragment mainFragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment);
             if (mainFragment instanceof ConversationFragment) {
                 final Conversation conversation = ((ConversationFragment) mainFragment).getConversation();
                 if (conversation != null) {
@@ -227,8 +224,11 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
 
     @Override
     public void onConversationArchived(Conversation conversation) {
+
         // skip Perform Redirect part.
-        Fragment mainFragment = getFragmentManager().findFragmentById(R.id.main_fragment);
+        // skip Tablet Layout part.
+
+        Fragment mainFragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment);
         if (mainFragment instanceof ConversationFragment) {
             try {
                 getFragmentManager().popBackStack();
@@ -238,7 +238,6 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             }
             return;
         }
-        // skip Tablet Layout part.
     }
 
     @Override
@@ -262,6 +261,9 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
 
     @Override
     public void onConversationUpdate() {
+
+        // skip Redirection Perform part.
+
         this.refreshUi();
     }
 

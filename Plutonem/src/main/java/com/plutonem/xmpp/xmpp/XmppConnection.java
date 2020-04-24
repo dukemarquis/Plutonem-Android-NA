@@ -258,7 +258,7 @@ public class XmppConnection implements Runnable {
             final boolean useTor = mXmppConnectionService.useTorToConnect() || account.isOnion();
             final boolean extended = mXmppConnectionService.showExtendedConnectionOptions();
             if (useTor) {
-                // omit by now
+                // skip Tor Service part.
             } else {
                 final String domain = account.getJid().getDomain();
                 final List<Resolver.Result> results;
@@ -1293,6 +1293,10 @@ public class XmppConnection implements Runnable {
     }
 
     public void sendMessagePacket(final MessagePacket packet) {
+        this.sendPacket(packet);
+    }
+
+    public void sendPresencePacket(final PresencePacket packet) {
         this.sendPacket(packet);
     }
 

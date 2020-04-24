@@ -13,11 +13,13 @@
 
     <!-- Screen titles -->
     <string name="home_page_section_screen_title" translatable="false">Nemur</string>
+    <string name="chat_screen_title">Messages</string>
     <string name="me_section_screen_title">Me</string>
 
     <!--TabBar Accessibility Labels-->
-    <string name="tabbar_accessibility_label_home_page">Nemur. Enjoy shopping in plutonem.</string>
-    <string name="tabbar_accessibility_label_me">My buyer. View your buyer and manage it, including orders.</string>
+    <string name="tabbar_accessibility_label_home_page">Product list. Enjoy shopping with good quality introduction videos.</string>
+    <string name="tabbar_accessibility_label_chat">Messages. Have conversations with sellers for pre-buy custom service.</string>
+    <string name="tabbar_accessibility_label_me">My info. View your personal information and manage it, including orders.</string>
 
     <!-- default strings -->
     <string name="plutonem" translatable="false">Plutonem</string>
@@ -315,6 +317,7 @@
     <string name="mtm_connect_anyway">Do you want to connect anyway?</string>
     <string name="mtm_cert_details">Certificate details:</string>
     <string name="once">Once</string>
+    <string name="draft">Draft:</string>
     <string name="not_encrypted_for_this_device">Message was not encrypted for this device.</string>
     <string name="foreground_service_channel_name">Foreground service</string>
     <string name="foreground_service_channel_description">This notification category is used to display a permanent notification indicating that Conversations is running.</string>

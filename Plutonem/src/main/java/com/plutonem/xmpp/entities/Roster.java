@@ -28,6 +28,12 @@ public class Roster {
         }
     }
 
+    public void clearPresences() {
+        for (Contact contact : getContacts()) {
+            contact.clearPresences();
+        }
+    }
+
     public void markAllAsNotInRoster() {
         for (Contact contact : getContacts()) {
             contact.resetOption(Contact.Options.IN_ROSTER);

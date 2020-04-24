@@ -81,6 +81,7 @@
     <string name="mark_as_read">Mark as read</string>
     <string name="contact_is_typing">%s is typing…</string>
     <string name="contact_has_stopped_typing">%s has stopped typing</string>
+    <string name="title_undo_swipe_out_conversation">Conversation closed</string>
     <string name="account_status_tor_unavailable">Tor network unavailable</string>
     <string name="account_status_bind_failure">Bind failure</string>
     <string name="account_status_host_unknown">Server not responsible for domain</string>
@@ -115,7 +116,9 @@
     <string name="mtm_connect_anyway">Do you want to connect anyway?</string>
     <string name="mtm_cert_details">Certificate details:</string>
     <string name="once">Once</string>
+    <string name="draft">Draft:</string>
     <string name="not_encrypted_for_this_device">Message was not encrypted for this device.</string>
+    <string name="undo">undo</string>
     <string name="foreground_service_channel_name">Foreground service</string>
     <string name="foreground_service_channel_description">This notification category is used to display a permanent notification indicating that Conversations is running.</string>
     <string name="notification_group_status_information">Status Information</string>

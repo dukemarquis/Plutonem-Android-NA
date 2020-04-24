@@ -48,7 +48,7 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
 
     private LoginMode mLoginMode;
 
-    private Jid jidToEdit;
+//    private Jid jidToEdit;
     private boolean mInitMode = false;
     private Boolean mForceRegister = null;
     private Account mAccount;
@@ -123,21 +123,24 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
     @Override
     protected void onStart() {
         super.onStart();
-        final Intent intent = getIntent();
-        if (intent != null) {
+//        final Intent intent = getIntent();
+//        if (intent != null) {
 
-            try {
-                this.jidToEdit = Jid.of(intent.getStringExtra("jid"));
-            } catch (final IllegalArgumentException | NullPointerException ignored) {
-                this.jidToEdit = null;
-            }
+//            try {
+//                this.jidToEdit = Jid.of(intent.getStringExtra("jid"));
+//            } catch (final IllegalArgumentException | NullPointerException ignored) {
+//                this.jidToEdit = null;
+//            }
 
-            boolean init = intent.getBooleanExtra("init", false);
-            Log.d(Config.LOGTAG, "extras " + intent.getExtras());
-            this.mForceRegister = intent.hasExtra(EXTRA_FORCE_REGISTER) ? intent.getBooleanExtra(EXTRA_FORCE_REGISTER, false) : null;
-            Log.d(Config.LOGTAG, "force register=" + mForceRegister);
-            this.mInitMode = init || this.jidToEdit == null;
-        }
+//            boolean init = intent.getBooleanExtra("init", false);
+//            Log.d(Config.LOGTAG, "extras " + intent.getExtras());
+//            this.mForceRegister = intent.hasExtra(EXTRA_FORCE_REGISTER) ? intent.getBooleanExtra(EXTRA_FORCE_REGISTER, false) : null;
+//            Log.d(Config.LOGTAG, "force register=" + mForceRegister);
+//            this.mInitMode = init || this.jidToEdit == null;
+//        }
+
+        this.mForceRegister = false;
+        this.mInitMode = true;
     }
 
     @Override
@@ -181,9 +184,10 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
             return false;
         }
         if (item.getItemId() == android.R.id.home) {
-            deleteAccountAndReturnIfNecessary();
+            onBackPressed();
+            return true;
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     @Override
@@ -265,11 +269,10 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
     }
 
     @Override
-    public void signUpXmppAccount(String phone, String xmppPassword, MaterialButton nextButton) {
+    public void logInXmppAccount(String phone, String xmppPassword, MaterialButton nextButton, boolean forceRegister) {
         final String account = phone + '@' + XMPP_NA_SERVER_DOMAIN;
-        final String password = xmppPassword;
-        final boolean wasDisabled = mAccount != null && mAccount.getStatus() == Account.State.DISABLED;
-        final boolean accountInfoEdited = accountInfoEdited(account, password);
+        mForceRegister = forceRegister;
+        final boolean accountInfoEdited = accountInfoEdited(account, xmppPassword);
 
         if (mInitMode && mAccount != null) {
             mAccount.setOption(Account.OPTION_DISABLED, false);
@@ -290,8 +293,7 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
             registerNewAccount = !Config.DISALLOW_REGISTRATION_IN_UI;
         }
 
-        XmppConnection connection = mAccount == null ? null : mAccount.getXmppConnection();
-        if (inNeedOfSaslAccept(account, password)) {
+        if (inNeedOfSaslAccept(account, xmppPassword)) {
             mAccount.setKey(Account.PINNED_MECHANISM_KEY, String.valueOf(-1));
             if (!xmppConnectionService.updateAccount(mAccount)) {
                 Toast.makeText(LoginActivity.this, R.string.unable_to_update_account, Toast.LENGTH_SHORT).show();
@@ -315,12 +317,12 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
 
         if (mAccount != null) {
             if (mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE)) {
-                mAccount.setOption(Account.OPTION_MAGIC_CREATE, mAccount.getPassword().contains(password));
+                mAccount.setOption(Account.OPTION_MAGIC_CREATE, mAccount.getPassword().contains(xmppPassword));
             }
             mAccount.setJid(jid);
             mAccount.setPort(numericPort);
             mAccount.setHostname(hostname);
-            mAccount.setPassword(password);
+            mAccount.setPassword(xmppPassword);
             mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
             if (!xmppConnectionService.updateAccount(mAccount)) {
                 Toast.makeText(LoginActivity.this, R.string.unable_to_update_account, Toast.LENGTH_SHORT).show();
@@ -331,7 +333,7 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
                 Toast.makeText(LoginActivity.this, R.string.unable_to_update_account, Toast.LENGTH_SHORT).show();
                 return;
             }
-            mAccount = new Account(jid.asBareJid(), password);
+            mAccount = new Account(jid.asBareJid(), xmppPassword);
             mAccount.setPort(numericPort);
             mAccount.setHostname(hostname);
             mAccount.setOption(Account.OPTION_USETLS, true);
@@ -356,24 +358,22 @@ public class LoginActivity extends XmppActivity implements LoginListener, HasSup
 
     @Override
     public void onBackendConnected() {
-        boolean init = true;
+//        boolean init = true;
 
         if (mSavedInstanceAccount != null) {
             try {
                 this.mAccount = xmppConnectionService.findAccountByJid(Jid.of(mSavedInstanceAccount));
                 this.mInitMode = mSavedInstanceInit;
-                init = false;
+//                init = false;
             } catch (IllegalArgumentException e) {
                 this.mAccount = null;
             }
 
-        } else if (this.jidToEdit != null) {
-            this.mAccount = xmppConnectionService.findAccountByJid(jidToEdit);
         }
 
-        if (mAccount != null) {
-            // we guess we don't need this logic right now.
-        }
+//        else if (this.jidToEdit != null) {
+//            this.mAccount = xmppConnectionService.findAccountByJid(jidToEdit);
+//        }
     }
 
     public void refreshUiReal() {

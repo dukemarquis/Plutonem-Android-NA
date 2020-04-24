@@ -369,8 +369,34 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
         }
     }
 
+    void kill(Conversation conversation) {
+        final ArrayList<Query> toBeKilled = new ArrayList<>();
+        synchronized (this.queries) {
+            for (Query q : queries) {
+                if (q.conversation == conversation) {
+                    toBeKilled.add(q);
+                }
+            }
+        }
+        for (Query q : toBeKilled) {
+            kill(q);
+        }
+    }
+
+    private void kill(Query query) {
+        Log.d(Config.LOGTAG, query.getAccount().getJid().asBareJid() + ": killing mam query prematurely");
+        query.callback = null;
+        this.finalizeQuery(query, false);
+        if (query.isCatchup() && query.getActualMessageCount() > 0) {
+            mXmppConnectionService.getNotificationService().finishBacklog(true, query.getAccount());
+        }
+        this.processPostponed(query);
+    }
+
     private void processPostponed(Query query) {
-//        query.account.getAxolotlService().processPostponed();
+
+        // skip Axolotl Encryption Service part.
+
         query.pendingReceiptRequests.removeAll(query.receiptRequests);
         Log.d(Config.LOGTAG, query.getAccount().getJid().asBareJid() + ": found " + query.pendingReceiptRequests.size() + " pending receipt requests");
         Iterator<ReceiptRequest> iterator = query.pendingReceiptRequests.iterator();

@@ -51,7 +51,9 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public Bitmap get(final Avatarable avatarable, final int size, final boolean cachedOnly) {
-        if (avatarable instanceof Message) {
+        if (avatarable instanceof Conversation) {
+            return get((Conversation) avatarable, size, cachedOnly);
+        } else if (avatarable instanceof Message) {
             return get((Message) avatarable, size, cachedOnly);
         }
         throw new AssertionError("AvatarService does not know how to generate avatar from "+avatarable.getClass().getName());
@@ -83,14 +85,15 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public void clear(Contact contact) {
+
+        // skip Multi User Chat part.
+
         synchronized (this.sizes) {
             for (Integer size : sizes) {
                 this.mXmppConnectionService.getBitmapCache().remove(
                         key(contact, size));
             }
         }
-
-        // skip Multi User Chat part.
     }
 
     private String key(Contact contact, int size) {
@@ -113,7 +116,9 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public Bitmap get(Conversation conversation, int size, boolean cachedOnly) {
-        // omit the Muc option condition consideration for now, so we turn into Single mode session directly
+
+        // skip Multi User Chat part.
+
         return get(conversation.getContact(), size, cachedOnly);
     }
 
@@ -142,14 +147,14 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public Bitmap get(Message message, int size, boolean cachedOnly) {
-        final Conversational conversation = message.getConversation();
+
         // skip Multi User Chat part.
+
+        final Conversational conversation = message.getConversation();
         if (message.getStatus() == Message.STATUS_RECEIVED) {
             Contact c = message.getContact();
             if (c != null && (c.getProfilePhoto() != null || c.getAvatarFilename() != null)) {
                 return get(c, size, cachedOnly);
-            } else if (conversation instanceof Conversation && message.getConversation().getMode() == Conversation.MODE_MULTI) {
-                // skip Multi User Chat part.
             } else if (c != null) {
                 return get(c, size, cachedOnly);
             }

@@ -224,6 +224,23 @@ public class Contact implements ListItem, Blockable {
         this.accountUuid = account.getUuid();
     }
 
+    public Presences getPresences() {
+        return this.presences;
+    }
+
+    public void updatePresence(final String resource, final Presence presence) {
+        this.presences.updatePresence(resource, presence);
+    }
+
+    public void removePresence(final String resource) {
+        this.presences.removePresence(resource);
+    }
+
+    public void clearPresences() {
+        this.presences.clearPresences();
+        this.resetOption(Options.PENDING_SUBSCRIPTION_REQUEST);
+    }
+
     public Presence.Status getShownStatus() {
         return this.presences.getShownStatus();
     }
@@ -242,6 +259,12 @@ public class Contact implements ListItem, Blockable {
 
     public void setServerName(String serverName) {
         this.serverName = serverName;
+    }
+
+    public boolean setPresenceName(String presenceName) {
+        final String old = getDisplayName();
+        this.presenceName = presenceName;
+        return !old.equals(getDisplayName());
     }
 
     public Uri getSystemAccount() {
@@ -348,6 +371,18 @@ public class Contact implements ListItem, Blockable {
         }
     }
 
+    public Element asElement() {
+        final Element item = new Element("item");
+        item.setAttribute("jid", this.jid.toString());
+        if (this.serverName != null) {
+            item.setAttribute("name", this.serverName);
+        }
+        for (String group : getGroups(false)) {
+            item.addChild("group").setContent(group);
+        }
+        return item;
+    }
+
     @Override
     public int compareTo(@NonNull final ListItem another) {
         return this.getDisplayName().compareToIgnoreCase(
@@ -356,6 +391,22 @@ public class Contact implements ListItem, Blockable {
 
     public String getServer() {
         return getJid().getDomain();
+    }
+
+    public boolean setAvatar(Avatar avatar) {
+        return setAvatar(avatar, false);
+    }
+
+    public boolean setAvatar(Avatar avatar, boolean previouslyOmittedPepFetch) {
+        if (this.avatar != null && this.avatar.equals(avatar)) {
+            return false;
+        } else {
+            if (!previouslyOmittedPepFetch && this.avatar != null && this.avatar.origin == Avatar.Origin.PEP && avatar.origin == Avatar.Origin.VCARD) {
+                return false;
+            }
+            this.avatar = avatar;
+            return true;
+        }
     }
 
     public String getAvatarFilename() {
@@ -401,8 +452,25 @@ public class Contact implements ListItem, Blockable {
         this.commonName = cn;
     }
 
+    public void flagActive() {
+        this.mActive = true;
+    }
+
+    public void flagInactive() {
+        this.mActive = false;
+    }
+
     public boolean isActive() {
         return this.mActive;
+    }
+
+    public boolean setLastseen(long timestamp) {
+        if (timestamp > this.mLastseen) {
+            this.mLastseen = timestamp;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void setLastResource(String resource) {

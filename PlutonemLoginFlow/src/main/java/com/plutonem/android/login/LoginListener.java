@@ -19,5 +19,5 @@ public interface LoginListener {
     void showSignupPhonePassword(String phone);
 
     // Xmpp specification
-    void signUpXmppAccount(String phone, String password, MaterialButton materialButton);
+    void logInXmppAccount(String phone, String password, MaterialButton materialButton, boolean forceRegister);
 }

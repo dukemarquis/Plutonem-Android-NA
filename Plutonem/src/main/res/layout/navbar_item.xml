@@ -14,8 +14,9 @@
 
         <ImageView
             android:id="@+id/nav_icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:alpha="@dimen/material_emphasis_disabled"
+            android:layout_width="@dimen/bottom_nav_bar_icon_size"
+            android:layout_height="@dimen/bottom_nav_bar_icon_size"
             android:layout_gravity="center"
             android:contentDescription="@string/tabbar_accessibility_label_home_page"
             app:tint="@drawable/nav_bar_button_selector"

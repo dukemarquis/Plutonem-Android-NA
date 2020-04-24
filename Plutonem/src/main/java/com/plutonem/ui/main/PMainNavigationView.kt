@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
@@ -22,11 +23,14 @@ import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.plutonem.R
 import com.plutonem.ui.main.PMainActivity.OnScrollToTopListener
 import com.plutonem.ui.main.PMainNavigationView.PageType.HOME_PAGE
+import com.plutonem.ui.main.PMainNavigationView.PageType.CHAT
 import com.plutonem.ui.main.PMainNavigationView.PageType.ME
 import com.plutonem.ui.nemur.NemurOrderListFragment
 import com.plutonem.ui.prefs.AppPrefs
 import com.plutonem.utilities.AniUtils
 import com.plutonem.utilities.AniUtils.Duration;
+import com.plutonem.utilities.getColorStateListFromAttribute
+import com.plutonem.xmpp.ui.ConversationsOverviewFragment
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -43,6 +47,10 @@ class PMainNavigationView @JvmOverloads constructor(
     private lateinit var fragmentManager: FragmentManager
     private lateinit var pageListener: OnPageListener
     private var prevPosition = -1
+    private val unselectedButtonAlpha = ResourcesCompat.getFloat(
+            resources,
+            R.dimen.material_emphasis_disabled
+    )
 
     private var currentPosition: Int
         get() = getPositionForItemId(selectedItemId)
@@ -57,7 +65,7 @@ class PMainNavigationView @JvmOverloads constructor(
 
     interface OnPageListener {
         fun onPageChanged(position: Int)
-        fun onMeButtonClicked(): Boolean
+        fun onMeAndChatButtonClicked(): Boolean
     }
 
     fun init(fm: FragmentManager, listener: OnPageListener) {
@@ -74,7 +82,7 @@ class PMainNavigationView @JvmOverloads constructor(
         for (i in 0 until menu.size()) {
             val itemView = menuView.getChildAt(i) as BottomNavigationItemView
             val customView: View = inflater.inflate(R.layout.navbar_item, menuView, false)
-            // remove the background ripple and use a different layout for the X button
+
             val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
             val imgIcon = customView.findViewById<ImageView>(R.id.nav_icon)
             txtLabel.text = getTitleForPosition(i)
@@ -87,7 +95,7 @@ class PMainNavigationView @JvmOverloads constructor(
             itemView.addView(customView)
         }
 
-        currentPosition = AppPrefs.getMainPageIndex()
+        currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
     }
 
     private fun disableShiftMode() {
@@ -101,8 +109,8 @@ class PMainNavigationView @JvmOverloads constructor(
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val position = getPositionForItemId(item.itemId)
-        return if (position == getPosition(ME)) {
-            if (handleMeButtonClick()) {
+        return if (position == getPosition(ME) || position == getPosition(CHAT)) {
+            if (handleMeAndChatButtonClick()) {
                 currentPosition = position
                 pageListener.onPageChanged(position)
                 true
@@ -116,8 +124,8 @@ class PMainNavigationView @JvmOverloads constructor(
         }
     }
 
-    private fun handleMeButtonClick(): Boolean {
-        return pageListener.onMeButtonClicked()
+    private fun handleMeAndChatButtonClick(): Boolean {
+        return pageListener.onMeAndChatButtonClicked()
     }
 
     override fun onNavigationItemReselected(item: MenuItem) {
@@ -133,6 +141,7 @@ class PMainNavigationView @JvmOverloads constructor(
     private fun getPageForItemId(@IdRes itemId: Int): PageType {
         return when (itemId) {
             R.id.nav_home_page -> HOME_PAGE
+            R.id.nav_chat -> CHAT
             else -> ME
         }
     }
@@ -141,6 +150,7 @@ class PMainNavigationView @JvmOverloads constructor(
     private fun getItemIdForPosition(position: Int): Int {
         return when (getPageTypeOrNull(position)) {
             HOME_PAGE -> R.id.nav_home_page
+            CHAT -> R.id.nav_chat
             else -> R.id.nav_me
         }
     }
@@ -148,15 +158,16 @@ class PMainNavigationView @JvmOverloads constructor(
     private fun updateCurrentPosition(position: Int) {
         // remove the title and selected state from the previously selected item
         if (prevPosition > -1) {
-            showTitleForPosition(prevPosition, false)
+            setTitleViewSelected(prevPosition, false)
             setImageViewSelected(prevPosition, false)
         }
 
         // set the title and selected state from the newly selected item
-        showTitleForPosition(position, true)
+        setTitleViewSelected(position, true)
+
         setImageViewSelected(position, true)
 
-//        AppPrefs.setMainPageIndex(position)
+        AppPrefs.setMainPageIndex(position)
         prevPosition = position
 
         // temporarily disable the nav listeners so they don't fire when we change the selected page
@@ -172,18 +183,33 @@ class PMainNavigationView @JvmOverloads constructor(
             fragmentManager
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment, getTagForPosition(position))
-                    .commit()
+                    // This is used because the main activity sometimes crashes because it's trying to switch fragments
+                    // after `onSaveInstanceState` was already called. This is the related issue
+                    // https://github.com/wordpress-mobile/WordPress-Android/issues/10852
+                    .commitAllowingStateLoss()
         }
     }
 
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
-        getImageViewForPosition(position)?.isSelected = isSelected
+        getImageViewForPosition(position)?.let {
+            it.isSelected = isSelected
+            it.alpha = if (isSelected) 1f else unselectedButtonAlpha
+        }
+    }
+
+    private fun setTitleViewSelected(position: Int, isSelected: Boolean) {
+        getTitleViewForPosition(position)?.setTextColor(
+                context.getColorStateListFromAttribute(
+                        if (isSelected) R.attr.colorPrimary else R.attr.pnColorOnSurfaceMedium
+                )
+        )
     }
 
     @DrawableRes
     private fun getDrawableResForPosition(position: Int): Int {
         return when (getPageTypeOrNull(position)) {
             HOME_PAGE -> R.drawable.ic_nemur_white_24dp
+            CHAT -> R.drawable.ic_chat_white_24dp
             else -> R.drawable.ic_mine_circle_white_24dp
         }
     }
@@ -191,6 +217,7 @@ class PMainNavigationView @JvmOverloads constructor(
     private fun getTitleForPosition(position: Int): CharSequence {
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
             HOME_PAGE -> R.string.home_page_section_screen_title
+            CHAT -> R.string.chat_screen_title
             else -> R.string.me_section_screen_title
         }
         return context.getString(idRes)
@@ -203,6 +230,7 @@ class PMainNavigationView @JvmOverloads constructor(
     private fun getContentDescriptionForPosition(position: Int): CharSequence {
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
             HOME_PAGE -> R.string.tabbar_accessibility_label_home_page
+            CHAT -> R.string.tabbar_accessibility_label_chat
             else -> R.string.tabbar_accessibility_label_me
         }
         return context.getString(idRes)
@@ -215,6 +243,7 @@ class PMainNavigationView @JvmOverloads constructor(
     private fun getTagForPosition(position: Int): String {
         return when (getPageTypeOrNull(position)) {
             HOME_PAGE -> TAG_HOME_PAGE
+            CHAT -> TAG_CHAT
             else -> TAG_ME
         }
     }
@@ -276,6 +305,7 @@ class PMainNavigationView @JvmOverloads constructor(
         private fun createFragment(position: Int): Fragment? {
             val fragment: Fragment = when (pages().getOrNull(position)) {
                 HOME_PAGE -> NemurOrderListFragment.newInstance(true)
+                CHAT -> ConversationsOverviewFragment.newInstance()
                 ME -> MyBuyerFragment.newInstance()
                 else -> return null
             }
@@ -300,18 +330,15 @@ class PMainNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val defaultPages = listOf(HOME_PAGE, ME)
+        private val pages = listOf(HOME_PAGE, CHAT, ME)
 
         private const val TAG_HOME_PAGE = "tag-homepage"
+        private const val TAG_CHAT = "tag-messages";
         private const val TAG_ME = "tag-me"
 
-        private fun numPages(): Int {
-            return defaultPages.size
-        }
+        private fun numPages(): Int = pages.size
 
-        private fun pages(): List<PageType> {
-            return defaultPages
-        }
+        private fun pages(): List<PageType> = pages
 
         private fun getPageTypeOrNull(position: Int): PageType? {
             return pages().getOrNull(position)
@@ -328,6 +355,6 @@ class PMainNavigationView @JvmOverloads constructor(
     }
 
     enum class PageType {
-        HOME_PAGE, ME
+        HOME_PAGE, CHAT, ME
     }
 }

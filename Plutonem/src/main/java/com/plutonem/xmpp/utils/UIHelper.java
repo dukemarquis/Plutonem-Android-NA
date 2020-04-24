@@ -204,38 +204,17 @@ public class UIHelper {
     }
 
     public static Pair<CharSequence, Boolean> getMessagePreview(final Context context, final Message message, @ColorInt int textColor) {
-        final Transferable d = message.getTransferable();
-        if (d != null) {
-            // omit this part by now
-            return null;
-        } else if (message.isFileOrImage() && message.isDeleted()) {
-            // omit this part by now
-            return null;
-        } else if (message.getEncryption() == Message.ENCRYPTION_PGP) {
-            // omit this part by now
-            return null;
-        } else if (message.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED) {
-            // omit this part by now
-            return null;
-        } else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE) {
+
+        // skip File Transfer Message Preview part.
+        // skip Encryption Message Preview part.
+
+        if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE) {
             return new Pair<>(context.getString(R.string.not_encrypted_for_this_device), true);
-        } else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL_FAILED) {
-            // omit this part by now
-            return null;
-        } else if (message.isFileOrImage()) {
-            // omit this part by now
-            return null;
         } else {
             final String body = MessageUtils.filterLtrRtl(message.getBody());
             if (body.startsWith(Message.ME_COMMAND)) {
                 return new Pair<>(body.replaceAll("^" + Message.ME_COMMAND,
                         UIHelper.getMessageDisplayName(message) + " "), false);
-            } else if (message.isGeoUri()) {
-                // omit this part by now
-                return null;
-            } else if (message.treatAsDownloadable() || MessageUtils.unInitiatedButKnownSize(message)) {
-                // omit this part by now
-                return null;
             } else {
                 SpannableStringBuilder styledBody = new SpannableStringBuilder(body);
                 if (textColor != 0) {
@@ -270,6 +249,10 @@ public class UIHelper {
                 return new Pair<>(builder, false);
             }
         }
+    }
+
+    public static CharSequence shorten(CharSequence input) {
+        return input.length() > 256 ? StylingHelper.subSequence(input, 0, 256) : input;
     }
 
     public static boolean isPositionFollowedByQuoteableCharacter(CharSequence body, int pos) {

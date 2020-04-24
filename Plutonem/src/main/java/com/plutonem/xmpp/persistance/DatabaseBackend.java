@@ -20,6 +20,7 @@ import com.plutonem.xmpp.entities.Contact;
 import com.plutonem.xmpp.entities.Conversation;
 import com.plutonem.xmpp.entities.Message;
 import com.plutonem.xmpp.entities.PresenceTemplate;
+import com.plutonem.xmpp.entities.Roster;
 import com.plutonem.xmpp.entities.ServiceDiscoveryResult;
 import com.plutonem.xmpp.services.QuickConversationsService;
 import com.plutonem.xmpp.utils.CryptoHelper;
@@ -828,6 +829,28 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] args = {uuid};
         return db.update(Message.TABLENAME, message.getContentValues(), Message.UUID + "=?", args) == 1;
+    }
+
+    public void writeRoster(final Roster roster) {
+        long start = SystemClock.elapsedRealtime();
+        final Account account = roster.getAccount();
+        final SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();;
+        for (Contact contact : roster.getContacts()) {
+            if (contact.getOption(Contact.Options.IN_ROSTER) || contact.getAvatarFilename() != null || contact.getOption(Contact.Options.SYNCED_VIA_OTHER)) {
+                db.insert(Contact.TABLENAME, null, contact.getContentValues());
+            } else {
+                String where = Contact.ACCOUNT + "=? AND " + Contact.JID + "=?";
+                String[] whereArgs = {account.getUuid(), contact.getJid().toString()};
+                db.delete(Contact.TABLENAME, where, whereArgs);
+            }
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        account.setRosterVersion(roster.getVersion());
+        updateAccount(account);
+        long duration = SystemClock.elapsedRealtime() - start;
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": persisted roster in " + duration + "ms");
     }
 
     public void expireOldMessages(long timestamp) {

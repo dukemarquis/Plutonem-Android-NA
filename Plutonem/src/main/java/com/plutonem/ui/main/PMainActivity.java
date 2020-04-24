@@ -1,14 +1,22 @@
 package com.plutonem.ui.main;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 
+import com.plutonem.Config;
 import com.plutonem.Plutonem;
 import com.plutonem.R;
 import com.plutonem.android.fluxc.Dispatcher;
@@ -30,16 +38,28 @@ import com.plutonem.ui.news.NewsManager;
 import com.plutonem.ui.prefs.AppPrefs;
 import com.plutonem.ui.submits.SubmitUtilsWrapper;
 import com.plutonem.utilities.FluxCUtils;
+import com.plutonem.xmpp.entities.Conversation;
+import com.plutonem.xmpp.services.XmppConnectionService;
+import com.plutonem.xmpp.ui.ConversationMainViewFragment;
+import com.plutonem.xmpp.ui.ConversationsOverviewFragment;
 import com.plutonem.xmpp.ui.XmppActivity;
+import com.plutonem.xmpp.ui.XmppFragment;
+import com.plutonem.xmpp.ui.interfaces.OnBackendConnected;
+import com.plutonem.xmpp.ui.interfaces.OnConversationArchived;
+import com.plutonem.xmpp.ui.interfaces.OnConversationRead;
+import com.plutonem.xmpp.ui.interfaces.OnConversationSelected;
+import com.plutonem.xmpp.ui.interfaces.OnConversationsListItemUpdated;
+import com.plutonem.xmpp.ui.util.MenuDoubleTabUtil;
+import com.plutonem.xmpp.ui.util.PendingItem;
+import com.plutonem.xmpp.utils.EmojiWrapper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.ProfilingUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -51,7 +71,14 @@ import static androidx.lifecycle.Lifecycle.State.STARTED;
  */
 public class PMainActivity extends XmppActivity implements
         OnPageListener,
-        BottomNavController {
+        BottomNavController,
+        OnConversationSelected,
+        OnConversationArchived,
+        OnConversationsListItemUpdated,
+        OnConversationRead,
+        XmppConnectionService.OnAccountUpdate,
+        XmppConnectionService.OnConversationUpdate {
+
     private PMainNavigationView mBottomNav;
 
     private BuyerModel mSelectedBuyer;
@@ -61,6 +88,35 @@ public class PMainActivity extends XmppActivity implements
     @Inject Dispatcher mDispatcher;
     @Inject NewsManager mNewsManager;
     @Inject SubmitUtilsWrapper mSubmitUtilsWrapper;
+
+    // Xmpp Chat Specification
+
+    public static final String ACTION_VIEW_CONVERSATION = "com.plutonem.action.VIEW";
+    public static final String EXTRA_CONVERSATION = "conversationUuid";
+
+    private static List<String> VIEW_AND_SHARE_ACTIONS = Arrays.asList(
+            ACTION_VIEW_CONVERSATION,
+            Intent.ACTION_SEND,
+            Intent.ACTION_SEND_MULTIPLE
+    );
+
+    // for Tablet Layout Only: secondary fragment (when holding the conversation, must be initialized before refreshing the overview fragment
+    private static final @IdRes
+    int[] FRAGMENT_ID_NOTIFICATION_ORDER = {R.id.fragment_container};
+    private final PendingItem<Intent> pendingViewIntent = new PendingItem<>();
+    private boolean mActivityPaused = true;
+
+    private static boolean isViewOrShareIntent(Intent i) {
+        Log.d(Config.LOGTAG, "action: " + (i == null ? null : i.getAction()));
+        return i != null && VIEW_AND_SHARE_ACTIONS.contains(i.getAction()) && i.hasExtra(EXTRA_CONVERSATION);
+    }
+
+    private static Intent createLauncherIntent(Context context) {
+        final Intent intent = new Intent(context, PMainActivity.class);
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        return intent;
+    }
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -79,12 +135,6 @@ public class PMainActivity extends XmppActivity implements
     }
 
     @Override
-    protected void refreshUiReal() {}
-
-    @Override
-    public void onBackendConnected() {}
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         ProfilingUtils.split("PNMainActivity.onCreate");
         ((Plutonem) getApplication()).component().inject(this);
@@ -97,16 +147,39 @@ public class PMainActivity extends XmppActivity implements
 
         registeNewsItemObserver();
 
-        // We need to register the dispatcher here otherwise it won't trigger if for example Buyer Picker is present
+        // We need to register the dispatcher here.
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
+
+        // Xmpp Chat Specification
+
+        final Intent intent;
+        if (savedInstanceState == null) {
+            intent = getIntent();
+        } else {
+            intent = savedInstanceState.getParcelable("intent");
+        }
+        if (isViewOrShareIntent(intent)) {
+            pendingViewIntent.push(intent);
+            setIntent(createLauncherIntent(this));
+        }
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        AppLog.i(T.MAIN, "main activity > new intent");
+
+        // skip Nemur Normal Intent part, include Notification.
+
+        if (isViewOrShareIntent(intent)) {
+            if (xmppConnectionService != null) {
+                clearPendingViewIntent();
+                processViewIntent(intent);
+            } else {
+                pendingViewIntent.push(intent);
+            }
+        }
+        setIntent(createLauncherIntent(this));
     }
 
     private void registeNewsItemObserver() {
@@ -124,6 +197,12 @@ public class PMainActivity extends XmppActivity implements
         EventBus.getDefault().unregister(this);
         mDispatcher.unregister(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        this.mActivityPaused = true;
+        super.onPause();
     }
 
     @Override
@@ -146,6 +225,9 @@ public class PMainActivity extends XmppActivity implements
         ProfilingUtils.split("PMainActivity.onResume");
         ProfilingUtils.dump();
         ProfilingUtils.stop();
+
+        // Xmpp Chat Specification
+        this.mActivityPaused = false;
     }
 
     private void announceTitleForAccessibility(PageType pageType) {
@@ -193,7 +275,7 @@ public class PMainActivity extends XmppActivity implements
 
     // user tapped the me button in the bottom navbar
     @Override
-    public boolean onMeButtonClicked() {
+    public boolean onMeAndChatButtonClicked() {
         if (FluxCUtils.isSignedInPN(mAccountStore)) {
             return true;
         } else {
@@ -209,6 +291,9 @@ public class PMainActivity extends XmppActivity implements
     private void updateTitle(PageType pageType) {
         if (pageType == PageType.ME && mSelectedBuyer != null) {
             ((MainToolbarFragment) mBottomNav.getActiveFragment()).setTitle(mSelectedBuyer.getName());
+        } else {
+            ((MainToolbarFragment) mBottomNav.getActiveFragment())
+                    .setTitle(mBottomNav.getTitleForPageType(pageType).toString());
         }
     }
 
@@ -359,9 +444,169 @@ public class PMainActivity extends XmppActivity implements
         }
     }
 
-    // (weird) - XD
+    // Xmpp Chat Specification
+
     @Override
-    public void onPause() {
-        super.onPause();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        }
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm.getBackStackEntryCount() > 0) {
+                    try {
+                        fm.popBackStack();
+                    } catch (IllegalStateException e) {
+                        Log.w(Config.LOGTAG, "Unable to pop back stack after pressing home button");
+                    }
+                    return true;
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        Intent pendingIntent = pendingViewIntent.peek();
+        savedInstanceState.putParcelable("intent", pendingIntent != null ? pendingIntent : getIntent());
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void refreshUiReal() {
+        for (@IdRes int id : FRAGMENT_ID_NOTIFICATION_ORDER) {
+            refreshFragment(id);
+        }
+    }
+
+    @Override
+    public void onBackendConnected() {
+
+        // skip Redirect Perform Action part.
+        // skip Tablet Layout part.
+        // skip ActionBar Manage Action part.
+        // skip Activity Result for Xmpp part.
+
+        xmppConnectionService.getNotificationService().setIsInForeground(true);
+        Intent intent = pendingViewIntent.pop();
+        if (intent != null) {
+            if (processViewIntent(intent)) {
+                return;
+            }
+        }
+        for (@IdRes int id : FRAGMENT_ID_NOTIFICATION_ORDER) {
+            notifyFragmentOfBackendConnected(id);
+        }
+    }
+
+    private void notifyFragmentOfBackendConnected(@IdRes int id) {
+        final Fragment fragment = getSupportFragmentManager().findFragmentById(id);
+        if (fragment instanceof OnBackendConnected) {
+            ((OnBackendConnected) fragment).onBackendConnected();
+        }
+    }
+
+    private void refreshFragment(@IdRes int id) {
+        final Fragment fragment = getSupportFragmentManager().findFragmentById(id);
+        if (fragment instanceof XmppFragment) {
+            ((XmppFragment) fragment).refresh();
+        }
+    }
+
+    private boolean processViewIntent(Intent intent) {
+        String uuid = intent.getStringExtra(EXTRA_CONVERSATION);
+        Conversation conversation = uuid != null ? xmppConnectionService.findConversationByUuid(uuid) : null;
+        if (conversation == null) {
+            Log.d(Config.LOGTAG, "unable to view conversation with uuid:" + uuid);
+            return false;
+        }
+        openConversation(conversation, intent.getExtras());
+        return true;
+    }
+
+    @Override
+    public void onConversationSelected(Conversation conversation) {
+        clearPendingViewIntent();
+
+        // skip Tablet Layout part.
+
+        openConversation(conversation, null);
+    }
+
+    public void clearPendingViewIntent() {
+        if (pendingViewIntent.clear()) {
+            Log.e(Config.LOGTAG, "cleared pending view intent");
+        }
+    }
+
+    private void openConversation(Conversation conversation, Bundle extras) {
+
+        // skip Tablet Layout part.
+
+        ConversationMainViewFragment conversationMainViewFragment;
+        Fragment mainFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (mainFragment instanceof ConversationMainViewFragment) {
+            conversationMainViewFragment = (ConversationMainViewFragment) mainFragment;
+        } else {
+            conversationMainViewFragment = new ConversationMainViewFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, conversationMainViewFragment);
+            fragmentTransaction.addToBackStack(null);
+            try {
+                fragmentTransaction.commit();
+            } catch (IllegalStateException e) {
+                Log.w(Config.LOGTAG, "state loss while opening conversation", e);
+                // allowing state loss is probably fine since view intents et all are already stored and a click can probably be 'ignored'
+                return;
+            }
+        }
+        conversationMainViewFragment.reInit(conversation, extras == null ? new Bundle() : extras);
+    }
+
+    @Override
+    public void onConversationArchived(Conversation conversation) {
+
+        // skip Tablet Layout part.
+        // skip Redirect Perform Action part.
+
+        Fragment mainFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (mainFragment instanceof ConversationMainViewFragment) {
+            try {
+                getSupportFragmentManager().popBackStack();
+            } catch (IllegalStateException e) {
+                Log.w(Config.LOGTAG, "state loss while popping back state after archiving conversation", e);
+                //this usually means activity is no longer active; meaning on the next open we will run through this again
+            }
+            return;
+        }
+    }
+
+    @Override
+    public void onConversationsListItemUpdated() {
+        // skip Tablet Layout part.
+    }
+
+    @Override
+    public void onConversationRead(Conversation conversation, String upToUuid) {
+        if (!mActivityPaused && pendingViewIntent.peek() == null) {
+            xmppConnectionService.sendReadMarker(conversation, upToUuid);
+        } else {
+            Log.d(Config.LOGTAG, "ignoring read callback. mActivityPaused=" + Boolean.toString(mActivityPaused));
+        }
+    }
+
+    @Override
+    public void onAccountUpdate() {
+        this.refreshUi();
+    }
+
+    @Override
+    public void onConversationUpdate() {
+
+        // skip Redirection Perform part.
+
+        this.refreshUi();
     }
 }

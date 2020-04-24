@@ -260,6 +260,22 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
                 && getXmppConnection().getAttempt() >= 3;
     }
 
+    public Presence.Status getPresenceStatus() {
+        return this.presenceStatus;
+    }
+
+    public void setPresenceStatus(Presence.Status status) {
+        this.presenceStatus = status;
+    }
+
+    public String getPresenceStatusMessage() {
+        return this.presenceStatusMessage;
+    }
+
+    public void setPresenceStatusMessage(String message) {
+        this.presenceStatusMessage = message;
+    }
+
     public String getResource() {
         return jid.getResource();
     }
@@ -344,6 +360,18 @@ public class Account extends AbstractEntity implements AvatarService.Avatarable 
 
     public void setXmppConnection(final XmppConnection connection) {
         this.xmppConnection = connection;
+    }
+
+    public String getRosterVersion() {
+        if (this.rosterVersion == null) {
+            return "";
+        } else {
+            return this.rosterVersion;
+        }
+    }
+
+    public void setRosterVersion(final String version) {
+        this.rosterVersion = version;
     }
 
     public boolean unsetPgpSignature() {

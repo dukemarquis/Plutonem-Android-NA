@@ -2,6 +2,8 @@ package com.plutonem.xmpp.entities;
 
 import androidx.annotation.NonNull;
 
+import com.plutonem.xmpp.xml.Element;
+
 import java.util.Locale;
 
 public class Presence implements Comparable {
@@ -53,11 +55,22 @@ public class Presence implements Comparable {
         this.message = message;
     }
 
+    public static Presence parse(String show, Element caps, String message) {
+        final String hash = caps == null ? null : caps.getAttribute("hash");
+        final String ver = caps == null ? null : caps.getAttribute("ver");
+        final String node = caps == null ? null : caps.getAttribute("node");
+        return new Presence(Status.fromShowString(show), ver, hash, node, message);
+    }
+
     public int compareTo(@NonNull Object other) {
         return this.status.compareTo(((Presence)other).status);
     }
 
     public Status getStatus() {
         return this.status;
+    }
+
+    public boolean hasCaps() {
+        return ver != null && hash != null;
     }
 }

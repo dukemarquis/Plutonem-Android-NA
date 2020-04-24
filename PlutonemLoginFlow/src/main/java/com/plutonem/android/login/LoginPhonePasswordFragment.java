@@ -21,6 +21,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.NetworkUtils;
 
+import com.google.android.material.button.MaterialButton;
 import com.plutonem.android.login.LoginPncomService.LoginState;
 import com.plutonem.android.login.widgets.PNLoginInputRow;
 import com.plutonem.android.login.widgets.PNLoginInputRow.OnEditorCommitListener;
@@ -40,6 +41,7 @@ public class LoginPhonePasswordFragment extends LoginBaseFormFragment<LoginListe
     public static final String TAG = "login_phone_password_fragment_tag";
 
     private PNLoginInputRow mPasswordInput;
+    private MaterialButton mNextButton;
 
     private String mRequestedPassword;
 
@@ -140,6 +142,8 @@ public class LoginPhonePasswordFragment extends LoginBaseFormFragment<LoginListe
 
         mPasswordInput = rootView.findViewById(R.id.password_row);
         mPasswordInput.setOnEditorCommitListener(this);
+
+        mNextButton = rootView.findViewById(R.id.primary_button);
     }
 
     @Override
@@ -220,9 +224,9 @@ public class LoginPhonePasswordFragment extends LoginBaseFormFragment<LoginListe
     @Override
     protected void onLoginFinished() {
         if (mIsSocialLogin) {
-            mLoginListener.loggedInViaSocialAccount();
+            mLoginListener.logInXmppAccount(mPhoneNumber, mRequestedPassword, mNextButton, false);
         } else {
-            mLoginListener.loggedInViaPassword();
+            mLoginListener.logInXmppAccount(mPhoneNumber, mRequestedPassword, mNextButton, false);
         }
     }
 

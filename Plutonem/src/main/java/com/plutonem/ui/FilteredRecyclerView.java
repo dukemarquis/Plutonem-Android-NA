@@ -169,7 +169,6 @@ public class FilteredRecyclerView extends RelativeLayout {
         int spacingVertical = DisplayUtils.dpToPx(getContext(), 1);
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
         mToolbar = findViewById(R.id.toolbar_with_spinner);

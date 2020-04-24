@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/nav_home_page"
         android:contentDescription="@string/tabbar_accessibility_label_home_page"
-        android:title=""/>
+        android:title="" />
+
+    <item
+        android:id="@+id/nav_chat"
+        android:contentDescription="@string/tabbar_accessibility_label_chat"
+        android:title="" />
+
     <item
         android:id="@+id/nav_me"
         android:contentDescription="@string/tabbar_accessibility_label_me"
-        android:title=""/>
+        android:title="" />
+
 </menu>

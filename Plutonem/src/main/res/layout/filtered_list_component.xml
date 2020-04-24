@@ -62,11 +62,6 @@
                 android:importantForAccessibility="no"
                 android:scrollbars="vertical" />
 
-<!--            <androidx.viewpager.widget.ViewPager-->
-<!--                android:id="@+id/pager"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"/>-->
-
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
         <com.plutonem.widgets.PNTextView

@@ -16,5 +16,4 @@
     <!-- login -->
     <dimen name="textinputlayout_correction_padding_right">9dp</dimen>
     <dimen name="google_button_icon_sz">24dp</dimen>
-
 </resources>

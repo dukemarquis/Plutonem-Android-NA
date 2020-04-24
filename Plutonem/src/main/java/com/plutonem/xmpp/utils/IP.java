@@ -18,5 +18,4 @@ public class IP {
                         || PATTERN_IPV6_HEX4DECCOMPRESSED.matcher(server).matches()
                         || PATTERN_IPV6_HEXCOMPRESSED.matcher(server).matches());
     }
-
 }

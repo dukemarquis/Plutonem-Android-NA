@@ -101,11 +101,13 @@
     <attr name="TextSizeBody1" format="dimension"/>
     <attr name="TextSizeBody2" format="dimension"/>
     <attr name="TextSizeInput" format="dimension"/>
+    <attr name="TextSeparation" format="dimension" />
 
     <attr name="IconSize" format="dimension"/>
 
     <attr name="color_background_secondary" format="reference|color" />
     <attr name="color_background_primary" format="reference|color"/>
+    <attr name="color_warning" format="reference|color" />
     <attr name="EmojiColor" format="reference|color"/>
 
     <attr name="ic_send_text_offline" format="reference"/>
@@ -116,7 +118,16 @@
 
     <attr name="unread_count" format="reference|color"/>
 
+    <attr name="conversations_overview_background" format="reference|color" />
+
+    <attr name="icon_alpha" format="float" />
+
     <attr name="icon_scroll_down" format="reference"/>
+
+    <attr name="icon_notifications" format="reference" />
+    <attr name="icon_notifications_off" format="reference" />
+    <attr name="icon_notifications_paused" format="reference" />
+    <attr name="icon_notifications_none" format="reference" />
 
     <declare-styleable name="UnreadCountCustomView">
         <attr name="backgroundColor" format="reference|color"/>

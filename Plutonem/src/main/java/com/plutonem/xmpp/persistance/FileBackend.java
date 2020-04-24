@@ -14,6 +14,7 @@ import android.util.Log;
 import androidx.core.content.FileProvider;
 
 import com.plutonem.Config;
+import com.plutonem.xmpp.entities.Avatar;
 import com.plutonem.xmpp.services.XmppConnectionService;
 import com.plutonem.xmpp.utils.ExifHelper;
 
@@ -123,6 +124,11 @@ public class FileBackend {
         } finally {
             close(is);
         }
+    }
+
+    public boolean isAvatarCached(Avatar avatar) {
+        File file = new File(getAvatarPath(avatar.getFilename()));
+        return file.exists();
     }
 
     private String getAvatarPath(String avatar) {

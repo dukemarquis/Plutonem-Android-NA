@@ -77,6 +77,7 @@
     <dimen name="default_cardview_radius">2dp</dimen>
 
     <!-- bottom navigation bar -->
+    <dimen name="bottom_nav_bar_icon_size">24dp</dimen>
     <dimen name="bottom_nav_bar_badge_size">12dp</dimen>
 
     <!-- left/right margin for content such as My Buyer fragment -->
@@ -186,7 +187,12 @@
 
     <!-- Xmpp Chat Specification -->
 
+    <dimen name="avatar_item_distance">16dp</dimen>
+
     <dimen name="avatar_on_status_message">32dp</dimen>
     <dimen name="avatar">48dp</dimen>
+    <dimen name="avatar_on_conversation_overview">56dp</dimen>
+
+    <dimen name="swipe_escape_velocity">1200dp</dimen> <!-- android default is 120dp -->
 
 </resources>

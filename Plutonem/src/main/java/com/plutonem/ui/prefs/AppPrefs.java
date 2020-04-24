@@ -144,8 +144,9 @@ public class AppPrefs {
         setString(DeletablePrefKey.LAST_ACTIVITY_STR, value);
     }
 
-    public static int getMainPageIndex() {
-        return getInt(DeletablePrefKey.MAIN_PAGE_INDEX);
+    public static int getMainPageIndex(int maxIndexValue) {
+        int value = getInt(DeletablePrefKey.MAIN_PAGE_INDEX);
+        return value > maxIndexValue ? 0 : value;
     }
 
     public static void setMainPageIndex(int index) {
