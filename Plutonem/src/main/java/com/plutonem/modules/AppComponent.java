@@ -25,6 +25,7 @@ import com.plutonem.ui.products.ProductsListActivity;
 import com.plutonem.ui.products.adapters.AccountSelectionAdapter;
 import com.plutonem.ui.submits.OrderSubmitHandler;
 import com.plutonem.ui.submits.SubmitService;
+import com.plutonem.xmpp.ui.ConversationsOverviewFragment;
 
 import javax.inject.Singleton;
 
@@ -87,6 +88,8 @@ public interface AppComponent extends AndroidInjector<Plutonem> {
     void inject(NemurOrderPagerActivity object);
 
     void inject(PlutonemGlideModule object);
+
+    void inject(ConversationsOverviewFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

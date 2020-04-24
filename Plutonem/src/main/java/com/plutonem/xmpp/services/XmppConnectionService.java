@@ -1270,6 +1270,13 @@ public class XmppConnectionService extends Service {
         return null;
     }
 
+    public boolean isConversationsListEmpty(final Conversation ignore) {
+        synchronized (this.conversations) {
+            final int size = this.conversations.size();
+            return size == 0 || size == 1 && this.conversations.get(0) == ignore;
+        }
+    }
+
     public boolean isConversationStillOpen(final Conversation conversation) {
         synchronized (this.conversations) {
             for (Conversation current : this.conversations) {

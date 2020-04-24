@@ -130,4 +130,7 @@
     <string name="silent_messages_channel_description">This notification group is used to display notifications that should not trigger any sound. For example when being active on another device (Grace Period).</string>
     <string name="cancelled">cancelled</string>
     <string name="fetch_xmpp_chat_service_fail">Chat service initialization failed. Please try again later</string>
+    <string name="messages_empty_list_button">Shop right now</string>
+    <string name="messages_empty_unread">No messages yet</string>
+    <string name="messages_empty_action_unread">Watch quality videos, enjoy your shopping process</string>
 </resources>

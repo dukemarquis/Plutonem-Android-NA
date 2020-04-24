@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,10 +25,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.plutonem.Config;
+import com.plutonem.Plutonem;
 import com.plutonem.R;
+import com.plutonem.android.fluxc.store.AccountStore;
 import com.plutonem.databinding.FragmentConversationsOverviewBinding;
+import com.plutonem.ui.ActionableEmptyView;
+import com.plutonem.ui.ActivityLauncher;
 import com.plutonem.ui.main.BottomNavController;
 import com.plutonem.ui.main.MainToolbarFragment;
+import com.plutonem.ui.main.PMainActivity;
 import com.plutonem.xmpp.entities.Conversation;
 import com.plutonem.xmpp.ui.adapter.ConversationAdapter;
 import com.plutonem.xmpp.ui.interfaces.OnConversationArchived;
@@ -35,13 +42,15 @@ import com.plutonem.xmpp.ui.util.PendingActionHelper;
 import com.plutonem.xmpp.ui.util.PendingItem;
 import com.plutonem.xmpp.ui.util.ScrollState;
 import com.plutonem.xmpp.ui.util.StyledAttributes;
-import com.plutonem.xmpp.utils.EmojiWrapper;
 import com.plutonem.xmpp.utils.ThemeHelper;
 
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.util.DisplayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static androidx.recyclerview.widget.ItemTouchHelper.LEFT;
 import static androidx.recyclerview.widget.ItemTouchHelper.RIGHT;
@@ -59,11 +68,12 @@ public class ConversationsOverviewFragment extends XmppFragment implements MainT
     private float mSwipeEscapeVelocity = 0f;
     private PendingActionHelper pendingActionHelper = new PendingActionHelper();
 
-    @NonNull
-    private Toolbar mToolbar = null;
+    @Nullable private Toolbar mToolbar = null;
     private String mToolbarTitle;
 
     private BottomNavController mBottomNavController;
+
+    @Inject AccountStore mAccountStore;
 
     private ItemTouchHelper.SimpleCallback callback = new ItemTouchHelper.SimpleCallback(0, LEFT|RIGHT) {
         @Override
@@ -183,6 +193,12 @@ public class ConversationsOverviewFragment extends XmppFragment implements MainT
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ((Plutonem) requireActivity().getApplication()).component().inject(this);
+    }
+
+    @Override
     public void onAttach(@NotNull Context context) {
         super.onAttach(context);
 
@@ -297,6 +313,19 @@ public class ConversationsOverviewFragment extends XmppFragment implements MainT
 
     @Override
     public void refresh() {
+        // add conversations list empty check part.
+        if (this.activity.xmppConnectionService == null) {
+            return;
+        }
+
+        boolean isConversationListEmpty = this.activity.xmppConnectionService.isConversationsListEmpty(null);
+        if (!isConversationListEmpty) {
+            hideEmptyView();
+        } else {
+            showEmptyView();
+            return;
+        }
+
         if (this.binding == null || this.activity == null) {
             Log.d(Config.LOGTAG,"ConversationsOverviewFragment.refresh() skipped updated because view binding or activity was null");
             return;
@@ -331,5 +360,70 @@ public class ConversationsOverviewFragment extends XmppFragment implements MainT
         if (mToolbar != null) {
             mToolbar.setTitle(mToolbarTitle);
         }
+    }
+
+    private void hideEmptyView() {
+        if (isAdded()) {
+            this.binding.actionableEmptyView.setVisibility(View.GONE);
+            this.binding.list.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void performAction() {
+        if (!isAdded()) {
+            return;
+        }
+
+        if (!mAccountStore.hasAccessToken()) {
+            ActivityLauncher.showSignInForResult(getActivity());
+            return;
+        }
+
+        if (getActivity() instanceof PMainActivity) {
+            ((PMainActivity) getActivity()).setHomePageActive();
+        }
+    }
+
+    private void showEmptyView(@StringRes int titleResId, @StringRes int descriptionResId, @StringRes int buttonResId) {
+        if (isAdded()) {
+            this.binding.actionableEmptyView.setVisibility(View.VISIBLE);
+            this.binding.list.setVisibility(View.GONE);
+            this.binding.actionableEmptyView.title.setText(titleResId);
+
+            if (descriptionResId != 0) {
+                this.binding.actionableEmptyView.subtitle.setText(descriptionResId);
+                this.binding.actionableEmptyView.subtitle.setVisibility(View.VISIBLE);
+            } else {
+                this.binding.actionableEmptyView.subtitle.setVisibility(View.GONE);
+            }
+
+            if (buttonResId != 0) {
+                this.binding.actionableEmptyView.button.setText(buttonResId);
+                this.binding.actionableEmptyView.button.setVisibility(View.VISIBLE);
+            } else {
+                this.binding.actionableEmptyView.button.setVisibility(View.GONE);
+            }
+
+            this.binding.actionableEmptyView.button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    performAction();
+                }
+            });
+        }
+    }
+
+    private void showEmptyView() {
+        if (!mAccountStore.hasAccessToken()) {
+            return;
+        }
+
+        showEmptyView(
+                R.string.messages_empty_unread,
+                R.string.messages_empty_action_unread,
+                R.string.messages_empty_list_button
+        );
+
+        this.binding.actionableEmptyView.image.setVisibility(DisplayUtils.isLandscape(getContext()) ? View.GONE : View.VISIBLE);
     }
 }

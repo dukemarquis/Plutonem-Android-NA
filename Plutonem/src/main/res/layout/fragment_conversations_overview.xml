@@ -1,5 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:background="?attr/color_background_primary"
@@ -27,6 +28,18 @@
             android:layout_height="match_parent"
             android:background="?attr/color_background_primary"
             android:layout_marginTop="@dimen/toolbar_height"/>
+
+        <com.plutonem.ui.ActionableEmptyView
+            android:id="@+id/actionable_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:aevButton="@string/messages_empty_list_button"
+            app:aevImage="@drawable/img_illustration_notifications_152dp"
+            app:aevSubtitle="@string/messages_empty_action_unread"
+            app:aevTitle="@string/messages_empty_unread"
+            tools:visibility="visible">
+        </com.plutonem.ui.ActionableEmptyView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
