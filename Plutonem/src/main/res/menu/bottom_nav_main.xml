@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_home_page"
+        android:id="@+id/nav_various_products"
         android:contentDescription="@string/tabbar_accessibility_label_home_page"
         android:title="" />
 
     <item
-        android:id="@+id/nav_chat"
+        android:id="@+id/nav_messages"
         android:contentDescription="@string/tabbar_accessibility_label_chat"
         android:title="" />
 

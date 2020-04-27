@@ -53,4 +53,17 @@ public class NemurTagList extends ArrayList<NemurTag> {
 
         return deletions;
     }
+
+    public boolean containsVariousTag() {
+        boolean containsVarious = false;
+
+        for (NemurTag tag : this) {
+            if (tag.isVariousProducts() || tag.isDefaultInMemoryTag()) {
+                containsVarious = true;
+                break;
+            }
+        }
+
+        return containsVarious;
+    }
 }

@@ -67,6 +67,10 @@ public class RestClientUtils {
         mRestClient.setUserAgent(sUserAgent);
     }
 
+    public RestClient getRestClient() {
+        return mRestClient;
+    }
+
     /**
      * Make GET request
      */

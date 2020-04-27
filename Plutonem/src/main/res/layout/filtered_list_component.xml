@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/min_touch_target_sz"
                 android:overlapAnchor="false"
-                app:popupTheme="@style/Theme.AppCompat.DayNight"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
                 tools:ignore="UnusedAttribute"/>
 
         </com.google.android.material.appbar.MaterialToolbar>

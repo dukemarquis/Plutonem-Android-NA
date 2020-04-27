@@ -11,19 +11,22 @@ import java.io.Serializable;
 import java.util.Locale;
 
 public class NemurTag implements Serializable, FilterCriteria {
-    public static final String NEMUR_PATH = String.format(Locale.US, "nem/buyers/%d/orders",
-            NemurConstants.NEMUR_BUYER_ID);
+//    public static final String VARIOUS_PATH = "/nem/various";
+    public static final String VARIOUS_PATH = String.format(Locale.US, "nem/buyers/%d/orders",
+            NemurConstants.WOMEN_BUYER_ID);
+    public static final String WOMEN_PATH = String.format(Locale.US, "nem/buyers/%d/orders",
+            NemurConstants.WOMEN_BUYER_ID);
 
-    public static final String TAG_TITLE_NEMUR = "Nemur";
-    public static final String TAG_TITLE_DEFAULT = TAG_TITLE_NEMUR;
-    public static final String TAG_ENDPOINT_DEFAULT = NEMUR_PATH;
+    public static final String TAG_TITLE_VARIOUS_PRODUCTS = "Various Products";
+    public static final String TAG_TITLE_DEFAULT = TAG_TITLE_VARIOUS_PRODUCTS;
+    public static final String TAG_ENDPOINT_DEFAULT = VARIOUS_PATH;
 
     private String mTagSlug; // tag for API calls
     private String mTagDisplayName; // tag for display, usually the same as the slug
     private String mTagTitle; // title, used for default tags
     private String mEndpoint; // endpoint for updating orders with this tag
 
-    private boolean mIsDefaultTag;
+    private boolean mIsDefaultInMemoryTag;
 
     public final NemurTagType tagType;
 
@@ -40,7 +43,7 @@ public class NemurTag implements Serializable, FilterCriteria {
                      String title,
                      String endpoint,
                     NemurTagType tagType,
-                     boolean isDefaultTag) {
+                     boolean isDefaultInMemoryTag) {
         // we need a slug since it's used to uniquely ID the tag (including setting it as the
         // primary key in the tag table)
         if (TextUtils.isEmpty(slug)) {
@@ -57,14 +60,14 @@ public class NemurTag implements Serializable, FilterCriteria {
         setTagTitle(title);
         setEndpoint(endpoint);
         this.tagType = tagType;
-        mIsDefaultTag = isDefaultTag;
+        mIsDefaultInMemoryTag = isDefaultInMemoryTag;
     }
 
     public String getEndpoint() {
         return StringUtils.notNullStr(mEndpoint);
     }
 
-    private void setEndpoint(String endpoint) {
+    public void setEndpoint(String endpoint) {
         this.mEndpoint = StringUtils.notNullStr(endpoint);
     }
 
@@ -72,7 +75,7 @@ public class NemurTag implements Serializable, FilterCriteria {
         return StringUtils.notNullStr(mTagTitle);
     }
 
-    private void setTagTitle(String title) {
+    public void setTagTitle(String title) {
         this.mTagTitle = StringUtils.notNullStr(title);
     }
 
@@ -141,8 +144,16 @@ public class NemurTag implements Serializable, FilterCriteria {
                                                                                     .equalsIgnoreCase(tag2.getTagSlug());
     }
 
-    public boolean isNemur() {
-        return tagType == NemurTagType.DEFAULT && getEndpoint().endsWith(NEMUR_PATH);
+    public boolean isVariousProducts() {
+        return tagType == NemurTagType.DEFAULT && getEndpoint().endsWith(VARIOUS_PATH);
+    }
+
+    public boolean isDefaultInMemoryTag() {
+        return tagType == NemurTagType.DEFAULT && mIsDefaultInMemoryTag;
+    }
+
+    public boolean isWomen() {
+        return tagType == NemurTagType.DEFAULT && getEndpoint().endsWith(WOMEN_PATH);
     }
 
 

@@ -8,8 +8,8 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/toolbar_height"
     android:visibility="gone"
-    app:aevButton="@string/nemur_empty_default_buyer_button_wait"
+    app:aevButton="@string/nemur_empty_various_products_button_wait"
     app:aevImage="@drawable/img_illustration_empty_results_216dp"
-    app:aevSubtitle="@string/nemur_empty_default_buyer_description"
-    app:aevTitle="@string/nemur_empty_default_buyer_title"
+    app:aevSubtitle="@string/nemur_empty_various_products_description"
+    app:aevTitle="@string/nemur_empty_various_products_title"
     tools:visibility="visible" />

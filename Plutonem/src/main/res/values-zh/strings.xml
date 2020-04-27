@@ -77,9 +77,9 @@ Language: zh_CN
     <string name="nemur_empty_orders_request_failed">无法检索商品</string>
     <string name="nemur_empty_orders_in_tag">没有包含此标签的商品</string>
     <string name="nemur_empty_orders_in_tag_updating">正在获取商品…</string>
-    <string name="nemur_empty_default_buyer_title">无默认的 Buyer </string>
-    <string name="nemur_empty_default_buyer_description">目前尚未有任何商品可以购买。请等待！</string>
-    <string name="nemur_empty_default_buyer_button_wait">等待新商品</string>
+    <string name="nemur_empty_various_products_title">无默认的 Buyer </string>
+    <string name="nemur_empty_various_products_description">目前尚未有任何商品可以购买。请等待！</string>
+    <string name="nemur_empty_various_products_button_wait">等待新商品</string>
     <string name="my_buyer_btn_my_order">我的订单</string>
     <string name="my_buyer_btn_buyer_orders">Buyer 订单</string>
     <string name="my_buyer_icon_content_description">更改 Buyer 图标</string>

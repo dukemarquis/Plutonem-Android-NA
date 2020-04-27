@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         app:pnSpinnerItemView="@layout/toolbar_main_spinner_item"
         app:pnToolbarDisableScrollGestures="true"
-        app:pnUseTabsForFiltering="false"/>
+        app:pnUseTabsForFiltering="true"/>
 
     <include
         android:id="@+id/empty_custom_view"

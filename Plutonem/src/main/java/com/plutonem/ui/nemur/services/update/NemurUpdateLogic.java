@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.android.volley.VolleyError;
 import com.plutonem.Plutonem;
+import com.plutonem.R;
 import com.plutonem.datasets.NemurDatabase;
 import com.plutonem.datasets.NemurOrderTable;
 import com.plutonem.datasets.NemurTagTable;
@@ -30,7 +31,7 @@ public class NemurUpdateLogic {
     /***
      * This class holds the business logic for Nemur Updates, serving both NemurUpdateService (<API26)
      * and NemurUpdateJobService (API26+).
-     * Updates default tags and buyers for the Nemur, relies
+     * Updates default tags for the Nemur, relies
      * on EventBus to notify of changes
      */
 
@@ -98,13 +99,33 @@ public class NemurUpdateLogic {
         Plutonem.getRestClientUtilsV1_2().get("nem/menu", params, null, listener, errorListener);
     }
 
+    private boolean displayNameUpdateWasNeeded(NemurTagList serverCategories) {
+        boolean updateDone = false;
+
+        for (NemurTag tag : serverCategories) {
+            String tagNameBefore = tag.getTagDisplayName();
+            if (tag.isVariousProducts()) {
+                tag.setTagDisplayName(mContext.getString(R.string.nemur_varioud_display_name));
+                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
+            } else if (tag.isWomen()) {
+                tag.setTagDisplayName(mContext.getString(R.string.nemur_women_display_name));
+                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
+            }
+        }
+
+        return updateDone;
+    }
+
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
         new Thread() {
             @Override
             public void run() {
-                // get server categories, default
+                // get server categories, default only - ignore special case for
+                // logged-out user as they are same as normal users
                 NemurTagList serverCategories = new NemurTagList();
                 serverCategories.addAll(parseTags(jsonObject, "default", NemurTagType.DEFAULT));
+
+                boolean displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverCategories);
 
                 // parse categories from the response, detect whether they're different from local
                 NemurTagList localCategories = new NemurTagList();
@@ -112,10 +133,12 @@ public class NemurUpdateLogic {
 
                 if (
                         !localCategories.isSameList(serverCategories)
+                        || displayNameUpdateWasNeeded
                 ) {
-                    AppLog.d(AppLog.T.NEMUR, "nemur service > default categories changed ");
+                    AppLog.d(AppLog.T.NEMUR, "nemur service > categories changed "
+                                                + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
                     // if any local categories have been removed from the server, make sure to delete
-                    // them locally (including their orders)
+                    // them locally (including their products)
                     deleteTags(localCategories.getDeletions(serverCategories));
                     // now replace local categories with the server categories
                     NemurTagTable.replaceTags(serverCategories);

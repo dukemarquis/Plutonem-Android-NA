@@ -19,7 +19,6 @@ import static com.plutonem.ui.nemur.services.update.NemurUpdateServiceStarter.AR
 public class NemurUpdateJobService extends JobService implements ServiceCompletionListener {
     private NemurUpdateLogic mNemurUpdateLogic;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean onStartJob(JobParameters params) {
         AppLog.i(AppLog.T.NEMUR, "nemur job service > started");
@@ -34,7 +33,6 @@ public class NemurUpdateJobService extends JobService implements ServiceCompleti
         return true;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean onStopJob(JobParameters params) {
         AppLog.i(AppLog.T.NEMUR, "nemur job service > stopped");
@@ -55,10 +53,9 @@ public class NemurUpdateJobService extends JobService implements ServiceCompleti
         super.onDestroy();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCompleted(Object companion) {
-        AppLog.i(AppLog.T.NEMUR, "reader job service > all tasks completed");
+        AppLog.i(AppLog.T.NEMUR, "nemur job service > all tasks completed");
         jobFinished((JobParameters) companion, false);
     }
 }

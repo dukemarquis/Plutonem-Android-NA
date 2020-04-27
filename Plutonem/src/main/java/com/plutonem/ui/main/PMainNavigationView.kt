@@ -22,8 +22,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavig
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.plutonem.R
 import com.plutonem.ui.main.PMainActivity.OnScrollToTopListener
-import com.plutonem.ui.main.PMainNavigationView.PageType.HOME_PAGE
-import com.plutonem.ui.main.PMainNavigationView.PageType.CHAT
+import com.plutonem.ui.main.PMainNavigationView.PageType.VARIOUS_PRODUCTS
+import com.plutonem.ui.main.PMainNavigationView.PageType.MESSAGES
 import com.plutonem.ui.main.PMainNavigationView.PageType.ME
 import com.plutonem.ui.nemur.NemurOrderListFragment
 import com.plutonem.ui.prefs.AppPrefs
@@ -88,7 +88,7 @@ class PMainNavigationView @JvmOverloads constructor(
             txtLabel.text = getTitleForPosition(i)
             customView.contentDescription = getContentDescriptionForPosition(i)
             imgIcon.setImageResource(getDrawableResForPosition(i))
-            if (i == getPosition(HOME_PAGE)) {
+            if (i == getPosition(VARIOUS_PRODUCTS)) {
                 customView.id = R.id.bottom_nav_nemur_button // identify view
             }
 
@@ -109,7 +109,7 @@ class PMainNavigationView @JvmOverloads constructor(
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         val position = getPositionForItemId(item.itemId)
-        return if (position == getPosition(ME) || position == getPosition(CHAT)) {
+        return if (position == getPosition(ME) || position == getPosition(MESSAGES)) {
             if (handleMeAndChatButtonClick()) {
                 currentPosition = position
                 pageListener.onPageChanged(position)
@@ -140,8 +140,8 @@ class PMainNavigationView @JvmOverloads constructor(
 
     private fun getPageForItemId(@IdRes itemId: Int): PageType {
         return when (itemId) {
-            R.id.nav_home_page -> HOME_PAGE
-            R.id.nav_chat -> CHAT
+            R.id.nav_various_products -> VARIOUS_PRODUCTS
+            R.id.nav_messages -> MESSAGES
             else -> ME
         }
     }
@@ -149,8 +149,8 @@ class PMainNavigationView @JvmOverloads constructor(
     @IdRes
     private fun getItemIdForPosition(position: Int): Int {
         return when (getPageTypeOrNull(position)) {
-            HOME_PAGE -> R.id.nav_home_page
-            CHAT -> R.id.nav_chat
+            VARIOUS_PRODUCTS -> R.id.nav_various_products
+            MESSAGES -> R.id.nav_messages
             else -> R.id.nav_me
         }
     }
@@ -208,16 +208,16 @@ class PMainNavigationView @JvmOverloads constructor(
     @DrawableRes
     private fun getDrawableResForPosition(position: Int): Int {
         return when (getPageTypeOrNull(position)) {
-            HOME_PAGE -> R.drawable.ic_nemur_white_24dp
-            CHAT -> R.drawable.ic_chat_white_24dp
+            VARIOUS_PRODUCTS -> R.drawable.ic_nemur_white_24dp
+            MESSAGES -> R.drawable.ic_chat_white_24dp
             else -> R.drawable.ic_mine_circle_white_24dp
         }
     }
 
     private fun getTitleForPosition(position: Int): CharSequence {
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
-            HOME_PAGE -> R.string.home_page_section_screen_title
-            CHAT -> R.string.chat_screen_title
+            VARIOUS_PRODUCTS -> R.string.home_page_section_screen_title
+            MESSAGES -> R.string.chat_screen_title
             else -> R.string.me_section_screen_title
         }
         return context.getString(idRes)
@@ -229,8 +229,8 @@ class PMainNavigationView @JvmOverloads constructor(
 
     private fun getContentDescriptionForPosition(position: Int): CharSequence {
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
-            HOME_PAGE -> R.string.tabbar_accessibility_label_home_page
-            CHAT -> R.string.tabbar_accessibility_label_chat
+            VARIOUS_PRODUCTS -> R.string.tabbar_accessibility_label_home_page
+            MESSAGES -> R.string.tabbar_accessibility_label_chat
             else -> R.string.tabbar_accessibility_label_me
         }
         return context.getString(idRes)
@@ -242,8 +242,8 @@ class PMainNavigationView @JvmOverloads constructor(
 
     private fun getTagForPosition(position: Int): String {
         return when (getPageTypeOrNull(position)) {
-            HOME_PAGE -> TAG_HOME_PAGE
-            CHAT -> TAG_CHAT
+            VARIOUS_PRODUCTS -> TAG_VARIOUS_PRODUCTS
+            MESSAGES -> TAG_MESSAGES
             else -> TAG_ME
         }
     }
@@ -273,7 +273,7 @@ class PMainNavigationView @JvmOverloads constructor(
     }
 
     fun showNemurBadge(showBadge: Boolean) {
-        showBadge(getPosition(HOME_PAGE), showBadge)
+        showBadge(getPosition(VARIOUS_PRODUCTS), showBadge)
     }
 
     /*
@@ -304,8 +304,8 @@ class PMainNavigationView @JvmOverloads constructor(
 
         private fun createFragment(position: Int): Fragment? {
             val fragment: Fragment = when (pages().getOrNull(position)) {
-                HOME_PAGE -> NemurOrderListFragment.newInstance(true)
-                CHAT -> ConversationsOverviewFragment.newInstance()
+                VARIOUS_PRODUCTS -> NemurOrderListFragment.newInstance(true)
+                MESSAGES -> ConversationsOverviewFragment.newInstance()
                 ME -> MyBuyerFragment.newInstance()
                 else -> return null
             }
@@ -330,10 +330,10 @@ class PMainNavigationView @JvmOverloads constructor(
     }
 
     companion object {
-        private val pages = listOf(HOME_PAGE, CHAT, ME)
+        private val pages = listOf(VARIOUS_PRODUCTS, MESSAGES, ME)
 
-        private const val TAG_HOME_PAGE = "tag-homepage"
-        private const val TAG_CHAT = "tag-messages";
+        private const val TAG_VARIOUS_PRODUCTS = "tag-various-products"
+        private const val TAG_MESSAGES = "tag-messages";
         private const val TAG_ME = "tag-me"
 
         private fun numPages(): Int = pages.size
@@ -355,6 +355,6 @@ class PMainNavigationView @JvmOverloads constructor(
     }
 
     enum class PageType {
-        HOME_PAGE, CHAT, ME
+        VARIOUS_PRODUCTS, MESSAGES, ME
     }
 }

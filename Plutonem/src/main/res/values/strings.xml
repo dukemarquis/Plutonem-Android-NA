@@ -15,9 +15,10 @@
     <string name="home_page_section_screen_title" translatable="false">Nemur</string>
     <string name="chat_screen_title">Messages</string>
     <string name="me_section_screen_title">Me</string>
+    <string name="nemur_screen_title">Nemur</string>
 
     <!--TabBar Accessibility Labels-->
-    <string name="tabbar_accessibility_label_home_page">Product list. Enjoy shopping with good quality introduction videos.</string>
+    <string name="tabbar_accessibility_label_home_page">Product lists. Enjoy shopping with quality short videos.</string>
     <string name="tabbar_accessibility_label_chat">Messages. Have conversations with sellers for pre-buy custom service.</string>
     <string name="tabbar_accessibility_label_me">My info. View your personal information and manage it, including orders.</string>
 
@@ -114,6 +115,12 @@
     <string name="error_pay_order">I\'m Sorry, there are some issues during your paying process.</string>
     <string name="error_buyer_hidden">This buyer is hidden and couldn\'t be loaded. Enable it and try again.</string>
 
+    <!--
+      nemur strings
+     -->
+    <string name="nemur_women_display_name">Women</string>
+    <string name="nemur_varioud_display_name">Various</string>
+
     <!-- accessibility announcement when list loads -->
     <string name="nemur_acessibility_list_loaded">"The list has loaded with %1$d items."</string>
 
@@ -150,12 +157,12 @@
 
     <!-- empty list/grid text -->
     <string name="nemur_empty_orders_no_connection" translatable="false">@string/no_network_title</string>
-    <string name="nemur_empty_orders_request_failed">Unable to retrieve orders</string>
-    <string name="nemur_empty_orders_in_tag">No orders with this tag</string>
-    <string name="nemur_empty_orders_in_tag_updating">Fetching orders…</string>
-    <string name="nemur_empty_default_buyer_title">No orders yet</string>
-    <string name="nemur_empty_default_buyer_description">There is currently no order to buy. Please wait!</string>
-    <string name="nemur_empty_default_buyer_button_wait">Waiting new orders</string>
+    <string name="nemur_empty_orders_request_failed">Unable to retrieve products</string>
+    <string name="nemur_empty_orders_in_tag">No products with this tag</string>
+    <string name="nemur_empty_orders_in_tag_updating">Fetching products…</string>
+    <string name="nemur_empty_various_products_title">No products yet</string>
+    <string name="nemur_empty_various_products_description">There is currently no product to buy. Please wait!</string>
+    <string name="nemur_empty_various_products_button_wait">Waiting new products</string>
     <string name="nemur_empty_search_title">No results found</string>
     <string name="nemur_empty_search_description">No results found for %s for your language</string>
     <string name="nemur_empty_search_request_failed">Unable to perform search</string>

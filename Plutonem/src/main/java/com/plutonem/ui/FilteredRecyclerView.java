@@ -19,6 +19,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,9 +28,13 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
+import com.google.android.material.tabs.TabLayout.Tab;
 import com.plutonem.R;
 import com.plutonem.models.FilterCriteria;
+import com.plutonem.utilities.ContextExtensionsKt;
 import com.plutonem.widgets.RecyclerItemDecoration;
 
 import org.wordpress.android.util.AppLog;
@@ -99,13 +104,34 @@ public class FilteredRecyclerView extends RelativeLayout {
         mCurrentFilter = filter;
 
         if (mUseTabsForFiltering) {
-
+            int position = mFilterCriteriaOptions.indexOf(filter);
+            setSelectedTab(position);
         } else {
             int position = mSpinnerAdapter.getIndexOfCriteria(filter);
             if (position > -1 && position != mSpinner.getSelectedItemPosition()) {
                 mSpinner.setSelection(position);
             }
         }
+    }
+
+    public FilterCriteria getCurrentFilter() {
+        return mCurrentFilter;
+    }
+
+    private void setSelectedTab(int position) {
+        if (mTabLayout != null) {
+            Tab tab = mTabLayout.getTabAt(position);
+            if (tab != null) {
+                tab.select();
+            }
+        }
+    }
+
+    public boolean isValidFilter(FilterCriteria filter) {
+        return filter != null
+                && mFilterCriteriaOptions != null
+                && !mFilterCriteriaOptions.isEmpty()
+                && mFilterCriteriaOptions.contains(filter);
     }
 
     public void setFilterListener(FilterListener filterListener) {
@@ -174,6 +200,15 @@ public class FilteredRecyclerView extends RelativeLayout {
         mToolbar = findViewById(R.id.toolbar_with_spinner);
         mAppBarLayout = findViewById(R.id.app_bar_layout);
 
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(getContext());
+        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
+        int appBarColor =
+                elevationOverlayProvider
+                        .compositeOverlay(ContextExtensionsKt.getColorFromAttribute(getContext(), R.attr.pnColorAppBar),
+                                cardElevation);
+
+        mToolbar.setBackgroundColor(appBarColor);
+
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
         if (mToolbarDisableScrollGestures) {
             params.setScrollFlags(0);
@@ -214,17 +249,17 @@ public class FilteredRecyclerView extends RelativeLayout {
             mSpinner = findViewById(R.id.filter_spinner);
         }
 
-//        mViewPager = findViewById(R.id.pager);
         if (mTabLayout == null) {
             mTabLayout = findViewById(R.id.tab_layout);
+            mTabLayout.addOnLayoutChangeListener(
+                    (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
+                            mTabLayout.setScrollPosition(mTabLayout.getSelectedTabPosition(), 0f, true));
         }
 
         if (mUseTabsForFiltering) {
-//            mViewPager.setVisibility(View.VISIBLE);
             mTabLayout.setVisibility(View.VISIBLE);
             mSpinner.setVisibility(View.GONE);
         } else {
-//            mViewPager.setVisibility(View.GONE);
             mTabLayout.setVisibility(View.GONE);
             mSpinner.setVisibility(View.VISIBLE);
         }
@@ -260,7 +295,11 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
 
         FilterCriteria selectedCriteria;
-        selectedCriteria = (FilterCriteria) mSpinnerAdapter.getItem(position);
+        if (mUseTabsForFiltering) {
+            selectedCriteria = mFilterCriteriaOptions.get(position);
+        } else {
+            selectedCriteria = (FilterCriteria) mSpinnerAdapter.getItem(position);
+        }
 
         if (mCurrentFilter == selectedCriteria) {
             AppLog.d(mTAG, "The selected STATUS is already active: "
@@ -278,8 +317,34 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     private void initFilterAdapter() {
-        if (mUseTabsForFiltering) {
+        mSelectingRememberedFilterOnCreate = true;
 
+        if (mUseTabsForFiltering) {
+            mTabLayout.clearOnTabSelectedListeners();
+            mTabLayout.removeAllTabs();
+
+            for (int i = 0; i < mFilterCriteriaOptions.size(); i++) {
+                FilterCriteria filterCriteria = mFilterCriteriaOptions.get(i);
+                Tab newTab = mTabLayout.newTab().setText(filterCriteria.getLabel());
+                mTabLayout.addTab(newTab, i);
+            }
+
+            mTabLayout.addOnTabSelectedListener(new OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(Tab tab) {
+                    manageFilterSelection(tab.getPosition());
+                }
+
+                @Override
+                public void onTabUnselected(Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(Tab tab) {
+                    mSelectingRememberedFilterOnCreate = false;
+                }
+            });
         } else {
             mSpinnerAdapter = new SpinnerAdapter(getContext(),
                     mFilterCriteriaOptions, mSpinnerItemView, mSpinnerDropDownItemView);
@@ -321,6 +386,8 @@ public class FilteredRecyclerView extends RelativeLayout {
                     mFilterListener.onShowCustomEmptyView(emptyViewMessageType);
                 }
             }
+        } else {
+            mEmptyView.setVisibility(View.GONE);
         }
     }
 
@@ -354,6 +421,17 @@ public class FilteredRecyclerView extends RelativeLayout {
                 mToolbar.getPaddingBottom());
     }
 
+    public void setToolbarTitle(@StringRes int title, int startMargin) {
+        mToolbar.setTitle(title);
+        mToolbar.setTitleMarginStart(startMargin);
+    }
+
+    public void setToolbarScrollFlags(int flags) {
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
+        params.setScrollFlags(flags);
+        mToolbar.setLayoutParams(params);
+    }
+
     public void scrollRecycleViewToPosition(int position) {
         if (mRecyclerView == null) {
             return;
@@ -368,11 +446,6 @@ public class FilteredRecyclerView extends RelativeLayout {
         } else {
             return -1;
         }
-//        if (mRecyclerView != null && mRecyclerView.getLayoutManager() != null) {
-//            return ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-//        } else {
-//            return -1;
-//        }
     }
 
     public void smoothScrollToPosition(int position) {
@@ -421,8 +494,10 @@ public class FilteredRecyclerView extends RelativeLayout {
     private class SpinnerAdapter extends BaseAdapter {
         private final List<FilterCriteria> mFilterValues;
         private final LayoutInflater mInflater;
-        @LayoutRes private final int mItemView;
-        @LayoutRes private final int mDropDownItemView;
+        @LayoutRes
+        private final int mItemView;
+        @LayoutRes
+        private final int mDropDownItemView;
 
         SpinnerAdapter(Context context,
                        List<FilterCriteria> filterValues,

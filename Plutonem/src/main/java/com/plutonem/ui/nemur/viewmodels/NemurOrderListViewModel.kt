@@ -2,6 +2,7 @@ package com.plutonem.ui.nemur.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.plutonem.models.NemurTag
 import com.plutonem.models.news.NewsItem
@@ -21,23 +22,30 @@ class NemurOrderListViewModel @Inject constructor(
 
     private val onTagChanged: Observer<NewsItem?> = Observer { _newsItemSourceMediator.value = it }
 
+    private val _shouldCollapseToolbar = MutableLiveData<Boolean>()
+    val shouldCollapseToolbar: LiveData<Boolean> = _shouldCollapseToolbar
+
     /**
      * First tag for which the card was shown.
      */
     private var initialTag: NemurTag? = null
     private var isStarted = false
 
-    /**
-     * Tag may be null.
-     */
-    fun start(tag: NemurTag?, shouldShowSubfilter: Boolean) {
+    private var lastKnownUserId: Long? = null
+    private var lastTokenAvailableStatus: Boolean? = null
+
+    fun start(tag: NemurTag?, shouldShowSubfilter: Boolean, collapseToolbar: Boolean) {
         if (isStarted) {
             return
         }
+
         tag?.let {
             onTagChanged(tag)
             newsManager.pull()
         }
+
+        _shouldCollapseToolbar.value = collapseToolbar
+
         isStarted = true
     }
 
@@ -67,6 +75,10 @@ class NemurOrderListViewModel @Inject constructor(
     ) {
         initialTag = currentTag
         newsManager.cardShown(item)
+    }
+
+    fun onUserComesToNemur() {
+        // skip Tag Update part.
     }
 
     override fun onCleared() {

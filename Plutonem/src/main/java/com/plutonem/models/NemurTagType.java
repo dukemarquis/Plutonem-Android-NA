@@ -8,12 +8,10 @@ public enum NemurTagType {
     private static final int INT_SEARCH = 1;
 
     public static NemurTagType fromInt(int value) {
-        switch (value) {
-            case INT_SEARCH:
-                return SEARCH;
-            default:
-                return DEFAULT;
+        if (value == INT_SEARCH) {
+            return SEARCH;
         }
+        return DEFAULT;
     }
 
     public int toInt() {

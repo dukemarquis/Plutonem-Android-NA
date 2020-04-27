@@ -242,7 +242,12 @@ public class Plutonem extends MultiDexApplication implements HasServiceInjector,
     }
 
     private static void startPostInitServices(Context context) {
-        // Get nemur tags so they're available as soon as the Nemur is accessed
+
+        // Get nemur tags so they're available as soon as the Nemur is accessed - done for
+        // pn.com - note that this uses the application context
+
+        // skip Notification Service part.
+
         NemurUpdateServiceStarter.startService(context, EnumSet.of(NemurUpdateLogic.UpdateTask.TAGS));
     }
 

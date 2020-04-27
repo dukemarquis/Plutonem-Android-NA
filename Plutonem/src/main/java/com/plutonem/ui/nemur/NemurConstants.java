@@ -12,7 +12,7 @@ public class NemurConstants {
 
     public static final long NEMUR_AUTO_UPDATE_DELAY_MINUTES = 5; // 5 minute delay between automatic updates
 
-    public static final long NEMUR_BUYER_ID = 10; // buyer id for nemur.plutonem.com
+    public static final long WOMEN_BUYER_ID = 10; // buyer id for women.plutonem.com
 
     // intent arguments / keys
     public static final String ARG_SHOP_NAME = "shop_name";
@@ -44,4 +44,7 @@ public class NemurConstants {
     public static final String JSON_TAG_DISPLAY_NAME = "tag_display_name";
     public static final String JSON_TAG_SLUG = "slug";
     public static final String JSON_TAG_URL = "URL";
+
+    public static final String KEY_VARIOUS = "various";
+    public static final String KEY_WOMEN = "women";
 }

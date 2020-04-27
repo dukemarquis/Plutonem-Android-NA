@@ -30,6 +30,7 @@ public class AppPrefs {
         // last selected tag in the nemur
         NEMUR_TAG_NAME,
         NEMUR_TAG_TYPE,
+        NEMUR_TAG_WAS_ARRANGING,
 
         // index of the last active page in main activity
         MAIN_PAGE_INDEX,
@@ -125,17 +126,36 @@ public class AppPrefs {
             return null;
         }
         int tagType = getInt(DeletablePrefKey.NEMUR_TAG_TYPE);
-        return NemurUtils.getTagFromTagName(tagName, NemurTagType.fromInt(tagType));
+
+        boolean wasArranging = false;
+
+        // The intention here is to check if the `DeletablePrefKey.NEMUR_TAG_WAS_DEFAULTING` key
+        // was present at all in the Shared Prefs.
+        // We could have it not set for example in cases where user is upgrading from
+        // a previous version of the app. In those cases we do not have enough information as of the saved
+        // tag was a Defaulting tag or not, so (as with empty `DeletablePrefKey.NEMUR_TAG_NAME`)
+        // let's do not use this piece of information.
+        String wasArrangingString = getString(DeletablePrefKey.NEMUR_TAG_WAS_ARRANGING);
+        if (TextUtils.isEmpty(wasArrangingString)) return null;
+
+        wasArranging = getBoolean(DeletablePrefKey.NEMUR_TAG_WAS_ARRANGING, false);
+
+        return NemurUtils.getTagFromTagName(tagName, NemurTagType.fromInt(tagType), wasArranging);
     }
 
     public static void setNemurTag(NemurTag tag) {
         if (tag != null && !TextUtils.isEmpty(tag.getTagSlug())) {
             setString(DeletablePrefKey.NEMUR_TAG_NAME, tag.getTagSlug());
             setInt(DeletablePrefKey.NEMUR_TAG_TYPE, tag.tagType.toInt());
+            setBoolean(
+                    DeletablePrefKey.NEMUR_TAG_WAS_ARRANGING,
+                    tag.isVariousProducts() || tag.isDefaultInMemoryTag()
+            );
         } else {
             prefs().edit()
                     .remove(DeletablePrefKey.NEMUR_TAG_NAME.name())
                     .remove(DeletablePrefKey.NEMUR_TAG_TYPE.name())
+                    .remove(DeletablePrefKey.NEMUR_TAG_WAS_ARRANGING.name())
                     .apply();
         }
     }

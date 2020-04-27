@@ -25,6 +25,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.tabs.TabLayout;
 import com.plutonem.Plutonem;
 import com.plutonem.R;
@@ -52,12 +54,14 @@ import com.plutonem.ui.nemur.services.order.NemurOrderServiceStarter.UpdateActio
 import com.plutonem.ui.nemur.services.search.NemurSearchServiceStarter;
 import com.plutonem.ui.nemur.services.update.NemurUpdateLogic.UpdateTask;
 import com.plutonem.ui.nemur.services.update.NemurUpdateServiceStarter;
+import com.plutonem.ui.nemur.services.update.TagUpdateClientUtilsProvider;
 import com.plutonem.ui.nemur.utils.NemurUtils;
 import com.plutonem.ui.nemur.viewmodels.NemurOrderListViewModel;
 import com.plutonem.ui.nemur.views.NemurBuyerHeaderView;
 import com.plutonem.ui.news.NewsViewHolder.NewsCardListener;
 import com.plutonem.ui.prefs.AppPrefs;
 import com.plutonem.utilities.AniUtils;
+import com.plutonem.utilities.ContextExtensionsKt;
 import com.plutonem.utilities.PNActivityUtils;
 import com.plutonem.utilities.image.ImageManager;
 import com.plutonem.widgets.RecyclerItemDecoration;
@@ -84,8 +88,7 @@ import kohii.v1.exoplayer.Kohii;
 
 public class NemurOrderListFragment extends Fragment
         implements NemurInterfaces.OnOrderSelectedListener,
-        PMainActivity.OnScrollToTopListener,
-        MainToolbarFragment {
+        PMainActivity.OnScrollToTopListener {
     private static final int TAB_ORDERS = 0;
     private static final int NO_POSITION = -1;
 
@@ -135,8 +138,9 @@ public class NemurOrderListFragment extends Fragment
     };
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
-    @Inject ImageManager mImageManager;
     @Inject Dispatcher mDispatcher;
+    @Inject ImageManager mImageManager;
+    @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
 
     private enum ActionableEmptyViewButtonType {}
 
@@ -219,23 +223,36 @@ public class NemurOrderListFragment extends Fragment
         mViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
                                        .get(NemurOrderListViewModel.class);
 
+        mViewModel.getShouldCollapseToolbar().observe(getViewLifecycleOwner(), collapse -> {
+            if (collapse) {
+                mRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                                                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+            } else {
+                mRecyclerView.setToolbarScrollFlags(0);
+            }
+        });
+
         mViewModel.start(
                 mCurrentTag,
-                false
+                false,
+                mIsTopLevel
         );
+
+        if (mIsTopLevel) {
+            mViewModel.onUserComesToNemur();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        AppLog.d(T.NEMUR, "TRACK NEMUR NemurOrderListFragment > STOP Count [mIsTopLevel = " + mIsTopLevel + "]");
         mWasPaused = true;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        AppLog.d(T.NEMUR, "TRACK NEMUR NemurOrderListFragment > START Count [mIsTopLevel = " + mIsTopLevel + "]");
+
         checkOrderAdapter();
 
         if (mWasPaused) {
@@ -251,14 +268,14 @@ public class NemurOrderListFragment extends Fragment
             if (getOrderListType() == NemurOrderListType.SEARCH_RESULTS) {
                 return;
             }
-            NemurTag defaultTag = NemurUtils.getTagFromEndpoint(NemurTag.NEMUR_PATH);
+            NemurTag womenTag = NemurUtils.getTagFromEndpoint(NemurTag.WOMEN_PATH);
             NemurTag nemurTag = AppPrefs.getNemurTag();
 
-            if (defaultTag != null && defaultTag.equals(nemurTag)) {
+            if (womenTag != null && womenTag.equals(nemurTag)) {
                 setCurrentTag(nemurTag);
                 updateCurrentTag();
-            } else if (defaultTag == null) {
-                AppLog.w(T.NEMUR, "Nemur tag not found; NemurTagTable returned null");
+            } else if (womenTag == null) {
+                AppLog.w(T.NEMUR, "Women tag not found; NemurTagTable returned null");
             }
         }
     }
@@ -267,22 +284,10 @@ public class NemurOrderListFragment extends Fragment
      * called when fragment is resumed and we're looking at orders in a default tag
      */
     private void resumeDefaultTag() {
-        if (!NemurTagTable.tagExists(getCurrentTag())) {
-            // current tag no longer exists, revert to default
-            AppLog.d(T.NEMUR, "nemur order list > current tag no longer valid");
-            NemurTag tag = NemurUtils.getDefaultTag();
-            // it's possible the default tag won't exist if the user just changed the app's
-            // language, in which case default to the first tag in the table
-            if (!NemurTagTable.tagExists(tag)) {
-                tag = NemurTagTable.getFirstTag();
-            }
-            setCurrentTag(tag);
-        } else {
-            // otherwise, refresh orders to make sure any changes are reflected and auto-update
-            // orders in the current tag if it's time
-            refreshOrders();
-            updateCurrentTagIfTime();
-        }
+        // refresh orders to make sure any changes are reflected and auto-update
+        // orders in the current tag if it's time
+        refreshOrders();
+        updateCurrentTagIfTime();
     }
 
     @Override
@@ -352,11 +357,6 @@ public class NemurOrderListFragment extends Fragment
         mRecyclerView.setAdapter(getOrderAdapter());
         mRecyclerView.setLayoutManager();
         mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
-    }
-
-    @Override
-    public void setTitle(@NonNull String title) {
-        // Do nothing - no title for this toolbar
     }
 
     @SuppressWarnings("unused")
@@ -450,8 +450,6 @@ public class NemurOrderListFragment extends Fragment
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.nemur_fragment_order_cards, container, false);
         mRecyclerView = rootView.findViewById(R.id.nemur_recycler_view);
 
-        Context context = container.getContext();
-
         mActionableEmptyView = rootView.findViewById(R.id.empty_custom_view);
 
         mRecyclerView.setLogT(AppLog.T.NEMUR);
@@ -480,10 +478,34 @@ public class NemurOrderListFragment extends Fragment
 
             @Override
             public FilterCriteria onRecallSelection() {
+                if (mIsTopLevel) {
+                    if (AppPrefs.getNemurTag() == null) {
+                        NemurTag mainTag = NemurUtils.getTagFromEndpoint(NemurTag.WOMEN_PATH);
+                        String mainLabel = requireActivity().getString(R.string.nemur_women_display_name);
+
+                        if (mainTag != null && mainTag.getTagDisplayName().equals(mainLabel)) {
+                            setCurrentTag(mainTag);
+                        }
+                    }
+                }
+
                 if (hasCurrentTag()) {
-                    return getCurrentTag();
+                    NemurTag defaultTag;
+
+                    defaultTag = NemurUtils.getDefaultTagFromDbOrCreateInMemory(
+                            requireActivity(),
+                            mTagUpdateClientUtilsProvider
+                    );
+
+                    NemurTag tag = NemurUtils.getValidTagForSharedPrefs(
+                            getCurrentTag(),
+                            mIsTopLevel,
+                            mRecyclerView,
+                            defaultTag);
+
+                    return tag;
                 } else {
-                    AppLog.w(T.NEMUR, "nemur order list > no current tag in onRecallSelection");
+                    AppLog.w(T.NEMUR, "nemur product list > no current tag in onRecallSelection");
                     return NemurUtils.getDefaultTag();
                 }
             }
@@ -502,24 +524,38 @@ public class NemurOrderListFragment extends Fragment
         });
 
         // add the item decoration (dividers) to the recycler, skipping the first item if the first
-        // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
+        // item is the tag toolbar (shown when viewing posts in default tags) - this is to avoid
         // having the tag toolbar take up more vertical space than necessary
-        int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.nemur_card_margin);
-        int spacingVertical = context.getResources().getDimensionPixelSize(R.dimen.nemur_card_gutters);
+        int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.nemur_card_margin);
+        int spacingVertical = getResources().getDimensionPixelSize(R.dimen.nemur_card_gutters);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
         // the following will change the look and feel of the toolbar to match the current design
-        mRecyclerView.setToolbarBackgroundColor(ContextCompat.getColor(context, R.color.primary));
-        mRecyclerView.setToolbarSpinnerTextColor(ContextCompat.getColor(context, android.R.color.white));
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
+        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
+        int elevatedAppBarColor = elevationOverlayProvider
+                .compositeOverlayIfNeeded(
+                        ContextExtensionsKt.getColorFromAttribute(mRecyclerView.getContext(), R.attr.pnColorAppBar),
+                        appbarElevation);
+        mRecyclerView.setToolbarBackgroundColor(elevatedAppBarColor);
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);
 
-        mRecyclerView.setToolbarLeftAndRightPadding(
-                getResources().getDimensionPixelSize(R.dimen.margin_medium),
-                getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
+        if (mIsTopLevel) {
+            mRecyclerView.setToolbarTitle(
+                    R.string.nemur_screen_title,
+                    getResources().getDimensionPixelSize(R.dimen.margin_extra_large)
+            );
+        } else {
+            mRecyclerView.setToolbarLeftAndRightPadding(
+                    getResources().getDimensionPixelSize(R.dimen.margin_medium),
+                    getResources().getDimensionPixelSize(R.dimen.margin_extra_large)
+            );
+        }
 
         // add a menu to the filtered recycler's toolbar
         if (getOrderListType() == NemurOrderListType.TAG_DEFAULT
-                || getOrderListType() == NemurOrderListType.SEARCH_RESULTS) {
+                || getOrderListType() == NemurOrderListType.SEARCH_RESULTS
+                || mIsTopLevel) {
             setupRecyclerToolbar();
         }
 
@@ -544,6 +580,8 @@ public class NemurOrderListFragment extends Fragment
             mIsUpdating = true;
             mRecyclerView.setRefreshing(true);
         }
+
+        // skip Sub Filter Component part.
 
         return rootView;
     }
@@ -876,7 +914,14 @@ public class NemurOrderListFragment extends Fragment
         } else {
             switch (getOrderListType()) {
                 case TAG_DEFAULT:
-                    title = getString(R.string.nemur_empty_orders_in_tag);
+                    if (getCurrentTag().isVariousProducts() || getCurrentTag().isDefaultInMemoryTag()) {
+                        title = getString(R.string.nemur_empty_various_products_title);
+                        description = getString(R.string.nemur_empty_various_products_description);
+
+                        button = null;
+                    } else {
+                        title = getString(R.string.nemur_empty_orders_in_tag);
+                    }
                     break;
                 case SEARCH_RESULTS:
                     isSearching = true;
@@ -1073,8 +1118,8 @@ public class NemurOrderListFragment extends Fragment
 
         // skip if this is already the current tag and the post adapter is already showing it
         if (isCurrentTag(tag)
-                && hasOrderAdapter()
-                && getOrderAdapter().isCurrentTag(tag)) {
+            && hasOrderAdapter()
+            && getOrderAdapter().isCurrentTag(tag)) {
             return;
         }
 
@@ -1082,11 +1127,26 @@ public class NemurOrderListFragment extends Fragment
 
         mViewModel.onTagChanged(mCurrentTag);
 
+        NemurTag validTag;
+
+        validTag = NemurUtils.getValidTagForSharedPrefs(
+                tag,
+                mIsTopLevel,
+                mRecyclerView,
+                NemurUtils.getDefaultTagFromDbOrCreateInMemory(
+                        requireActivity(),
+                        mTagUpdateClientUtilsProvider
+                )
+        );
+
         switch (getOrderListType()) {
             case TAG_DEFAULT:
                 // remember this as the current tag if viewing default tag
                 AppPrefs.setNemurTag(tag);
 
+                break;
+            case SEARCH_RESULTS:
+                // noop
                 break;
         }
 
@@ -1100,7 +1160,14 @@ public class NemurOrderListFragment extends Fragment
      * load tags on which the main data will be filtered
      */
     private void loadTags(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
-        new LoadTagsTask(listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        NemurTag defaultTag = null;
+
+        defaultTag = NemurUtils.getDefaultTagFromDbOrCreateInMemory(
+                requireActivity(),
+                mTagUpdateClientUtilsProvider
+        );
+
+        new LoadTagsTask(listener, defaultTag).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*
@@ -1441,16 +1508,29 @@ public class NemurOrderListFragment extends Fragment
 
     private class LoadTagsTask extends AsyncTask<Void, Void, NemurTagList> {
         private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
+        private NemurTag mDefaultTag;
 
-        LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
+        LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, NemurTag defaultTag) {
             mFilterCriteriaLoaderListener = listener;
+            mDefaultTag = defaultTag;
         }
 
         @Override
         protected NemurTagList doInBackground(Void... voids) {
+
+            // skip Custom List Tags part.
+            // skip Followed Tags part.
+            // skip Bookmark Tags part.
+
             NemurTagList tagList = NemurTagTable.getDefaultTags();
 
-            return tagList;
+            if (mIsTopLevel) {
+                if (!tagList.containsVariousTag()) {
+                    tagList.add(mDefaultTag);
+                }
+            }
+
+            return mIsTopLevel ? NemurUtils.getOrderedTagsList(tagList, NemurUtils.getDefaultTagInfo()) : tagList;
         }
 
         @Override
