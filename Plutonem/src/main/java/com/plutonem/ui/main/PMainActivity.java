@@ -298,7 +298,7 @@ public class PMainActivity extends XmppActivity implements
     }
 
     public void setHomePageActive() {
-        mBottomNav.setCurrentSelectedPage(PageType.HOME_PAGE);
+        mBottomNav.setCurrentSelectedPage(PageType.VARIOUS_PRODUCTS);
     }
 
     @Override

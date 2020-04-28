@@ -119,7 +119,9 @@
       nemur strings
      -->
     <string name="nemur_women_display_name">Women</string>
-    <string name="nemur_varioud_display_name">Various</string>
+    <string name="nemur_various_display_name">Various</string>
+    <string name="nemur_covid19_display_name">Covid-19</string>
+    <string name="nemur_heels_display_name">Heels</string>
 
     <!-- accessibility announcement when list loads -->
     <string name="nemur_acessibility_list_loaded">"The list has loaded with %1$d items."</string>

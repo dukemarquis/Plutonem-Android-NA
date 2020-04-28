@@ -12,7 +12,10 @@ public class NemurConstants {
 
     public static final long NEMUR_AUTO_UPDATE_DELAY_MINUTES = 5; // 5 minute delay between automatic updates
 
-    public static final long WOMEN_BUYER_ID = 10; // buyer id for women.plutonem.com
+    public static final long VARIOUS_BUYER_ID = 10; // buyer id for various category in nemur page
+    public static final long WOMEN_BUYER_ID = 20; // buyer id for women category in nemur page
+    public static final long COVID19_BUYER_ID = 30; // buyer id for covid-19 category in nemur page
+    public static final long HEELS_BUYER_ID = 40; // buyer id for heels category in nemur page
 
     // intent arguments / keys
     public static final String ARG_SHOP_NAME = "shop_name";

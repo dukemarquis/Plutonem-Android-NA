@@ -73,7 +73,6 @@ public class NemurBuyerHeaderView extends LinearLayout {
         // then get from server if doesn't exist locally or is time to update it
         if (localBuyerInfo == null || NemurBuyerTable.isTimeToUpdateBuyerInfo(localBuyerInfo)) {
             NemurActions.UpdateBuyerInfoListener listener = new NemurActions.UpdateBuyerInfoListener() {
-                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void onResult(NemurBuyer serverBuyerInfo) {
                     if (isAttachedToWindow()) {

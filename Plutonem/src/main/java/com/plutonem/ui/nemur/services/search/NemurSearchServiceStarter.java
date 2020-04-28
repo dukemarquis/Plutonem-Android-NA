@@ -15,7 +15,7 @@ import org.wordpress.android.util.AppLog;
 import static com.plutonem.JobServiceId.JOB_NEMUR_SEARCH_SERVICE_ID;
 
 /**
- * service which searches for nemur orders on plutonem
+ * service which searches for nemur products on plutonem
  */
 
 public class NemurSearchServiceStarter {

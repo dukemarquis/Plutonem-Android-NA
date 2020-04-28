@@ -11,11 +11,14 @@ import java.io.Serializable;
 import java.util.Locale;
 
 public class NemurTag implements Serializable, FilterCriteria {
-//    public static final String VARIOUS_PATH = "/nem/various";
     public static final String VARIOUS_PATH = String.format(Locale.US, "nem/buyers/%d/orders",
-            NemurConstants.WOMEN_BUYER_ID);
+            NemurConstants.VARIOUS_BUYER_ID);
     public static final String WOMEN_PATH = String.format(Locale.US, "nem/buyers/%d/orders",
             NemurConstants.WOMEN_BUYER_ID);
+    public static final String COVID19_PATH = String.format(Locale.US, "nem/buyers/%d/orders",
+            NemurConstants.COVID19_BUYER_ID);
+    public static final String HEELS_PATH = String.format(Locale.US, "nem/buyers/%d/orders",
+            NemurConstants.HEELS_BUYER_ID);
 
     public static final String TAG_TITLE_VARIOUS_PRODUCTS = "Various Products";
     public static final String TAG_TITLE_DEFAULT = TAG_TITLE_VARIOUS_PRODUCTS;
@@ -142,6 +145,14 @@ public class NemurTag implements Serializable, FilterCriteria {
     public static boolean isSameTag(NemurTag tag1, NemurTag tag2) {
         return tag1 != null && tag2 != null && tag1.tagType == tag2.tagType && tag1.getTagSlug()
                                                                                     .equalsIgnoreCase(tag2.getTagSlug());
+    }
+
+    public boolean isHeels() {
+        return tagType == NemurTagType.DEFAULT && getEndpoint().endsWith(HEELS_PATH);
+    }
+
+    public boolean isCovid19() {
+        return tagType == NemurTagType.DEFAULT && getEndpoint().endsWith(COVID19_PATH);
     }
 
     public boolean isVariousProducts() {

@@ -27,6 +27,8 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import javax.inject.Inject;
+
 public class NemurUpdateLogic {
     /***
      * This class holds the business logic for Nemur Updates, serving both NemurUpdateService (<API26)
@@ -44,6 +46,8 @@ public class NemurUpdateLogic {
     private Object mListenerCompanion;
     private String mLanguage;
     private Context mContext;
+
+    @Inject TagUpdateClientUtilsProvider mClientUtilsProvider;
 
     public NemurUpdateLogic(Context context, Plutonem app, ServiceCompletionListener listener) {
         mCompletionListener = listener;
@@ -96,7 +100,9 @@ public class NemurUpdateLogic {
         AppLog.d(AppLog.T.NEMUR, "nemur service > updating tags");
         HashMap<String, String> params = new HashMap<>();
         params.put("locale", mLanguage);
-        Plutonem.getRestClientUtilsV1_2().get("nem/menu", params, null, listener, errorListener);
+        mClientUtilsProvider.getRestClientForTagUpdate()
+                            .get("nem/product-categories/20200427", params, null, listener, errorListener);
+//        Plutonem.getRestClientUtilsV1_2().get("nem/product-categories/20200427", params, null, listener, errorListener);
     }
 
     private boolean displayNameUpdateWasNeeded(NemurTagList serverCategories) {
@@ -105,10 +111,16 @@ public class NemurUpdateLogic {
         for (NemurTag tag : serverCategories) {
             String tagNameBefore = tag.getTagDisplayName();
             if (tag.isVariousProducts()) {
-                tag.setTagDisplayName(mContext.getString(R.string.nemur_varioud_display_name));
+                tag.setTagDisplayName(mContext.getString(R.string.nemur_various_display_name));
                 if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isWomen()) {
                 tag.setTagDisplayName(mContext.getString(R.string.nemur_women_display_name));
+                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
+            } else if (tag.isCovid19()) {
+                tag.setTagDisplayName(mContext.getString(R.string.nemur_covid19_display_name));
+                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
+            } else if (tag.isHeels()) {
+                tag.setTagDisplayName(mContext.getString(R.string.nemur_heels_display_name));
                 if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             }
         }

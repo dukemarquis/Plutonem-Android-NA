@@ -114,8 +114,8 @@ public class NemurUtils {
         if (tag.isDefaultInMemoryTag()) {
             // if the tag was created in memory from createTagFromTagName
             // we need to set some fields as below before to use it
-            tag.setTagTitle(context.getString(R.string.nemur_varioud_display_name));
-            tag.setTagDisplayName(context.getString(R.string.nemur_varioud_display_name));
+            tag.setTagTitle(context.getString(R.string.nemur_various_display_name));
+            tag.setTagDisplayName(context.getString(R.string.nemur_various_display_name));
 
             String baseUrl = clientUtilsProvider.getTagUpdateEndpointURL();
 

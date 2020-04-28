@@ -36,6 +36,7 @@ import com.plutonem.ui.news.NewsViewHolder.NewsCardListener;
 import com.plutonem.utilities.image.ImageManager;
 import com.plutonem.utilities.image.ImageType;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.util.AppLog;
 
 import kohii.v1.core.Playback;
@@ -76,32 +77,6 @@ public class NemurOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final int NEWS_CARD_POSITION = 0;
 
-    /*
-     * full order
-     */
-//    private class NemurOrderViewHolder extends RecyclerView.ViewHolder {
-//        final CardView mCardView;
-//
-//        private final TextView mTxtTitle;
-//        private final TextView mTxtPrice;
-//
-//        private final ImageView mImgFeatured;
-//
-//        private final ViewGroup mFramePhoto;
-//
-//        NemurOrderViewHolder(View itemView) {
-//            super(itemView);
-//
-//            mCardView = itemView.findViewById(R.id.card_view);
-//
-//            mTxtTitle = itemView.findViewById(R.id.text_title);
-//            mTxtPrice = itemView.findViewById(R.id.text_price);
-//
-//            mFramePhoto = itemView.findViewById(R.id.frame_photo);
-//            mImgFeatured = mFramePhoto.findViewById(R.id.image_featured);
-//        }
-//    }
-
     private class BuyerHeaderViewHolder extends RecyclerView.ViewHolder {
         private final NemurBuyerHeaderView mBuyerHeaderView;
 
@@ -121,11 +96,10 @@ public class NemurOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+    public void onViewAttachedToWindow(@NotNull RecyclerView.ViewHolder holder) {
         super.onViewAttachedToWindow(holder);
         ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
-        if (lp != null
-                && lp instanceof StaggeredGridLayoutManager.LayoutParams
+        if (lp instanceof StaggeredGridLayoutManager.LayoutParams
                 && holder.getLayoutPosition() == 0
                 && (hasBuyerHeader() || hasNewsCard())) {
             StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
@@ -164,18 +138,14 @@ public class NemurOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new GapMarkerViewHolder(new NemurGapMarkerView(context));
 
             default:
-//                return new GapMarkerViewHolder(new NemurGapMarkerView(context));
                 return new NemurOrderViewHolder(parent, mKohii);
-//            default:
-//                orderView = LayoutInflater.from(context).inflate(R.layout.nemur_cardview_order, parent, false);
-//                return new NemurOrderViewHolder(orderView);
+
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof NemurOrderViewHolder) {
-//            renderOrder(position, (NemurOrderViewHolder) holder);
             final NemurOrder order = getItem(position);
             if (order == null) return;
             ((NemurOrderViewHolder) holder).renderOrder(order, mImageManager, mPhotonWidth, mPhotonHeight, mMarginLarge, mOrderSelectedListener);
@@ -183,8 +153,8 @@ public class NemurOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (holder instanceof BuyerHeaderViewHolder) {
             BuyerHeaderViewHolder buyerHolder = (BuyerHeaderViewHolder) holder;
             buyerHolder.mBuyerHeaderView.setOnBuyerInfoLoadedListener(mBuyerInfoLoadedListener);
-            if (isNemur()) {
-                buyerHolder.mBuyerHeaderView.loadBuyerInfo(NemurConstants.NEMUR_BUYER_ID);
+            if (isWomen()) {
+                buyerHolder.mBuyerHeaderView.loadBuyerInfo(NemurConstants.WOMEN_BUYER_ID);
             }
         } else if (holder instanceof GapMarkerViewHolder) {
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
@@ -194,52 +164,8 @@ public class NemurOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-//    private void renderOrder(final int position, final NemurOrderViewHolder holder) {
-//        final NemurOrder order = getItem(position);
-//        if (order == null) {
-//            return;
-//        }
-//
-//        mImageManager.cancelRequestAndClearImageView(holder.mImgFeatured);
-//        holder.mTxtTitle.setVisibility(View.VISIBLE);
-//        holder.mTxtTitle.setText(order.getTitle());
-//
-//        if (order.hasPrice()) {
-//            holder.mTxtPrice.setVisibility(View.VISIBLE);
-//            holder.mTxtPrice.setText(order.getPrice());
-//        } else {
-//            holder.mTxtPrice.setVisibility(View.GONE);
-//        }
-//
-//        final int titleMargin;
-//        if (order.hasFeaturedImage()) {
-//            mImageManager.load(holder.mImgFeatured, ImageType.PHOTO,
-//                    order.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), ScaleType.CENTER_INSIDE);
-//            holder.mFramePhoto.setVisibility(View.VISIBLE);
-//            titleMargin = mMarginLarge;
-//        } else {
-//            holder.mFramePhoto.setVisibility(View.GONE);
-//            titleMargin = 0;
-//        }
-//
-//        // set the top margin of the title based on whether there's a featured image
-//        LayoutParams params = (LayoutParams) holder.mTxtTitle.getLayoutParams();
-//        params.topMargin = titleMargin;
-//
-//        holder.mCardView.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mOrderSelectedListener != null) {
-//                    mOrderSelectedListener.onOrderSelected(order);
-//                }
-//            }
-//        });
-//
-//        checkLoadMore(position);
-//    }
-
     /*
-     * if we're nearing the end of the orders, fire request to load more
+     * if we're nearing the end of the products, fire request to load more
      */
     private void checkLoadMore(int position) {
         if (mCanRequestMoreOrders
@@ -279,11 +205,11 @@ public class NemurOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasBuyerHeader() {
-        return isNemur();
+        return isWomen();
     }
 
-    private boolean isNemur() {
-        return mCurrentTag != null && mCurrentTag.isNemur();
+    private boolean isWomen() {
+        return mCurrentTag != null && mCurrentTag.isWomen();
     }
 
     public void setOnOrderSelectedListener(NemurInterfaces.OnOrderSelectedListener listener) {
@@ -446,7 +372,7 @@ public class NemurOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         // is shown, even when we are loading data, so the card should be displayed. [moreover displaying the card only
         // after we fetch the data results in weird animation after configuration change, since it plays insertion
         // animation for all the data (including the card) except of the header which hasn't changed].
-        return mNewsItem != null && (!isEmpty() || isNemur());
+        return mNewsItem != null && (!isEmpty() || isWomen());
     }
 
     /*

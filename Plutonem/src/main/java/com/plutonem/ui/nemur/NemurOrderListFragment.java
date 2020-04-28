@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.tabs.TabLayout;
 import com.plutonem.Plutonem;
@@ -49,6 +50,7 @@ import com.plutonem.ui.main.PMainActivity;
 import com.plutonem.ui.nemur.NemurTypes.NemurOrderListType;
 import com.plutonem.ui.nemur.actions.NemurActions;
 import com.plutonem.ui.nemur.adapters.NemurSearchSuggestionAdapter;
+import com.plutonem.ui.nemur.adapters.NemurSearchSuggestionRecyclerAdapter;
 import com.plutonem.ui.nemur.services.order.NemurOrderServiceStarter;
 import com.plutonem.ui.nemur.services.order.NemurOrderServiceStarter.UpdateAction;
 import com.plutonem.ui.nemur.services.search.NemurSearchServiceStarter;
@@ -88,12 +90,15 @@ import kohii.v1.exoplayer.Kohii;
 
 public class NemurOrderListFragment extends Fragment
         implements NemurInterfaces.OnOrderSelectedListener,
+        PMainActivity.OnActivityBackPressedListener,
         PMainActivity.OnScrollToTopListener {
     private static final int TAB_ORDERS = 0;
     private static final int NO_POSITION = -1;
 
     private NemurOrderAdapter mOrderAdapter;
     private NemurSearchSuggestionAdapter mSearchSuggestionAdapter;
+    private NemurSearchSuggestionRecyclerAdapter mSearchSuggestionRecyclerAdapter;
+
 
     private FilteredRecyclerView mRecyclerView;
     private boolean mFirstLoad = true;
@@ -553,9 +558,7 @@ public class NemurOrderListFragment extends Fragment
         }
 
         // add a menu to the filtered recycler's toolbar
-        if (getOrderListType() == NemurOrderListType.TAG_DEFAULT
-                || getOrderListType() == NemurOrderListType.SEARCH_RESULTS
-                || mIsTopLevel) {
+        if (getOrderListType() == NemurOrderListType.TAG_DEFAULT || getOrderListType() == NemurOrderListType.SEARCH_RESULTS || mIsTopLevel) {
             setupRecyclerToolbar();
         }
 
@@ -624,8 +627,12 @@ public class NemurOrderListFragment extends Fragment
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 resetOrderAdapter(NemurOrderListType.SEARCH_RESULTS);
-                showSearchMessage();
+                populateSearchSuggestions(null);
+                showSearchMessageOrSuggestions();
                 mRecyclerView.setTabLayoutVisibility(false);
+                if (mIsTopLevel) {
+                    mViewModel.onSearchMenuCollaspe(false);
+                }
 
                 // hide the bottom navigation when search is active
                 if (mBottomNavController != null) {
@@ -638,40 +645,83 @@ public class NemurOrderListFragment extends Fragment
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 hideSearchMessage();
+                hideSearchSuggestions();
                 hideSearchTabs();
-                resetSearchSuggestionAdapter();
+                resetSearchSuggestions();
                 mCurrentSearchQuery = null;
 
                 if (mBottomNavController != null) {
                     mBottomNavController.onRequestShowBottomNavigation();
                 }
 
-                // return to the default tag that was showing prior to searching
-                resetOrderAdapter(NemurOrderListType.TAG_DEFAULT);
+                if (mIsTopLevel) {
+                    if (!isCurrentTagManagedInVariousTab()) {
+                        // return to the default tag that was showing prior to searching
+                        resetOrderAdapter(NemurOrderListType.TAG_DEFAULT);
+                    }
+
+                    mRecyclerView.setTabLayoutVisibility(true);
+                    mViewModel.onSearchMenuCollaspe(true);
+                } else {
+                    // return to the default tag that was showing prior to searching
+                    resetOrderAdapter(NemurOrderListType.TAG_DEFAULT);
+                }
 
                 return true;
             }
         });
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-               @Override
-               public boolean onQueryTextSubmit(String query) {
-                   submitSearchQuery(query);
-                   return true;
-               }
+                                               @Override
+                                               public boolean onQueryTextSubmit(String query) {
+                                                   submitSearchQuery(query);
+                                                   return true;
+                                               }
 
-               @Override
-               public boolean onQueryTextChange(String newText) {
-                   if (TextUtils.isEmpty(newText)) {
-                       showSearchMessage();
-                       hideSearchTabs();
-                   } else {
-                       populateSearchSuggestionAdapter(newText);
-                   }
-                   return true;
-                   }
-               }
+                                               @Override
+                                               public boolean onQueryTextChange(String newText) {
+                                                   populateSearchSuggestions(newText);
+                                                   showSearchMessageOrSuggestions();
+                                                   return true;
+                                               }
+                                           }
         );
+    }
+
+    private void showSearchMessageOrSuggestions() {
+        boolean hasQuery = !isSearchViewEmpty();
+        boolean hasPerformedSearch = !TextUtils.isEmpty(mCurrentSearchQuery);
+        boolean isSearching = getOrderListType() == NemurOrderListType.SEARCH_RESULTS;
+
+        // prevents suggestions from being shown after the search view has been collapsed
+        if (!isSearching) {
+            return;
+        }
+
+        if (mWasPaused && hasPerformedSearch) {
+            return;
+        }
+
+        if (!hasQuery || !hasPerformedSearch) {
+            // clear products so only the suggestions or the empty view are visible
+            getOrderAdapter().clear();
+
+            hideSearchTabs();
+
+            // clears the last performed query
+            mCurrentSearchQuery = null;
+
+            final boolean hasSuggestions =
+                    mSearchSuggestionRecyclerAdapter != null && mSearchSuggestionRecyclerAdapter.getItemCount() > 0;
+
+            if (hasSuggestions) {
+                hideSearchMessage();
+                showSearchSuggestions();
+            } else {
+                showSearchMessage();
+                hideSearchSuggestions();
+            }
+        }
     }
 
     /*
@@ -689,6 +739,7 @@ public class NemurOrderListFragment extends Fragment
 
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
+        hideSearchSuggestions();
 
         // remember this query for future suggestions
         String trimQuery = query.trim();
@@ -712,15 +763,20 @@ public class NemurOrderListFragment extends Fragment
             return;
         }
 
-        // clear orders so only the empty view is visible
-        getOrderAdapter().clear();
-
         setEmptyTitleDescriptionAndButton(false);
         showEmptyView();
     }
 
     private void hideSearchMessage() {
         hideEmptyView();
+    }
+
+    private void showSearchSuggestions() {
+        mRecyclerView.showSearchSuggestions();
+    }
+
+    private void hideSearchSuggestions() {
+        mRecyclerView.hideSearchSuggestions();
     }
 
     /*
@@ -806,6 +862,16 @@ public class NemurOrderListFragment extends Fragment
         return isSearchTabsShowing() ? mSearchTabs.getSelectedTabPosition() : -1;
     }
 
+    private void populateSearchSuggestions(String query) {
+        populateSearchSuggestionAdapter(query);
+        populateSearchSuggestionRecyclerAdapter(null); // always passing null as there's no need to filter
+    }
+
+    private void resetSearchSuggestions() {
+        resetSearchSuggestionAdapter();
+        resetSearchSuggestionRecyclerAdapter();
+    }
+
     /*
      * create and assign the suggestion adapter for the search view
      */
@@ -822,12 +888,13 @@ public class NemurOrderListFragment extends Fragment
             @Override
             public boolean onSuggestionClick(int position) {
                 String query = mSearchSuggestionAdapter.getSuggestion(position);
-                if (!TextUtils.isEmpty(query)) {
-                    mSearchView.setQuery(query, true);
-                }
+                onSearchSuggestionClicked(query);
                 return true;
             }
         });
+
+        mSearchSuggestionAdapter.setOnSuggestionDeleteClickListener(this::onSearchSuggestionDeleteClicked);
+        mSearchSuggestionAdapter.setOnSuggestionClearClickListener(this::onSearchSuggestionClearClicked);
     }
 
     private void populateSearchSuggestionAdapter(String query) {
@@ -840,6 +907,72 @@ public class NemurOrderListFragment extends Fragment
     private void resetSearchSuggestionAdapter() {
         mSearchView.setSuggestionsAdapter(null);
         mSearchSuggestionAdapter = null;
+    }
+
+    private void createSearchSuggestionRecyclerAdapter() {
+        mSearchSuggestionRecyclerAdapter = new NemurSearchSuggestionRecyclerAdapter();
+        mRecyclerView.setSearchSuggestionAdapter(mSearchSuggestionRecyclerAdapter);
+
+        mSearchSuggestionRecyclerAdapter.setOnSuggestionClickListener(this::onSearchSuggestionClicked);
+        mSearchSuggestionRecyclerAdapter.setOnSuggestionDeleteClickListener(this::onSearchSuggestionDeleteClicked);
+        mSearchSuggestionRecyclerAdapter.setOnSuggestionClearClickListener(this::onSearchSuggestionClearClicked);
+    }
+
+    private void populateSearchSuggestionRecyclerAdapter(String query) {
+        if (mSearchSuggestionRecyclerAdapter == null) {
+            createSearchSuggestionRecyclerAdapter();
+        }
+        mSearchSuggestionRecyclerAdapter.setQuery(query);
+    }
+
+    private void resetSearchSuggestionRecyclerAdapter() {
+        mRecyclerView.setSearchSuggestionAdapter(null);
+        mSearchSuggestionRecyclerAdapter = null;
+    }
+
+    private void onSearchSuggestionClicked(String query) {
+        if (!TextUtils.isEmpty(query)) {
+            mSearchView.setQuery(query, true);
+        }
+    }
+
+    private void onSearchSuggestionDeleteClicked(String query) {
+        NemurSearchTable.deleteQueryString(query);
+
+        mSearchSuggestionAdapter.reload();
+        mSearchSuggestionRecyclerAdapter.reload();
+
+        showSearchMessageOrSuggestions();
+    }
+
+    private void onSearchSuggestionClearClicked() {
+        showClearSearchSuggestionsConfirmationDialog(getContext());
+    }
+
+    private void showClearSearchSuggestionsConfirmationDialog(final Context context) {
+        new MaterialAlertDialogBuilder(context)
+                .setMessage(R.string.dlg_confirm_clear_search_history)
+                .setCancelable(true)
+                .setNegativeButton(R.string.no, null)
+                .setPositiveButton(R.string.yes, (dialog, id) -> clearSearchSuggestions())
+                .create()
+                .show();
+    }
+
+    private void clearSearchSuggestions() {
+        NemurSearchTable.deleteAllQueries();
+
+        mSearchSuggestionAdapter.swapCursor(null);
+        mSearchSuggestionRecyclerAdapter.swapCursor(null);
+
+        showSearchMessageOrSuggestions();
+    }
+
+    /*
+     * is the search input showing?
+     */
+    private boolean isSearchViewExpanded() {
+        return mSearchView != null && !mSearchView.isIconified();
     }
 
     private boolean isSearchViewEmpty() {
@@ -1037,13 +1170,20 @@ public class NemurOrderListFragment extends Fragment
                         return;
                     }
 
-                    // request older posts unless we already have the max # to show
+                    // request older products unless we already have the max # to show
                     switch (getOrderListType()) {
                         case TAG_DEFAULT:
                             if (NemurOrderTable.getNumOrdersWithTag(mCurrentTag)
                                     < NemurConstants.NEMUR_MAX_ORDERS_TO_DISPLAY) {
-                                // request older orders
+                                // request older products
                                 updateOrdersWithTag(getCurrentTag(), UpdateAction.REQUEST_OLDER);
+                            }
+                            break;
+                        case SEARCH_RESULTS:
+                            NemurTag searchTag = NemurUtils.getTagForSearchQuery(mCurrentSearchQuery);
+                            int offset = NemurOrderTable.getNumOrdersWithTag(searchTag);
+                            if (offset < NemurConstants.NEMUR_MAX_ORDERS_TO_DISPLAY) {
+                                updateOrdersInCurrentSearch(offset);
                             }
                             break;
                     }
@@ -1157,6 +1297,20 @@ public class NemurOrderListFragment extends Fragment
     }
 
     /*
+     * called by the activity when user hits the back button - returns true if the back button
+     * is handled here and should be ignored by the activity
+     */
+    @Override
+    public boolean onActivityBackPressed() {
+        if (isSearchViewExpanded()) {
+            mSearchMenuItem.collapseActionView();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
      * load tags on which the main data will be filtered
      */
     private void loadTags(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
@@ -1219,6 +1373,13 @@ public class NemurOrderListFragment extends Fragment
 
         setIsUpdating(false, event.getAction());
         if (event.getNemurTag() != null && !isCurrentTag(event.getNemurTag())) {
+            return;
+        }
+
+        // don't show new products if user is searching - products will automatically
+        // appear when search is exited
+        if (isSearchViewExpanded()
+            || getOrderListType() == NemurOrderListType.SEARCH_RESULTS) {
             return;
         }
 
@@ -1504,6 +1665,14 @@ public class NemurOrderListFragment extends Fragment
     // updated when the fragment is recreated (necessary after signin/disconnect)
     public static void resetLastUpdateDate() {
         mLastAutoUpdateDt = null;
+    }
+
+    private boolean isCurrentTagManagedInVariousTab() {
+        return NemurUtils.isTagManagedInVariousTab(
+                mCurrentTag,
+                mIsTopLevel,
+                mRecyclerView
+        );
     }
 
     private class LoadTagsTask extends AsyncTask<Void, Void, NemurTagList> {

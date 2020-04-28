@@ -77,6 +77,10 @@ class NemurOrderListViewModel @Inject constructor(
         newsManager.cardShown(item)
     }
 
+    fun onSearchMenuCollaspe(collapse: Boolean) {
+        _shouldCollapseToolbar.value = collapse
+    }
+
     fun onUserComesToNemur() {
         // skip Tag Update part.
     }

@@ -10,7 +10,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 /**
- * service which searches for nemur orders on plutonem
+ * service which searches for nemur products on plutonem
  */
 
 public class NemurSearchService extends Service implements ServiceCompletionListener {

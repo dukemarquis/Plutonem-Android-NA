@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import androidx.cursoradapter.widget.CursorAdapter;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.plutonem.R;
 import com.plutonem.datasets.NemurSearchTable;
 
@@ -33,12 +34,21 @@ public class NemurSearchSuggestionAdapter extends CursorAdapter {
     private final int mClearAllBgColor;
     private final int mSuggestionBgColor;
 
+    private OnSuggestionDeleteClickListener mOnSuggestionDeleteClickListener;
+    private OnSuggestionClearClickListener mOnSuggestionClearClickListener;
+
     public NemurSearchSuggestionAdapter(Context context) {
         super(context, null, false);
         String clearAllText = context.getString(R.string.label_clear_search_history);
         mClearAllRow = new Object[]{CLEAR_ALL_ROW_ID, clearAllText};
-        mClearAllBgColor = ContextCompat.getColor(context, R.color.neutral_0);
-        mSuggestionBgColor = ContextCompat.getColor(context, R.color.neutral_0);
+
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(context);
+        float appbarElevation = context.getResources().getDimension(R.dimen.appbar_elevation);
+        int elevatedSurfaceColor =
+                elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation);
+
+        mClearAllBgColor = elevatedSurfaceColor;
+        mSuggestionBgColor = elevatedSurfaceColor;
     }
 
     public synchronized void setFilter(String filter) {
@@ -75,7 +85,7 @@ public class NemurSearchSuggestionAdapter extends CursorAdapter {
     /*
      * forces setFilter() to always repopulate by skipping the isCurrentFilter() check
      */
-    private synchronized void reload() {
+    public synchronized void reload() {
         String newFilter = mCurrentFilter;
         mCurrentFilter = null;
         setFilter(newFilter);
@@ -117,8 +127,8 @@ public class NemurSearchSuggestionAdapter extends CursorAdapter {
         private final ImageView mImgDelete;
 
         SuggestionViewHolder(View view) {
-            mTxtSuggestion = (TextView) view.findViewById(R.id.text_suggestion);
-            mImgDelete = (ImageView) view.findViewById(R.id.image_delete);
+            mTxtSuggestion = view.findViewById(R.id.text_suggestion);
+            mImgDelete = view.findViewById(R.id.image_delete);
         }
     }
 
@@ -132,10 +142,9 @@ public class NemurSearchSuggestionAdapter extends CursorAdapter {
         long id = cursor.getLong(cursor.getColumnIndex(NemurSearchTable.COL_ID));
         if (id == CLEAR_ALL_ROW_ID) {
             view.setBackgroundColor(mClearAllBgColor);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    confirmClearSavedSearches(v.getContext());
+            view.setOnClickListener(v -> {
+                if (mOnSuggestionClearClickListener != null) {
+                    mOnSuggestionClearClickListener.onClearClicked();
                 }
             });
             holder.mImgDelete.setVisibility(View.GONE);
@@ -155,28 +164,19 @@ public class NemurSearchSuggestionAdapter extends CursorAdapter {
 
         long id = cursor.getLong(cursor.getColumnIndex(NemurSearchTable.COL_ID));
         if (id != CLEAR_ALL_ROW_ID) {
-            holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NemurSearchTable.deleteQueryString(query);
-                    reload();
+            holder.mImgDelete.setOnClickListener(v -> {
+                if (mOnSuggestionDeleteClickListener != null) {
+                    mOnSuggestionDeleteClickListener.onDeleteClicked(query);
                 }
             });
         }
     }
 
-    private void confirmClearSavedSearches(Context context) {
-        new MaterialAlertDialogBuilder(context)
-                .setMessage(R.string.dlg_confirm_clear_search_history)
-                .setCancelable(true)
-                .setNegativeButton(R.string.no, null)
-                .setPositiveButton(R.string.yes, (dialog, id) -> clearSavedSearches())
-                .create()
-                .show();
+    public void setOnSuggestionDeleteClickListener(OnSuggestionDeleteClickListener onSuggestionDeleteClickListener) {
+        mOnSuggestionDeleteClickListener = onSuggestionDeleteClickListener;
     }
 
-    private synchronized void clearSavedSearches() {
-        NemurSearchTable.deleteAllQueries();
-        swapCursor(null);
+    public void setOnSuggestionClearClickListener(OnSuggestionClearClickListener onSuggestionClearClickListener) {
+        mOnSuggestionClearClickListener = onSuggestionClearClickListener;
     }
 }
