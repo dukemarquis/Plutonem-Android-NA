@@ -11,13 +11,12 @@ import java.io.Serializable;
 import java.util.Locale;
 
 public class NemurTag implements Serializable, FilterCriteria {
-    public static final String VARIOUS_PATH = String.format(Locale.US, "nem/buyers/%d/orders",
-            NemurConstants.VARIOUS_BUYER_ID);
-    public static final String WOMEN_PATH = String.format(Locale.US, "nem/buyers/%d/orders",
+    public static final String VARIOUS_PATH = "nem/buyers/various/random-items";
+    public static final String WOMEN_PATH = String.format(Locale.US, "nem/buyers/%d/random-items",
             NemurConstants.WOMEN_BUYER_ID);
-    public static final String COVID19_PATH = String.format(Locale.US, "nem/buyers/%d/orders",
+    public static final String COVID19_PATH = String.format(Locale.US, "nem/buyers/%d/random-items",
             NemurConstants.COVID19_BUYER_ID);
-    public static final String HEELS_PATH = String.format(Locale.US, "nem/buyers/%d/orders",
+    public static final String HEELS_PATH = String.format(Locale.US, "nem/buyers/%d/random-items",
             NemurConstants.HEELS_BUYER_ID);
 
     public static final String TAG_TITLE_VARIOUS_PRODUCTS = "Various Products";

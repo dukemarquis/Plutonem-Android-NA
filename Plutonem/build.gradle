@@ -106,7 +106,7 @@ dependencies {
 //    implementation ('com.plutonem:rest:1.0.9') {
 //        exclude group: 'com.mcxiaoke.volley'
 //    }
-    implementation ("com.github.Plutonemur:Plutonemur-Rest-Android-NA:1.0.1") {
+    implementation ("com.github.Plutonemur:Plutonemur-Rest-Android-NA:1.0.2") {
         exclude group: "com.mcxiaoke.volley"
     }
     implementation 'org.apache.commons:commons-text:1.8'

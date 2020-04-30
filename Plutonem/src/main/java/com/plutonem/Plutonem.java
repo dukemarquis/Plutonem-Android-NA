@@ -58,6 +58,7 @@ public class Plutonem extends MultiDexApplication implements HasServiceInjector,
 
     private static RestClientUtils sRestClientUtilsVersion1p1;
     private static RestClientUtils sRestClientUtilsVersion1p2;
+    private static RestClientUtils sRestClientUtilsVersion1p4;
 
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
@@ -156,6 +157,14 @@ public class Plutonem extends MultiDexApplication implements HasServiceInjector,
                     null, RestClient.REST_CLIENT_VERSIONS.V1_2);
         }
         return sRestClientUtilsVersion1p2;
+    }
+
+    public static RestClientUtils getRestClientUtilsV1_4() {
+        if (sRestClientUtilsVersion1p4 == null) {
+            sRestClientUtilsVersion1p4 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
+                    null, RestClient.REST_CLIENT_VERSIONS.V1_4);
+        }
+        return sRestClientUtilsVersion1p4;
     }
 
     @SuppressWarnings("unused")

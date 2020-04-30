@@ -655,10 +655,10 @@ public class NemurOrderListFragment extends Fragment
                 }
 
                 if (mIsTopLevel) {
-                    if (!isCurrentTagManagedInVariousTab()) {
+//                    if (!isCurrentTagManagedInVariousTab()) {
                         // return to the default tag that was showing prior to searching
-                        resetOrderAdapter(NemurOrderListType.TAG_DEFAULT);
-                    }
+                    resetOrderAdapter(NemurOrderListType.TAG_DEFAULT);
+//                    }
 
                     mRecyclerView.setTabLayoutVisibility(true);
                     mViewModel.onSearchMenuCollaspe(true);

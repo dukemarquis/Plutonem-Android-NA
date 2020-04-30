@@ -183,4 +183,6 @@ Language: zh_TW
     <string name="unable_to_update_account">無法更新帳戶</string>
     <string name="not_fetching_history_retention_period">訊息的時間因為超過本機保留區間而沒有下載。</string>
     <string name="session_failure">通訊對話錯誤</string>
+    <string name="chat_screen_title">消息</string>
+    <string name="nemur_screen_title">首頁</string>
 </resources>
