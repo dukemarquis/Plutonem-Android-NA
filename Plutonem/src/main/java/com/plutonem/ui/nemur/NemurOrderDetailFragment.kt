@@ -10,14 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.view.doOnLayout
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
-import com.google.android.exoplayer2.ui.PlayerView
 import com.plutonem.Plutonem
 import com.plutonem.R
+import com.plutonem.databinding.NemurFragmentOrderDetailBinding
 import com.plutonem.datasets.NemurOrderTable
 import com.plutonem.models.NemurOrder
 import com.plutonem.ui.main.PMainActivity
@@ -26,31 +23,29 @@ import com.plutonem.ui.nemur.NemurInterfaces.ChatInterfaceListener
 import com.plutonem.ui.nemur.NemurTypes.NemurOrderListType
 import com.plutonem.ui.nemur.actions.NemurActions
 import com.plutonem.ui.nemur.actions.NemurOrderActions
-import com.plutonem.ui.nemur.video.VideoCustomController
+import com.plutonem.ui.nemur.video.NemurItemVideoController
 import com.plutonem.ui.nemur.views.NemurIconView
 import com.plutonem.ui.nemur.views.NemurPriceButton
 import com.plutonem.utilities.AniUtils
 import com.plutonem.utilities.PNSwipeToRefreshHelper.buildSwipeToRefreshHelper
-import com.plutonem.widgets.PNScrollView.ScrollDirectionListener
-import com.plutonem.widgets.PNScrollView.VISIBLE
+import com.plutonem.widgets.PNScrollView
+import com.plutonem.widgets.PNScrollView.*
 import kohii.v1.core.*
-import kohii.v1.exoplayer.DefaultControlDispatcher
 import kohii.v1.exoplayer.Kohii
 import kotlinx.android.synthetic.main.nemur_fragment_order_detail.*
-import kotlinx.android.synthetic.main.nemur_fragment_order_detail.view.*
-import kotlinx.android.synthetic.main.nemur_include_order_detail_footer.*
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtils
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 
 class NemurOrderDetailFragment : Fragment(),
         PMainActivity.OnActivityBackPressedListener,
         ScrollDirectionListener,
-        Prioritized {
+        Prioritized,
+        Playback.ArtworkHintListener,
+        Presenter {
     private lateinit var kohii: Kohii
     private lateinit var manager: Manager
     private lateinit var playable: Playable
@@ -58,11 +53,12 @@ class NemurOrderDetailFragment : Fragment(),
     private var orderId: Long = 0
     private var buyerId: Long = 0
     private var order: NemurOrder? = null
-    private var orderVideo: NemurOrder? = null
+//    private var orderVideo: NemurOrder? = null
     private var orderListType: NemurOrderListType = NemurTypes.DEFAULT_ORDER_LIST_TYPE
 
+    lateinit var binding: NemurFragmentOrderDetailBinding
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
-
+    private lateinit var scrollView: PNScrollView
     private lateinit var layoutFooter: ViewGroup
     private lateinit var nemurPriceButton: NemurPriceButton
 
@@ -71,7 +67,9 @@ class NemurOrderDetailFragment : Fragment(),
     private var toolbarHeight: Int = 0
     private var errorMessage: String? = null
 
+    private var isToolbarShowing = true
     private var autoHideToolbarListener: AutoHideToolbarListener? = null
+
     private var chatInterfaceListener: ChatInterfaceListener? = null
 
     /*
@@ -79,7 +77,11 @@ class NemurOrderDetailFragment : Fragment(),
      */
     private var isOrderTaskRunning = false
 
+    // Kohii Video Specification
     private var playback: Playback? = null
+    private var videoItem: NemurOrder? = null
+//    private lateinit var kohiiExoPlay: ImageButton
+//    private lateinit var shortVideoPlayerContainer: AspectRatioFrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,6 +117,13 @@ class NemurOrderDetailFragment : Fragment(),
     ): View? {
         val view = inflater.inflate(R.layout.nemur_fragment_order_detail, container, false)
 
+        binding = DataBindingUtil.inflate(
+                inflater,
+                R.layout.nemur_fragment_order_detail,
+                container,
+                false
+        ) as NemurFragmentOrderDetailBinding
+
         val swipeRefreshLayout = view.findViewById<CustomSwipeRefreshLayout>(R.id.swipe_to_refresh)
 
         // this fragment hides/shows toolbar with scrolling, which messes up ptr animation position
@@ -130,9 +139,26 @@ class NemurOrderDetailFragment : Fragment(),
             }
         }
 
+        scrollView = view.findViewById( R.id.scroll_view_nemur )
+        scrollView.setScrollDirectionListener( this )
+
         layoutFooter = view.findViewById(R.id.layout_order_detail_footer)
+
+        // hide footer and scrollView until the item is loaded
         layoutFooter.visibility = View.INVISIBLE
+        scrollView.visibility = View.INVISIBLE
+
         nemurPriceButton = view.findViewById(R.id.price_button)
+
+//        kohiiExoPlay = view.findViewById(R.id.kohii_exo_play)
+//        exoPlay.setImageDrawable(resources.getDrawable(R.id.animated_vector, null))
+
+//        val animatedVector = resources.getDrawable(
+//                R.drawable.animator_vector_drawable,
+//                null
+//        ) as AnimatedVectorDrawable
+//
+//        exoPlay.setImageDrawable(animatedVector)
 
         showOrder()
 
@@ -144,46 +170,128 @@ class NemurOrderDetailFragment : Fragment(),
             savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
-        kohii = Kohii[this]
-        manager = kohii.register(this)
-                .addBucket(layout_content)
 
-        val pagePos = requireArguments().getInt(
-                pageTagKey
-        )
+        val kohii = Kohii[this]
+        val manager = kohii.register( this )
+                .addBucket( scroll_view_nemur )
 
-        if (order != null) {
-            orderVideo = order
+        videoItem = if (order != null) {
+            order
         } else {
-            orderVideo = NemurOrderTable.getBuyerOrder(buyerId, orderId)
+            NemurOrderTable.getBuyerOrder(buyerId, orderId)
         }
 
-        val videoTag = "PAGE::$pagePos::${orderVideo!!.featuredVideo}"
-        val videoCustomController = VideoCustomController(manager, playerView)
+        val featuredVideoTag = "${videoItem?.title}::${videoItem?.itemDescriptiveVideoMain}"
 
-        kohii.setUp(orderVideo!!.featuredVideo) {
-                    tag = videoTag
-                    delay = 500
-                    repeatMode = Common.REPEAT_MODE_ALL
-                    preload = true
-                    controller = videoCustomController
-                }
-                .bind(playerView) { playback = it }
+        val featuredVideoController = NemurItemVideoController( manager, featured_player_view, featured_player_controller )
 
-        view.doOnLayout {
-            // [1] Update resize mode based on Window size.
-            playerContainer.also { ctn ->
-                if (it.width * 9 >= it.height * 16) {
-                    // if (it.width * it.height >= it.height * it.width) { // how about this?
-                    ctn.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT
-                } else {
-                    ctn.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
-                }
-            }
+        kohii.setUp( videoItem!!.itemDescriptiveVideoMain ) {
+            tag                 = featuredVideoTag
+            delay               = 500
+            repeatMode          = Common.REPEAT_MODE_ALL
+            preload             = true
+            controller          = featuredVideoController
+            artworkHintListener = this@NemurOrderDetailFragment
         }
+                .bind( featured_player_view )
 
-        val playerContainer = view.findViewById<AspectRatioFrameLayout>(R.id.playerContainer)
-        playerContainer.setOnClickListener(videoCustomController)
+        featured_player_container.setOnClickListener( featuredVideoController )
+        featured_player_controller.setOnClickListener( featuredVideoController )
+
+        val affiliatedVideoTag = "${videoItem?.title}::${videoItem?.itemDescriptiveVideoAffiliated}"
+
+        val affiliatedVideoController = NemurItemVideoController( manager, affiliated_player_view, affiliated_player_controller )
+
+        kohii.setUp( videoItem!!.itemDescriptiveVideoAffiliated ) {
+            tag                 = affiliatedVideoTag
+            delay               = 500
+            repeatMode          = Common.REPEAT_MODE_ALL
+            preload             = true
+            controller          = affiliatedVideoController
+            artworkHintListener = this@NemurOrderDetailFragment
+        }
+                .bind( affiliated_player_view )
+
+        affiliated_player_container.setOnClickListener( affiliatedVideoController )
+        affiliated_player_controller.setOnClickListener( affiliatedVideoController )
+
+//        binding.lifecycleOwner = viewLifecycleOwner
+
+//        kohii = Kohii[this]
+//        manager = kohii.register(this)
+//                .addBucket(layout_content)
+//
+//        val pagePos = requireArguments().getInt(
+//                pageTagKey
+//        )
+
+//        if (order != null) {
+//            orderVideo = order
+//        } else {
+//            orderVideo = NemurOrderTable.getBuyerOrder(buyerId, orderId)
+//        }
+
+//        val featuredVideoTag = "PAGE::$pagePos::${orderVideo!!.itemDescriptiveVideoMain}"
+//        val videoController = VideoCustomController(manager, nemur_featured_video_view)
+
+//        kohii.setUp(orderVideo!!.itemDescriptiveVideoMain) {
+//                    tag = featuredVideoTag
+//                    delay = 500
+//                    preload = true
+//                    repeatMode = Common.REPEAT_MODE_ALL
+//                    controller = videoController
+//                    artworkHintListener = this@NemurOrderDetailFragment
+//        }
+//            .bind(nemur_featured_video_view) { playback = it }
+//
+//        view.doOnLayout {
+//            // [1] Update resize mode based on Window size.
+//            nemur_featured_video_container.also { ctn ->
+//                if (it.width * 9 >= it.height * 16) {
+//                    // if (it.width * it.height >= it.height * it.width) { // how about this?
+//                    ctn.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT
+//                } else {
+//                    ctn.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
+//                }
+//            }
+//        }
+
+//        nemur_featured_video_container.setOnClickListener(videoController)
+
+//        if ( orderVideo!!.hasItemDescriptiveVideoMain() ) {
+//            nemur_affiliated_video_container.visibility = View.VISIBLE
+//        }
+//
+//        if ( nemur_affiliated_video_container.visibility == View.VISIBLE ) {
+////            val affiliatedVideoTag = "PAGE::$pagePos::${orderVideo!!.itemDescriptiveVideoMain}"
+////            val affiliatedVideoController = VideoCustomController(manager, nemur_affiliated_video_view)
+//
+//            kohii.setUp(orderVideo!!.itemDescriptiveVideoMain) {
+////                tag = affiliatedVideoTag
+//                delay = 500
+//                preload = true
+//                repeatMode = Common.REPEAT_MODE_ALL
+////                controller = affiliatedVideoController
+//                artworkHintListener = this@NemurOrderDetailFragment
+//            }
+//                .bind(nemur_affiliated_video_view) { playback = it }
+//
+//            view.doOnLayout {
+//                // [1] Update resize mode based on Window size.
+//                nemur_affiliated_video_container.also { ctn ->
+//                    if (it.width * 9 >= it.height * 16) {
+//                        // if (it.width * it.height >= it.height * it.width) { // how about this?
+//                        ctn.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT
+//                    } else {
+//                        ctn.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
+//                    }
+//                }
+//            }
+//
+////            nemur_affiliated_video_container.setOnClickListener(videoController)
+//        }
+
+//        exoPlay.setOnClickListener(videoController)
     }
 
     private fun hasOrder(): Boolean {
@@ -443,13 +551,14 @@ class NemurOrderDetailFragment : Fragment(),
             }
 
             // add padding to the playerContainer to make room for the top and bottom toolbars - this also
-            // ensures the playerContainer matches the content so it doesn't disappear behind the toolbars
+            // ensures the scrollbar matches the content so it doesn't disappear behind the toolbars
             val topPadding = if (autoHideToolbarListener != null) toolbarHeight else 0
             val bottomPadding = if (canShowFooter()) layoutFooter.height else 0
-            playerContainer.setPadding(0, topPadding, 0, bottomPadding)
+//            nemur_featured_video_container.setPadding( 0, topPadding, 0, bottomPadding );
+            scrollView.setPadding(0, topPadding, 0, bottomPadding)
 
             // scrollView was hidden in onCreateView, show it now that we have the post
-//            scrollView.visibility = View.VISIBLE
+            scrollView.visibility = View.VISIBLE
 
 //            headerView.setOrder(order!!)
 
@@ -463,41 +572,41 @@ class NemurOrderDetailFragment : Fragment(),
     }
 
     override fun onScrollUp(distanceY: Float) {
-//        if (!isToolbarShowing && -distanceY >= MIN_SCROLL_DISTANCE_Y) {
-//            showToolbar(true)
-//            showFooter(true)
-//        }
+        if (!isToolbarShowing && -distanceY >= MIN_SCROLL_DISTANCE_Y) {
+            showToolbar(true)
+            showFooter(true)
+        }
     }
 
     override fun onScrollDown(distanceY: Float) {
-//        if (isToolbarShowing &&
-//                distanceY >= MIN_SCROLL_DISTANCE_Y &&
-//                scrollView.canScrollDown() &&
-//                scrollView.canScrollUp() &&
-//                scrollView.scrollY > toolbarHeight) {
-//            showToolbar(false)
-//            showFooter(false)
-//        }
+        if (isToolbarShowing &&
+                distanceY >= MIN_SCROLL_DISTANCE_Y &&
+                scrollView.canScrollDown() &&
+                scrollView.canScrollUp() &&
+                scrollView.scrollY > toolbarHeight) {
+            showToolbar(false)
+            showFooter(false)
+        }
     }
 
     override fun onScrollCompleted() {
-//        if (!isToolbarShowing && (!scrollView.canScrollDown() || !scrollView.canScrollUp())) {
-//            showToolbar(true)
-//            showFooter(true)
-//        }
+        if (!isToolbarShowing && (!scrollView.canScrollDown() || !scrollView.canScrollUp())) {
+            showToolbar(true)
+            showFooter(true)
+        }
     }
 
     private fun showToolbar(show: Boolean) {
-//        isToolbarShowing = show
-//        if (autoHideToolbarListener != null) {
-//            autoHideToolbarListener!!.onShowHideToolbar(show)
-//        }
+        isToolbarShowing = show
+        if (autoHideToolbarListener != null) {
+            autoHideToolbarListener!!.onShowHideToolbar(show)
+        }
     }
 
     private fun showFooter(show: Boolean) {
-//        if (isAdded && canShowFooter()) {
-//            AniUtils.animateBottomBar(layoutFooter, show)
-//        }
+        if (isAdded && canShowFooter()) {
+            AniUtils.animateBottomBar(layoutFooter, show)
+        }
     }
 
     /*
@@ -523,11 +632,45 @@ class NemurOrderDetailFragment : Fragment(),
         swipeToRefreshHelper.isRefreshing = refreshing
     }
 
+    override fun onArtworkHint(
+            shouldShow: Boolean,
+            position: Long,
+            state: Int
+    ) {
+//        exoPlay.isVisible = shouldShow && state == Common.STATE_READY
+//        if (exoPlay.visibility == View.VISIBLE) {
+//            val animatable = exoPlay.drawable as android.graphics.drawable.Animatable
+//            animatable.start()
+//        }
+//        if (shouldShow && state == Common.STATE_READY) {
+//            exoPlay.apply {
+//                visibility = View.VISIBLE
+//
+//                val animatable = drawable as android.graphics.drawable.Animatable
+//                animatable.start()
+//            }
+//        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.presenter = this
+    }
+
+    override fun onStop() {
+        super.onStop()
+        binding.presenter = null
+    }
+
+    override fun requireProvider(): Kohii {
+        return Kohii[this]
+    }
+
     companion object {
         private const val pageTagKey = "nemur:order:pager:tag"
 
         // min scroll distance before toggling toolbar
-//        private const val MIN_SCROLL_DISTANCE_Y = 10f
+        private const val MIN_SCROLL_DISTANCE_Y = 10f
 
         fun newInstance(buyerId: Long, orderId: Long): NemurOrderDetailFragment {
             return newInstance(buyerId, orderId, null, 0)

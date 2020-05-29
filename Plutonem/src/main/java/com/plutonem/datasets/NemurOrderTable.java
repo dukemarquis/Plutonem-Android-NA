@@ -39,12 +39,13 @@ public class NemurOrderTable {
             + "item_distribution_mode," // 8
             + "buyer_name," // 9
             + "featured_image," // 10
-            + "featured_video," // 11
-            + "date_published," // 12
-            + "tag_name," // 13
-            + "tag_type," // 14
-            + "has_gap_marker," // 15
-            + "card_type"; // 16
+            + "item_descriptive_video_main," // 11
+            + "item_descriptive_video_affiliated," // 12
+            + "date_published," // 13
+            + "tag_name," // 14
+            + "tag_type," // 15
+            + "has_gap_marker," // 16
+            + "card_type"; // 17
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_orders ("
@@ -58,7 +59,8 @@ public class NemurOrderTable {
                 + " item_distribution_mode TEXT,"
                 + " buyer_name TEXT,"
                 + " featured_image TEXT,"
-                + " featured_video TEXT,"
+                + " item_descriptive_video_main TEXT,"
+                + " item_descriptive_video_affiliated TEXT,"
                 + " date_published TEXT,"
                 + " tag_name TEXT NOT NULL COLLATE NOCASE,"
                 + " tag_type INTEGER DEFAULT 0,"
@@ -138,7 +140,8 @@ public class NemurOrderTable {
         values.put("price", order.getPrice());
         values.put("item_distribution_mode", order.getItemDistributionMode());
         values.put("featured_image", order.getFeaturedImage());
-        values.put("featured_video", order.getFeaturedVideo());
+        values.put("item_descriptive_video_main", order.getItemDescriptiveVideoMain());
+        values.put("item_descriptive_video_affiliated", order.getItemDescriptiveVideoAffiliated());
         NemurDatabase.getWritableDb().update(
                 "tbl_orders", values, "pseudo_id=?", new String[]{order.getPseudoId()});
         NemurOrderList orders = new NemurOrderList();
@@ -345,7 +348,7 @@ public class NemurOrderTable {
         SQLiteStatement stmtOrders = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_orders ("
                         + COLUMN_NAMES
-                        + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)");
+                        + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17)");
 
         db.beginTransaction();
         try {
@@ -368,12 +371,13 @@ public class NemurOrderTable {
                 stmtOrders.bindString(8, order.getItemDistributionMode());
                 stmtOrders.bindString(9, order.getBuyerName());
                 stmtOrders.bindString(10, order.getFeaturedImage());
-                stmtOrders.bindString(11, order.getFeaturedVideo());
-                stmtOrders.bindString(12, order.getDatePublished());
-                stmtOrders.bindString(13, tagName);
-                stmtOrders.bindLong(14, tagType);
-                stmtOrders.bindLong(15, SqlUtils.boolToSql(hasGapMarker));
-                stmtOrders.bindString(16, NemurCardType.toString(order.getCardType()));
+                stmtOrders.bindString(11, order.getItemDescriptiveVideoMain());
+                stmtOrders.bindString(12, order.getItemDescriptiveVideoAffiliated());
+                stmtOrders.bindString(13, order.getDatePublished());
+                stmtOrders.bindString(14, tagName);
+                stmtOrders.bindLong(15, tagType);
+                stmtOrders.bindLong(16, SqlUtils.boolToSql(hasGapMarker));
+                stmtOrders.bindString(17, NemurCardType.toString(order.getCardType()));
                 stmtOrders.execute();
             }
 
@@ -458,7 +462,8 @@ public class NemurOrderTable {
         order.setPrice(c.getString(c.getColumnIndex("price")));
         order.setItemDistributionMode(c.getString(c.getColumnIndex("item_distribution_mode")));
         order.setFeaturedImage(c.getString(c.getColumnIndex("featured_image")));
-        order.setFeaturedVideo(c.getString(c.getColumnIndex("featured_video")));
+        order.setItemDescriptiveVideoMain(c.getString(c.getColumnIndex("item_descriptive_video_main")));
+        order.setItemDescriptiveVideoAffiliated(c.getString(c.getColumnIndex("item_descriptive_video_affiliated")));
 
         order.setTitle(c.getString(c.getColumnIndex("title")));
 

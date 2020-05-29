@@ -69,11 +69,11 @@ internal class NemurOrderViewHolder(
             }
 
             val titleMargin: Int
-            if (it.hasFeaturedImage() && it.hasFeaturedVideo()) {
+            if (it.hasFeaturedImage() && it.hasItemDescriptiveVideoMain()) {
                 videoImage = it.featuredImage
                 imageManager.load(imgFeatured, ImageType.PHOTO,
                         it.getFeaturedImageForDisplay(photonWidth, photonHeight), ScaleType.CENTER_CROP)
-                kohii.setUp(it.featuredVideo, params)
+                kohii.setUp(it.itemDescriptiveVideoMain, params)
                         .bind(playerView) { pk ->
                             pk.addStateListener(this@NemurOrderViewHolder)
                             playback = pk

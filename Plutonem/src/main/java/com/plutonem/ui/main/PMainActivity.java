@@ -268,10 +268,7 @@ public class PMainActivity extends XmppActivity implements
 
     // user switched pages in the bottom navbar
     @Override
-    public void onPageChanged(int position) {
-        PageType pageType = PMainNavigationView.getPageType(position);
-        updateTitle(pageType);
-    }
+    public void onPageChanged(int position) {}
 
     // user tapped the me button in the bottom navbar
     @Override
@@ -281,19 +278,6 @@ public class PMainActivity extends XmppActivity implements
         } else {
             ActivityLauncher.showSignInForResult(this);
             return false;
-        }
-    }
-
-    private void updateTitle() {
-        updateTitle(mBottomNav.getCurrentSelectedPage());
-    }
-
-    private void updateTitle(PageType pageType) {
-        if (pageType == PageType.ME && mSelectedBuyer != null) {
-            ((MainToolbarFragment) mBottomNav.getActiveFragment()).setTitle(mSelectedBuyer.getName());
-        } else {
-            ((MainToolbarFragment) mBottomNav.getActiveFragment())
-                    .setTitle(mBottomNav.getTitleForPageType(pageType).toString());
         }
     }
 
@@ -357,8 +341,6 @@ public class PMainActivity extends XmppActivity implements
         // Make selected buyer visible
         selectedBuyer.setIsVisible(true);
         AppPrefs.setSelectedBuyer(selectedBuyer.getId());
-
-        updateTitle();
     }
 
     /**
@@ -374,7 +356,6 @@ public class PMainActivity extends XmppActivity implements
             mSelectedBuyer = mBuyerStore.getBuyerByLocalId(buyerLocalId);
             // If saved buyer exist, then return, else (buyer has been removed?) try to select another buyer
             if (mSelectedBuyer != null) {
-                updateTitle();
                 return;
             }
         }

@@ -16,6 +16,33 @@
 
 <resources>
 
+    <!-- Kohii Video Specification -->
+
+    <style name="KohiiExoMediaButton">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:layout_width">@dimen/kohii_exo_media_button_width</item>
+        <item name="android:layout_height">@dimen/kohii_exo_media_button_height</item>
+    </style>
+
+    <style name="KohiiExoMediaButton.KohiiPlay">
+        <item name="android:src">@drawable/ic_kohii_exo_icon_play</item>
+        <item name="android:contentDescription">@string/kohii_exo_controls_play_description</item>
+    </style>
+
+    <style name="KohiiExoMediaButton.KohiiPlayAnimation">
+        <item name="android:src">@drawable/animator_vector_drawable_20200509</item>
+        <item name="android:contentDescription">@string/kohii_exo_controls_play_description</item>
+    </style>
+
+    <style name="KohiiExoMediaButton.KohiiPlay20200509">
+        <item name="android:contentDescription">@string/kohii_exo_controls_play_description</item>
+    </style>
+
+    <style name="KohiiExoMediaButton.KohiiPause">
+        <item name="android:src">@drawable/kohii_exo_icon_pause</item>
+        <item name="android:contentDescription">@string/kohii_exo_controls_pause_description</item>
+    </style>
+
     <!-- Xmpp Chat Specification -->
 
     <style name="TextAppearance.Conversations.Subhead" parent="TextAppearance.AppCompat.Subhead">

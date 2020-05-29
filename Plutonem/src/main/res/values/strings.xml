@@ -120,7 +120,7 @@
      -->
     <string name="nemur_women_display_name">Women</string>
     <string name="nemur_various_display_name">Various</string>
-    <string name="nemur_covid19_display_name">Covid-19</string>
+    <string name="nemur_covid19_display_name" translatable="false">Covid-19</string>
     <string name="nemur_heels_display_name">Heels</string>
 
     <!-- accessibility announcement when list loads -->
@@ -342,4 +342,12 @@
     <string name="messages_empty_list_button">Shop right now</string>
     <string name="messages_empty_unread">No messages yet</string>
     <string name="messages_empty_action_unread">Watch quality videos, enjoy your shopping process</string>
+
+    <!-- Kohii Video Specification -->
+    <item name="nemur_detail_view_tag" type="id" format="integer" />
+
+    <string name="featured_player_controller_content_description">Click to play the featured video or pause otherwise</string>
+    <string name="affiliated_player_controller_content_description">Click to play the affiliated video or pause otherwise</string>
+    <string name="kohii_exo_controls_play_description">Play</string>
+    <string name="kohii_exo_controls_pause_description">Pause</string>
 </resources>

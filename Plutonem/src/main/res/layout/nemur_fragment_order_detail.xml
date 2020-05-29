@@ -1,76 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_content"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    >
+    
+    <data>
 
-    <RelativeLayout
-        android:id="@+id/layout_order_detail_container"
+        <variable
+            name="presenter"
+            type="com.plutonem.ui.nemur.Presenter"
+            />
+        
+    </data>
+
+    <RelativeLayout 
+        
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/layout_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:descendantFocusability="blocksDescendants">
-
-        <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-            android:id="@+id/swipe_to_refresh"
+        android:layout_height="match_parent">
+    
+        <RelativeLayout
+            android:id="@+id/layout_order_detail_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.google.android.exoplayer2.ui.AspectRatioFrameLayout
-                android:id="@+id/playerContainer"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_gravity="center">
-
-                <com.google.android.exoplayer2.ui.PlayerView
-                    android:id="@+id/playerView"
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants">
+    
+            <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+                android:id="@+id/swipe_to_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    
+                <com.plutonem.widgets.PNScrollView
+                    android:id="@+id/scroll_view_nemur"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:keep_content_on_player_reset="true"
-                    app:resize_mode="fixed_height"
-                    app:show_buffering="when_playing"
-                    app:shutter_background_color="#0a0a0a"
-                    app:surface_type="texture_view"
-                    app:use_controller="true" />
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:scrollbars="vertical"
+                    android:scrollbarStyle="insideOverlay">
 
-            </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
 
-        </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-        <include
-            android:id="@+id/layout_order_detail_footer"
-            layout="@layout/nemur_include_order_detail_footer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
+                            <FrameLayout
+                                android:id="@+id/featured_player_container"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:focusable="true"
+                                >
 
-        <ProgressBar
-            android:id="@+id/progress_loading"
-            style="@style/NemurProgressBar"
+                                <com.google.android.exoplayer2.ui.PlayerView
+                                    android:id="@+id/featured_player_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:minHeight="550dp"
+                                    app:resize_mode="fixed_width"
+                                    app:show_buffering="when_playing"
+                                    app:surface_type="texture_view"
+                                    app:use_controller="true"
+                                    />
+
+                            </FrameLayout>
+
+                            <ImageButton
+                                android:id="@+id/featured_player_controller"
+                                style="@style/KohiiExoMediaButton.KohiiPlayAnimation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:background="#00000000"
+                                android:contentDescription="@string/featured_player_controller_content_description"
+                                android:visibility="gone"
+                                tools:visibility="visible" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <FrameLayout
+                                android:id="@+id/affiliated_player_container"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:focusable="true"
+                                >
+
+                                <com.google.android.exoplayer2.ui.PlayerView
+                                    android:id="@+id/affiliated_player_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:minHeight="550dp"
+                                    app:resize_mode="fixed_width"
+                                    app:show_buffering="when_playing"
+                                    app:surface_type="texture_view"
+                                    app:use_controller="true"
+                                    />
+
+                            </FrameLayout>
+
+                            <ImageButton
+                                android:id="@+id/affiliated_player_controller"
+                                style="@style/KohiiExoMediaButton.KohiiPlayAnimation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:background="#00000000"
+                                android:contentDescription="@string/affiliated_player_controller_content_description"
+                                android:visibility="gone"
+                                tools:visibility="visible" />
+
+                        </RelativeLayout>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+    
+    <!--                <RelativeLayout-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content">-->
+    
+    <!--                    <com.google.android.exoplayer2.ui.AspectRatioFrameLayout-->
+    <!--                        android:id="@+id/nemur_featured_video_container"-->
+    <!--                        android:layout_width="0dp"-->
+    <!--                        android:layout_height="0dp"-->
+    <!--                        android:layout_gravity="center">-->
+    
+    <!--                        <com.google.android.exoplayer2.ui.PlayerView-->
+    <!--                            android:id="@+id/nemur_featured_video_view"-->
+    <!--                            android:layout_width="match_parent"-->
+    <!--                            android:layout_height="match_parent"-->
+    <!--                            app:keep_content_on_player_reset="true"-->
+    <!--                            app:resize_mode="fixed_height"-->
+    <!--                            app:show_buffering="when_playing"-->
+    <!--                            app:shutter_background_color="#0a0a0a"-->
+    <!--                            app:surface_type="texture_view"-->
+    <!--                            app:use_controller="true" />-->
+    
+    <!--                    </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>-->
+    
+    <!--                    <com.google.android.exoplayer2.ui.AspectRatioFrameLayout-->
+    <!--                        android:id="@+id/nemur_affiliated_video_container"-->
+    <!--                        android:layout_width="0dp"-->
+    <!--                        android:layout_height="0dp"-->
+    <!--                        android:layout_gravity="center"-->
+    <!--                        android:visibility="gone">-->
+    
+    <!--                        <com.google.android.exoplayer2.ui.PlayerView-->
+    <!--                            android:id="@+id/nemur_affiliated_video_view"-->
+    <!--                            android:layout_width="match_parent"-->
+    <!--                            android:layout_height="match_parent"-->
+    <!--                            app:keep_content_on_player_reset="true"-->
+    <!--                            app:resize_mode="fixed_height"-->
+    <!--                            app:show_buffering="when_playing"-->
+    <!--                            app:shutter_background_color="#0a0a0a"-->
+    <!--                            app:surface_type="texture_view"-->
+    <!--                            app:use_controller="true" />-->
+    
+    <!--                    </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>-->
+    
+    <!--                </RelativeLayout>-->
+    
+                </com.plutonem.widgets.PNScrollView>
+    
+            </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+    
+            <include
+                android:id="@+id/layout_order_detail_footer"
+                layout="@layout/nemur_include_order_detail_footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true" />
+    
+            <ProgressBar
+                android:id="@+id/progress_loading"
+                style="@style/NemurProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                tools:visibility="visible" />
+    
+<!--            <ImageButton-->
+<!--                android:id="@+id/exoPlay"-->
+<!--                style="@style/KohiiExoMediaButton.KohiiPlayAnimation"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:background="#00000000"-->
+<!--                android:visibility="gone"-->
+<!--                tools:ignore="ContentDescription"-->
+<!--                tools:visibility="visible" />-->
+    
+        </RelativeLayout>
+    
+        <!-- error message when requesting order fails -->
+        <com.plutonem.widgets.PNTextView
+            android:id="@+id/text_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:drawablePadding="@dimen/margin_small"
+            android:drawableTop="@drawable/ic_notice_48dp"
+            android:gravity="center"
+            android:textColor="@color/neutral_30"
+            android:textSize="@dimen/text_sz_extra_large"
             android:visibility="gone"
-            tools:visibility="visible" />
-
+            tools:text="Error message"
+            tools:visibility="visible"
+            android:layout_marginStart="@dimen/nemur_detail_margin"
+            android:layout_marginEnd="@dimen/nemur_detail_margin" />
+    
     </RelativeLayout>
-
-    <!-- error message when requesting order fails -->
-    <com.plutonem.widgets.PNTextView
-        android:id="@+id/text_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:drawablePadding="@dimen/margin_small"
-        android:drawableTop="@drawable/ic_notice_48dp"
-        android:gravity="center"
-        android:textColor="@color/neutral_30"
-        android:textSize="@dimen/text_sz_extra_large"
-        android:visibility="gone"
-        tools:text="Error message"
-        tools:visibility="visible"
-        android:layout_marginStart="@dimen/nemur_detail_margin"
-        android:layout_marginEnd="@dimen/nemur_detail_margin" />
-
-</RelativeLayout>
+    
+</layout>

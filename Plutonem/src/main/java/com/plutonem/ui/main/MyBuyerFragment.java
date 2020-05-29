@@ -25,9 +25,7 @@ import com.plutonem.widgets.PNTextView;
 
 import javax.inject.Inject;
 
-public class MyBuyerFragment extends Fragment implements
-        PMainActivity.OnScrollToTopListener,
-        MainToolbarFragment {
+public class MyBuyerFragment extends Fragment implements PMainActivity.OnScrollToTopListener {
     private ImageView mByavatarImageView;
     private ProgressBar mByavatarProgressBar;
     private PNTextView mBuyerTitleTextView;
@@ -38,7 +36,6 @@ public class MyBuyerFragment extends Fragment implements
 
     @Nullable
     private Toolbar mToolbar = null;
-    private String mToolbarTitle;
 
     private int mByavatarSz;
 
@@ -88,7 +85,7 @@ public class MyBuyerFragment extends Fragment implements
         setupClickListeners(rootView);
 
         mToolbar = rootView.findViewById(R.id.toolbar_main);
-        mToolbar.setTitle(mToolbarTitle);
+        mToolbar.setTitle( R.string.me_section_screen_title );
 
         return rootView;
     }
@@ -144,9 +141,6 @@ public class MyBuyerFragment extends Fragment implements
 
         mBuyerTitleTextView.setText(buyerTitle);
         mBuyerSubtitleTextView.setText(buyerDescription);
-
-        // Refresh the title
-        setTitle(buyer.getName());
     }
 
     @Override
@@ -156,16 +150,16 @@ public class MyBuyerFragment extends Fragment implements
         }
     }
 
-    @Override
-    public void setTitle(@NonNull final String title) {
-        if (isAdded()) {
-            mToolbarTitle = (title.isEmpty()) ? getString(R.string.plutonem) : title;
-
-            if (mToolbar != null) {
-                mToolbar.setTitle(mToolbarTitle);
-            }
-        }
-    }
+//    @Override
+//    public void setTitle(@NonNull final String title) {
+//        if (isAdded()) {
+//            mToolbarTitle = (title.isEmpty()) ? getString(R.string.plutonem) : title;
+//
+//            if (mToolbar != null) {
+//                mToolbar.setTitle(mToolbarTitle);
+//            }
+//        }
+//    }
 
     /**
      * We can't just use fluxc OnBuyerChanged event, as the order of events is not guaranteed -> getSelectedBuyer()

@@ -195,4 +195,8 @@
 
     <dimen name="swipe_escape_velocity">1200dp</dimen> <!-- android default is 120dp -->
 
+    <!-- Kohii Video Specification -->
+    <dimen name="kohii_exo_media_button_width">71dp</dimen>
+    <dimen name="kohii_exo_media_button_height">52dp</dimen>
+
 </resources>

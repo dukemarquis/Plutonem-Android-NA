@@ -25,7 +25,14 @@ public class NemurOrder {
     private String mDatePublished;
 
     private String mFeaturedImage;
-    private String mFeaturedVideo;
+    private String mItemDescriptiveVideoMain;
+    private String mItemDescriptiveVideoAffiliated;
+
+    // preserved for future upgrading
+    private String mFeaturedVideoWidth;
+    private String mFeaturedVideoHeight;
+    private String mAffiliatedVideoWidth;
+    private String mAffiliatedVideoHeight;
 
     private NemurCardType mCardType = NemurCardType.DEFAULT;
 
@@ -53,7 +60,8 @@ public class NemurOrder {
         assignAccountFromJson(order, json.optJSONObject("account"));
 
         order.mFeaturedImage = JSONUtils.getString(json, "featured_image");
-        order.mFeaturedVideo = JSONUtils.getString(json, "featured_video");
+        order.mItemDescriptiveVideoMain = JSONUtils.getString(json, "featured_video");
+        order.mItemDescriptiveVideoAffiliated = JSONUtils.getString(json, "affiliated_video");
         order.mBuyerName = JSONUtils.getStringDecoded(json, "buyer_name");
 
         order.mDatePublished = JSONUtils.getString(json, "date");
@@ -140,12 +148,52 @@ public class NemurOrder {
         this.mFeaturedImage = StringUtils.notNullStr(featuredImage);
     }
 
-    public String getFeaturedVideo() {
-        return StringUtils.notNullStr(mFeaturedVideo);
+    public String getItemDescriptiveVideoMain() {
+        return StringUtils.notNullStr(mItemDescriptiveVideoMain);
     }
 
-    public void setFeaturedVideo(String featuredVideo) {
-        this.mFeaturedVideo = StringUtils.notNullStr(featuredVideo);
+    public void setItemDescriptiveVideoMain(String itemDescriptiveVideoMain) {
+        this.mItemDescriptiveVideoMain = StringUtils.notNullStr(itemDescriptiveVideoMain);
+    }
+
+    public String getItemDescriptiveVideoAffiliated() {
+        return StringUtils.notNullStr(mItemDescriptiveVideoAffiliated);
+    }
+
+    public void setItemDescriptiveVideoAffiliated(String itemDescriptiveVideoAffiliated) {
+        this.mItemDescriptiveVideoAffiliated = StringUtils.notNullStr(itemDescriptiveVideoAffiliated);
+    }
+
+    public String getFeaturedVideoWidth() {
+        return StringUtils.notNullStr( mFeaturedVideoWidth );
+    }
+
+    public void setFeaturedVideoWidth( String featuredVideoWidth ) {
+        this.mFeaturedVideoWidth = featuredVideoWidth;
+    }
+
+    public String getFeaturedVideoHeight() {
+        return StringUtils.notNullStr( mFeaturedVideoHeight );
+    }
+
+    public void setFeaturedVideoHeight( String featuredVideoHeight ) {
+        this.mFeaturedVideoHeight = featuredVideoHeight;
+    }
+
+    public String getAffiliatedVideoWidth() {
+        return StringUtils.notNullStr( mAffiliatedVideoWidth );
+    }
+
+    public void setAffiliatedVideoWidth( String affiliatedVideoWidth ) {
+        this.mAffiliatedVideoWidth = affiliatedVideoWidth;
+    }
+
+    public String getAffiliatedVideoHeight() {
+        return StringUtils.notNullStr( mAffiliatedVideoHeight );
+    }
+
+    public void setAffiliatedVideoHeight( String affiliatedVideoHeight ) {
+        this.mAffiliatedVideoHeight = affiliatedVideoHeight;
     }
 
     public String getBuyerName() {
@@ -180,8 +228,12 @@ public class NemurOrder {
         return !TextUtils.isEmpty(mFeaturedImage);
     }
 
-    public boolean hasFeaturedVideo() {
-        return !TextUtils.isEmpty(mFeaturedVideo);
+    public boolean hasItemDescriptiveVideoMain() {
+        return !TextUtils.isEmpty(mItemDescriptiveVideoMain);
+    }
+
+    public boolean hasItemDescriptiveVideoAffiliated() {
+        return !TextUtils.isEmpty( mItemDescriptiveVideoAffiliated );
     }
 
     public boolean hasTitle() {
@@ -200,7 +252,8 @@ public class NemurOrder {
                 && order.getPrice().equals(this.getPrice())
                 && order.getItemDistributionMode().equals(this.getItemDistributionMode())
                 && order.getFeaturedImage().equals(this.getFeaturedImage())
-                && order.getFeaturedVideo().equals(this.getFeaturedVideo());
+                && order.getItemDescriptiveVideoMain().equals(this.getItemDescriptiveVideoMain())
+                && order.getItemDescriptiveVideoAffiliated().equals(this.getItemDescriptiveVideoAffiliated());
     }
 
     public boolean hasIds(NemurBuyerIdOrderId ids) {

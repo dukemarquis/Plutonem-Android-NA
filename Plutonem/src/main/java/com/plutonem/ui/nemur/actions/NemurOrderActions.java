@@ -22,8 +22,8 @@ public class NemurOrderActions {
     }
 
     /*
-     * get the latest version of this order - note that the order is only considered changed if the
-     * title/price value has changed, or if the image/video link has changed
+     * get the latest version of this item - note that the item is only considered changed if the
+     * name/price value has changed, or if the image/main video/affiliated video link has changed
      */
     public static void updateOrder(final NemurOrder localOrder,
                                    final UpdateResultListener resultListener) {
@@ -76,7 +76,8 @@ public class NemurOrderActions {
                     localOrder.setPrice(serverOrder.getPrice());
                     localOrder.setItemDistributionMode(serverOrder.getItemDistributionMode());
                     localOrder.setFeaturedImage(serverOrder.getFeaturedImage());
-                    localOrder.setFeaturedVideo(serverOrder.getFeaturedVideo());
+                    localOrder.setItemDescriptiveVideoMain(serverOrder.getItemDescriptiveVideoMain());
+                    localOrder.setItemDescriptiveVideoAffiliated(serverOrder.getItemDescriptiveVideoAffiliated());
                     NemurOrderTable.updateOrder(localOrder);
                 }
 

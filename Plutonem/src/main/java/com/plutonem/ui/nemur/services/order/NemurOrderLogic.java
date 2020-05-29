@@ -78,7 +78,8 @@ public class NemurOrderLogic {
         sb.append("?number=").append(NemurConstants.NEMUR_MAX_ORDERS_TO_REQUEST);
 
         // return newest orders first (this is the default, but make it explicit since it's important)
-        sb.append("&order=DESC");
+        // we don't need this as we choose to push random items - 2020-04-30
+        // sb.append("&order=DESC");
 
         String beforeDate;
         switch (updateAction) {
@@ -119,7 +120,7 @@ public class NemurOrderLogic {
             }
         };
 
-        Plutonem.getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener);
+        Plutonem.getRestClientUtilsV1_4().get(sb.toString(), null, null, listener, errorListener);
     }
 
     /*

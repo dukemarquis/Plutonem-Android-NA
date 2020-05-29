@@ -55,7 +55,7 @@ import javax.inject.Inject;
 import static androidx.recyclerview.widget.ItemTouchHelper.LEFT;
 import static androidx.recyclerview.widget.ItemTouchHelper.RIGHT;
 
-public class ConversationsOverviewFragment extends XmppFragment implements MainToolbarFragment {
+public class ConversationsOverviewFragment extends XmppFragment {
 
     private static final String STATE_SCROLL_POSITION = ConversationsOverviewFragment.class.getName() + ".scroll_state";
 
@@ -69,7 +69,6 @@ public class ConversationsOverviewFragment extends XmppFragment implements MainT
     private PendingActionHelper pendingActionHelper = new PendingActionHelper();
 
     @Nullable private Toolbar mToolbar = null;
-    private String mToolbarTitle;
 
     private BottomNavController mBottomNavController;
 
@@ -252,11 +251,11 @@ public class ConversationsOverviewFragment extends XmppFragment implements MainT
         // after switch pages, this fragment hasn't been created yet so we will have null Toolbar reference.
         // but in the setTitle method we already set the ToolbarTitle value so all we need to do is assigning the value to Toolbar in this moment.
         mToolbar = this.binding.toolbarMain;
+        mToolbar.setTitle( R.string.chat_screen_title );
         ((AppCompatActivity) getActivity()).setSupportActionBar((mToolbar));
 
         final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(mToolbarTitle);
             actionBar.setDisplayHomeAsUpEnabled(false);
         }
 
@@ -353,14 +352,14 @@ public class ConversationsOverviewFragment extends XmppFragment implements MainT
         }
     }
 
-    @Override
-    public void setTitle(@NonNull final String title) {
-        mToolbarTitle = (title.isEmpty()) ? getString(R.string.plutonem) : title;
-
-        if (mToolbar != null) {
-            mToolbar.setTitle(mToolbarTitle);
-        }
-    }
+//    @Override
+//    public void setTitle(@NonNull final String title) {
+//        mToolbarTitle = (title.isEmpty()) ? getString(R.string.plutonem) : title;
+//
+//        if (mToolbar != null) {
+//            mToolbar.setTitle(mToolbarTitle);
+//        }
+//    }
 
     private void hideEmptyView() {
         if (isAdded()) {

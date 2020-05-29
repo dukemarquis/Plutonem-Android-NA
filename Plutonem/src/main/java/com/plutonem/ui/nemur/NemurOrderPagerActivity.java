@@ -150,6 +150,8 @@ public class NemurOrderPagerActivity extends XmppActivity
                 .addBucket(this.mViewPager);
     }
 
+
+
     /*
      * set the activity title based on the order at the passed position
      */

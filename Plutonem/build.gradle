@@ -23,7 +23,7 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 android {
     signingConfigs {
         Plutonem_SigningConfig {
-            storeFile file('D:\\Chrome\\findex-NA\\Plutonem-Android-Develop-master\\upload-keystore.jks')
+            storeFile file('D:\\Chrome\\PlutoNem.China.Mainland\\Plutonem-Android-Develop-master\\upload-keystore.jks')
             storePassword 'Cao18913912779!'
             keyAlias = 'upload'
             keyPassword 'Cao18913912779'
@@ -44,10 +44,10 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "1.0.4"
+            versionName "1.0.5"
         }
-        versionCode 4
-        minSdkVersion 19
+        versionCode 5
+        minSdkVersion 21
         targetSdkVersion 29
 
         multiDexEnabled true
@@ -106,7 +106,7 @@ dependencies {
 //    implementation ('com.plutonem:rest:1.0.9') {
 //        exclude group: 'com.mcxiaoke.volley'
 //    }
-    implementation ("com.github.Plutonemur:Plutonemur-Rest-Android-NA:1.0.1") {
+    implementation ("com.github.Plutonemur:Plutonemur-Rest-Android-NA:1.0.2") {
         exclude group: "com.mcxiaoke.volley"
     }
     implementation 'org.apache.commons:commons-text:1.8'

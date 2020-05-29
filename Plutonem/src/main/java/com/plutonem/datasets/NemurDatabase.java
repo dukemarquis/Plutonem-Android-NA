@@ -14,13 +14,15 @@ import org.wordpress.android.util.AppLog.T;
  */
 public class NemurDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "pnnemur.db";
-    private static final int DB_VERSION = 2;
-    private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 1; // do not change this value
+    private static final int DB_VERSION = 4;
+    private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 3; // do not change this value
 
     /*
      * version history
-     * 1 - added NemurTagTable
-     * 2 - added support for migration scripts
+     * 1 - add NemurTagTable, NemurOrderTable, NemurBuyerTable, NemurSearchTable
+     * 2 - rename featured_video to item_descriptive_video_main in NemurOrderTable
+     * 3 - add item_descriptive_video_affiliated to NemurOrderTable
+     * 4 - still decide what to do now
      */
 
     /*
@@ -74,13 +76,13 @@ public class NemurDatabase extends SQLiteOpenHelper {
                 "Upgrading database from version " + oldVersion + " to version " + newVersion + " IN PROGRESS");
         int currentVersion = oldVersion;
         if (currentVersion <= DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT) {
-            // versions 0 - 1 didn't support migration scripts, so we can safely drop and recreate all tables
+            // versions 0 - 3 didn't support migration scripts, so we can safely drop and recreate all tables
             reset(db);
             currentVersion = DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT;
         }
 
         switch (currentVersion) {
-            case 1:
+            case 3:
                 // no-op
                 currentVersion++;
         }
@@ -134,8 +136,7 @@ public class NemurDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDb();
         db.beginTransaction();
         try {
-            int numPostsDeleted = NemurOrderTable.purge(db);
-
+            NemurOrderTable.purge(db);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
