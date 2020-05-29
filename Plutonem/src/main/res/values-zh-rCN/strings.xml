@@ -215,11 +215,4 @@ Language: zh_CN
     <string name="silent_messages_channel_name">无声消息</string>
     <string name="silent_messages_channel_description">此通知组用于显示不应触发任何声音的通知。 例如，当在另一个设备上激活时（宽限期）。</string>
     <string name="cancelled">已取消</string>
-    <string name="chat_screen_title">消息</string>
-    <string name="nemur_screen_title">首页</string>
-    <string name="nemur_women_display_name">女士</string>
-    <string name="nemur_various_display_name">全部</string>
-    <string name="nemur_heels_display_name">高跟鞋</string>
-    <string name="kohii_exo_controls_play_description">播放</string>
-    <string name="kohii_exo_controls_pause_description">暂停</string>
 </resources>
